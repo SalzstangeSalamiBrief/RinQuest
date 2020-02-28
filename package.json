@@ -2,7 +2,7 @@
   "name": "rin-quest",
   "version": "1.0.0",
   "description": "Nuxt + Electron",
-  "author": "SalzstangeSalamieBrief",
+  "author": "SalzstangeSalamiBrief",
   "private": true,
   "main": "main.js",
   "build": {
