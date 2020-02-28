@@ -1,4 +1,4 @@
-# nene-quest
+# rin-quest
 
 > Nuxt + Electron
 

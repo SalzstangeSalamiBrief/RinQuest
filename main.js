@@ -27,14 +27,14 @@ console.log(`Nuxt working on ${_NUXT_URL_}`)
 */
 let win = null // Current window
 const {app, BrowserWindow,} = require('electron')
-const path = require('path')
 const newWin = () => {
 	const options = {		
 			// icon: path.join(__dirname, 'static/icon.png'),
 			width: 1600,
 			height: 900,
 			webPreferences: {
-				nodeIntegration: true
+				nodeIntegration: true,
+				webSecurity: false,
 			},
 			backgroundColor: '#fff'	
 	}
