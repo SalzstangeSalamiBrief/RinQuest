@@ -34,12 +34,12 @@ const newWin = () => {
 			height: 900,
 			webPreferences: {
 				nodeIntegration: true,
-				webSecurity: false,
 			},
 			backgroundColor: '#fff'	
 	}
 	win = new BrowserWindow(options)
-	
+	// todo: comment in
+	// win.setMenu(null);
 	win.on('closed', () => win = null)
 	if (config.dev) {
 		// Install vue dev tool and open chrome dev tools

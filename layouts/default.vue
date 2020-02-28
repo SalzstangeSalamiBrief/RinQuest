@@ -1,5 +1,5 @@
 <template>
-	<main class="container mx-auto flex--row center-flex">
+	<main class="flex--row center-flex">
 		<nuxt/>
 	</main>
 </template>
