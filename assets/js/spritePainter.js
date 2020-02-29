@@ -1,6 +1,5 @@
 import ImageLoaderClass from './imageLoader';
 
-
 export default class SpritePainter {
 	constructor(canvas = undefined) {
 		this.canvas = canvas;
@@ -22,18 +21,30 @@ export default class SpritePainter {
 	async drawBackground(
 		xStart, yStart, xEnd, yEnd, imageName,
 	) {
+		console.log(`xStart: ${xStart}, yStart: ${yStart}, xEnd: ${xEnd}, yEnd: ${yEnd}`);
 		// check if an image already got loaded. if not, then call ImageLoader
 		let img = this.imagesLoaded.get(imageName);
-		if (this.imagesLoaded.get(imageName) === undefined) {
+		if (img === undefined) {
 			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
 		// const img = await ImageLoader(imagePath);
 		for (let x = xStart; x < xEnd; x += 1) {
+			// console.log('x: ', x);
 			for (let y = yStart; y < yEnd; y += 1) {
+				console.log('x: ', x, 'y: ', y);
 				this.ctx.drawImage(img, x * 20, y * 20);
 			}
 		}
+	}
+
+	async drawCharacter(characterType, [xCoord, yCoord]) {
+		let img = this.imagesLoaded.get(characterType);
+		if (img === undefined) {
+			img = await this.imageLoader.loadImage(`/game/characters/${characterType}.png`);
+			this.imagesLoaded.set(characterType, img);
+		}
+		this.ctx.drawImage(img, xCoord, yCoord);
 	}
 
 	setCanvasAndCtx(canvas) {

@@ -1,8 +1,9 @@
-const Character = require('./character');
+import Character from './character';
 
 export default class PlayerCharacter extends Character {
 	constructor() {
-		super();
+		// todo starting coords
+		super(0, 0, 60, 80, 'playerCharacter');
 		this.HP = 100;
 	}
 

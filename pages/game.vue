@@ -1,19 +1,53 @@
 <template>
-  <div @keyup.tab="debuggingBackToIndex" class="flex--row flex-center">
+  <div @keydown="addKeyListeners" class="flex--row flex-center">
     <canvas id="game-area" width="1600" height="860"></canvas>
   </div>
 </template>
 <script>
 import SpritePainter from '../assets/js/spritePainter';
+import PlayerCharacter from '../assets/js/characters/playerCharacter';
+import MovementAgent from '../assets/js/movementAgent';
 
 export default {
+	name: 'game',
 	data() {
 		return {
+			player: undefined,
+			canRepeat: true,
 		};
 	},
 	methods: {
 		debuggingBackToIndex() {
 			this.$router.push({ path: '/' });
+		},
+		addKeyListeners({ keyCode }) {
+			// 	// check if the movement can continue
+			if (this.canRepeat === false) return;
+			switch (keyCode) {
+			// w
+			case 87:
+				this.movementAgent.moveCharacter(0, -1, this.player);
+				break;
+				// a
+			case 65:
+				this.movementAgent.moveCharacter(-1, 0, this.player);
+				break;
+				// ss
+			case 83:
+				this.movementAgent.moveCharacter(0, 1, this.player);
+				break;
+				// d
+			case 68:
+				this.movementAgent.moveCharacter(1, 0, this.player);
+				break;
+			default:
+				break;
+			}
+			// set interval for moving a character to 50ms
+			this.canRepeat = false;
+			setTimeout(() => {
+				this.canRepeat = true;
+			}, 50);
 		},
 	},
 	// todo back to mounted and asyncData; remove store
@@ -25,12 +59,19 @@ export default {
 		await this.painter.drawBackground(
 			42, 0, 80, 43, 'waterTile',
 		);
-		console.log(this.painter.getCanvasSize());
+		this.player = new PlayerCharacter();
+		// init player
+		this.painter.drawCharacter(this.player.getType(), [0, 0]);
+		window.addEventListener('keydown', this.addKeyListeners);
+	},
+	beforeDestroy() {
+		window.removeEventListener('keydown', this.addKeyListeners);
 	},
 	async asyncData() {
 		const painter = new SpritePainter();
+		const movementAgent = new MovementAgent(painter);
 		await painter.loadAllImages();
-		return { painter };
+		return { painter, movementAgent };
 	},
 
 };

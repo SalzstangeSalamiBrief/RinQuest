@@ -1,21 +1,35 @@
 export default class Character {
-	constructor(x = 0, y = 0) {
-		this.x = x;
-		this.y = y;
+	constructor(xCoord = 0, yCoord = 0, width = 0, height = 0, type) {
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
+		this.width = width;
+		this.height = height;
+		this.type = type;
 	}
 
-	setX(x) {
-		this.x = x;
+	setX(xCoord) {
+		this.xCoord = xCoord;
 	}
 
-	setY(y) {
-		this.y = y;
+	setY(yCoord) {
+		this.y = yCoord;
 	}
 
-	getCoords() {
+	setCoords([xCoord, yCoord]) {
+		this.xCoord = xCoord;
+		this.yCoord = yCoord;
+	}
+
+	getType() {
+		return this.type;
+	}
+
+	getCoordsAndSize() {
 		return {
-			x: this.x,
-			y: this.y,
+			xCoord: this.xCoord,
+			yCoord: this.yCoord,
+			width:	this.width,
+			height: this.height,
 		};
 	}
 }
