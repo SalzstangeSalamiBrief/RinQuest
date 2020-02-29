@@ -1,10 +1,11 @@
 import ImageLoaderClass from './imageLoader';
 
 export default class SpritePainter {
-	constructor(canvas = undefined) {
-		this.canvas = canvas;
-		this.ctx = canvas ? canvas.getContext('2d') : undefined;
-		this.canvasSize = canvas ? this.calcCanvasSize() : undefined;
+	constructor() {
+		// this.canvas = canvas;
+		this.canvasMap = new Map();
+		// this.ctx = canvas ? canvas.getContext('2d') : undefined;
+		this.canvasSize = undefined;
 		this.imagesLoaded = new Map();
 		this.imageLoader = new ImageLoaderClass();
 	}
@@ -19,57 +20,52 @@ export default class SpritePainter {
 	}
 
 	async drawBackground(
-		xStart, yStart, xEnd, yEnd, imageName,
+		xStart, yStart, xEnd, yEnd, imageName, type = 'background',
 	) {
-		console.log(`xStart: ${xStart}, yStart: ${yStart}, xEnd: ${xEnd}, yEnd: ${yEnd}`);
 		// check if an image already got loaded. if not, then call ImageLoader
 		let img = this.imagesLoaded.get(imageName);
 		if (img === undefined) {
 			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
-		// const img = await ImageLoader(imagePath);
 		for (let x = xStart; x < xEnd; x += 1) {
-			// console.log('x: ', x);
 			for (let y = yStart; y < yEnd; y += 1) {
-				console.log('x: ', x, 'y: ', y);
-				this.ctx.drawImage(img, x * 20, y * 20);
+				this.canvasMap.get(type).ctx.drawImage(img, x * 20, y * 20);
 			}
 		}
 	}
 
-	async drawCharacter(characterType, [xCoord, yCoord]) {
-		let img = this.imagesLoaded.get(characterType);
-		if (img === undefined) {
-			img = await this.imageLoader.loadImage(`/game/characters/${characterType}.png`);
-			this.imagesLoaded.set(characterType, img);
-		}
-		this.ctx.drawImage(img, xCoord, yCoord);
+	drawCharacter(characterType, [xCoord, yCoord]) {
+		const img = this.imagesLoaded.get(characterType);
+		this.canvasMap.get('characters').ctx.drawImage(img, xCoord, yCoord);
 	}
 
-	setCanvasAndCtx(canvas) {
+	clearCanvas(type) {
+		this.canvasMap.get(type).ctx.clearRect(0, 0, this.canvasSize.xMax, this.canvasSize.yMax);
+	}
+
+	addCanvasAndCtx(canvas, type) {
 		return new Promise((resolve, reject) => {
-			if (!canvas) {
+			if (!canvas || !type) {
 				reject();
 			}
-			this.canvas = canvas;
-			this.ctx = canvas.getContext('2d');
-			this.canvasSize = this.calcCanvasSize();
+			this.canvasMap.set(type, { canvas, ctx: canvas.getContext('2d') });
+			if (this.canvasSize === undefined) this.canvasSize = this.constructor.calcCanvasSize(canvas);
 			resolve();
 		});
 	}
 
-	calcCanvasSize() {
+	static calcCanvasSize(canvas) {
 		return {
 			xMin: 0,
 			yMin: 0,
-			xMax: this.canvas.width,
-			yMax: this.canvas.height,
+			xMax: canvas.width,
+			yMax: canvas.height,
 		};
 	}
 
-	getCanvasAndCtx() {
-		return { canvas: this.canvas, ctx: this.ctx };
+	getCanvasAndCtx(type) {
+		return this.canvasMap.get(type);
 	}
 
 	getCanvasSize() {

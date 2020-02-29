@@ -17,6 +17,7 @@ export default class MovementAgent {
 		*/
 		const characterCoordAndSize = character.getCoordsAndSize();
 		const characterType = character.getType();
+		const canvasSize = this.painter.getCanvasSize();
 		let newCoords;
 		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
@@ -34,43 +35,20 @@ export default class MovementAgent {
 			}
 			// todo check collision
 			// check for collision with field
-			newCoords = this.checkForFieldCollision(characterCoordAndSize, newCoords, characterType);
-			// todo draw if no collision
-			// draw character
-			character.setCoords(newCoords);
-			this.painter.drawCharacter(characterType, newCoords);
-			// draw field
-			// todo temp only grass
-			console.log('--------------');
-			console.log(newCoords);
-			const backgroundTilesToDraw = [newCoords[0] / 20, newCoords[1] / 20];
-			console.log(backgroundTilesToDraw);
-			console.log(`charWIdth: ${characterCoordAndSize.width / 20}`);
-			console.log(`charHeight: ${characterCoordAndSize.height / 20}`);
-			console.log(`temp: ${backgroundTilesToDraw[0] === 0 ? 0 : backgroundTilesToDraw[0] + (-1 * xAxis)}`);
-			console.log('--------------');
-			// move right
-			// TODO MOVEMENT
-			// this.painter.drawBackground(
-			// 	backgroundTilesToDraw[0] + (-1 * xAxis),
-			// 	backgroundTilesToDraw[1] + (-1 * yAxis),
-			// 	backgroundTilesToDraw[0],
-			// 	backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20),
-			// 	// backgroundTilesToDraw[0] + (characterCoordAndSize.width / 20),
-			// 	// // backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20) + 1,
-			// 	// backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20),
-			// 	'grassTile',
-			// );
-			this.painter.drawBackground(
-				backgroundTilesToDraw[0] + (-1 * xAxis),
-				backgroundTilesToDraw[1] + (-1 * yAxis),
-				backgroundTilesToDraw[0],
-				backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20),
-				// backgroundTilesToDraw[0] + (characterCoordAndSize.width / 20),
-				// // backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20) + 1,
-				// backgroundTilesToDraw[1] + (characterCoordAndSize.height / 20),
-				'grassTile',
+			newCoords = this.checkForFieldCollision(
+				characterCoordAndSize,
+				newCoords,
+				characterType,
+				canvasSize,
 			);
+			// todo draw if no collision
+			// draw field
+			// draw character
+			this.painter.clearCanvas('characters');
+			// TODO: draw each active character again
+			character.setCoords(newCoords);
+			// requestAnimationFrame(this.painter.drawCharacter(characterType, newCoords));
+			this.painter.drawCharacter(characterType, newCoords);
 		}
 	}
 
@@ -79,8 +57,7 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	checkForFieldCollision({ width, height }, [newXCoord, newYCoord], type) {
-		const canvasSize = this.painter.calcCanvasSize();
+	checkForFieldCollision({ width, height }, [newXCoord, newYCoord], type, canvasSize) {
 		const newCalcedCoords = [newXCoord, newYCoord];
 		// check for -x/left movement collision
 		if (newXCoord <= 0) newCalcedCoords[0] = 0;

@@ -1,6 +1,17 @@
 <template>
-  <div @keydown="addKeyListeners" class="flex--row flex-center">
-    <canvas id="game-area" width="1600" height="860"></canvas>
+  <div @keydown="addKeyListeners" class="flex--row flex-center" style="position: relative">
+    <canvas
+			id="background-area"
+			width="1600"
+			height="860"
+		>
+		</canvas>
+		<canvas
+			id="character-area"
+			width="1600"
+			height="860"
+			style="position: absolute; left: 0; top: 0; z-index: 1;"
+		></canvas>
   </div>
 </template>
 <script>
@@ -52,13 +63,15 @@ export default {
 	},
 	// todo back to mounted and asyncData; remove store
 	async mounted() {
-		this.painter.setCanvasAndCtx(document.querySelector('#game-area'));
+		this.painter.addCanvasAndCtx(document.querySelector('#background-area'), 'background');
+		this.painter.addCanvasAndCtx(document.querySelector('#character-area'), 'characters');
 		await this.painter.drawBackground(
-			0, 0, 42, 43, 'grassTile',
+			0, 0, 42, 43, 'grassTile', 'background',
 		);
 		await this.painter.drawBackground(
-			42, 0, 80, 43, 'waterTile',
+			42, 0, 80, 43, 'waterTile', 'background',
 		);
+
 		this.player = new PlayerCharacter();
 		// init player
 		this.painter.drawCharacter(this.player.getType(), [0, 0]);
