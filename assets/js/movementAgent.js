@@ -47,7 +47,6 @@ export default class MovementAgent {
 			this.painter.clearCanvas('characters');
 			// TODO: draw each active character again
 			character.setCoords(newCoords);
-			// requestAnimationFrame(this.painter.drawCharacter(characterType, newCoords));
 			this.painter.drawCharacter(characterType, newCoords);
 		}
 	}
