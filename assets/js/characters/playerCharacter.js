@@ -1,9 +1,16 @@
 import Character from './character';
+import { initCharacters } from '../gamefield/fields.json';
 
 export default class PlayerCharacter extends Character {
 	constructor() {
 		// todo starting coords
-		super(0, 0, 60, 80, 'playerCharacter');
+		super(
+			initCharacters.xMin,
+			initCharacters.yMin,
+			60 + initCharacters.xMin,
+			80 + initCharacters.yMin,
+			'playerCharacter',
+		);
 		this.HP = 100;
 	}
 

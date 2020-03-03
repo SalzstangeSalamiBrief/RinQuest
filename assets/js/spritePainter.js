@@ -19,8 +19,10 @@ export default class SpritePainter {
 		});
 	}
 
-	async drawBackground(
-		xStart, yStart, xEnd, yEnd, imageName, type = 'background',
+	async drawBackgroundInit(
+		{
+			xMin, yMin, xMax, yMax, imageName, type = 'background',
+		},
 	) {
 		// check if an image already got loaded. if not, then call ImageLoader
 		let img = this.imagesLoaded.get(imageName);
@@ -28,14 +30,30 @@ export default class SpritePainter {
 			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
-		for (let x = xStart; x < xEnd; x += 1) {
-			for (let y = yStart; y < yEnd; y += 1) {
-				this.canvasMap.get(type).ctx.drawImage(img, x * 20, y * 20);
+		const canvasCtx = this.canvasMap.get(type).ctx;
+		for (let row = xMin; row < xMax; row += 1) {
+			for (let col = yMin; col < yMax; col += 1) {
+				canvasCtx.drawImage(img, row * 20, col * 20);
 			}
 		}
 	}
 
-	drawCharacter(characterType, [xCoord, yCoord]) {
+	async drawFieldMap(fieldArray, type = 'background') {
+		this.clearCanvas(type);
+		const canvasCtx = 	this.canvasMap.get(type).ctx;
+		for (let row = 0; row < fieldArray.length; row += 1) {
+			for (let col = 0; col < fieldArray[row].length; col += 1) {
+				canvasCtx.drawImage(
+					this.imagesLoaded.get(fieldArray[row][col]),
+					col * 20,
+					row * 20,
+				);
+			}
+		}
+	}
+
+	async drawCharacter(characterType, [xCoord, yCoord]) {
+		// console.log(characterType, xCoord, yCoord);
 		const img = this.imagesLoaded.get(characterType);
 		this.canvasMap.get('characters').ctx.drawImage(img, xCoord, yCoord);
 	}

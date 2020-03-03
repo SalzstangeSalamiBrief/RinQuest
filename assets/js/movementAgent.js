@@ -8,7 +8,7 @@ export default class MovementAgent {
 
 	// destructure character getCoordsAndSize()-object
 	// eslint-disable-next-line class-methods-use-this
-	moveCharacter(xAxis = 0, yAxis = 0, character) {
+	async moveCharacter(xAxis = 0, yAxis = 0, character) {
 		/*
 		xAxis
 			= 0 => not moved on this axis
@@ -47,7 +47,7 @@ export default class MovementAgent {
 			this.painter.clearCanvas('characters');
 			// TODO: draw each active character again
 			character.setCoords(newCoords);
-			this.painter.drawCharacter(characterType, newCoords);
+			await this.painter.drawCharacter(characterType, newCoords);
 		}
 	}
 

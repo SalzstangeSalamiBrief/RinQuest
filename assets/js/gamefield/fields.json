@@ -1,0 +1,66 @@
+{
+  "backgroundColumns": 
+  {
+    "start":
+      [
+        {
+          "xMin": 0,
+          "yMin": 0,
+          "xMax": 42,
+          "yMax": 43,
+          "imageName": "grassTile"
+        },
+        {
+          "xMin": 42,
+          "yMin": 0,
+          "xMax": 80,
+          "yMax": 43,
+          "imageName": "waterTile"
+        }
+      ],
+    "scollColumns": 
+      [
+        [
+          {
+            "type": "waterTile",
+            "start": 0,
+            "end": 16
+          },
+          {
+            "type": "grassTile",
+            "start": 16,
+            "end": 31
+          },
+          {
+            "type": "waterTile",
+            "start": 31,
+            "end": 43
+          }
+        ],
+        [
+          {
+            "type": "waterTile",
+            "start": 0,
+            "end": 5
+          },
+          {
+            "type": "grassTile",
+            "start": 5,
+            "end": 37
+          },
+          {
+            "type": "waterTile",
+            "start": 37,
+            "end": 43
+          }
+        ]
+      ]
+  },
+  "initCharacters": [
+    {
+      "xMin": 1,
+      "yMin": 17,
+      "type": "playerCharacter"
+    }
+  ]
+}
