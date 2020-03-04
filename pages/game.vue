@@ -52,7 +52,7 @@ export default {
 				// d
 			case 68:
 				await this.movementAgent.moveCharacter(1, 0, this.player);
-				await this.gameField.scrollField();
+				// await this.gameField.scrollField();
 				break;
 			default:
 				break;

@@ -6,6 +6,7 @@ export default class GameField {
 			this.scrollIndex = 0;
 			this.fieldMap = new Map();
 			this.painter = painter;
+			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 			// parallel init and drawing
 			Promise.all([
 				this.initField(backgroundColumns.start, 'background'),
@@ -46,14 +47,19 @@ export default class GameField {
 	// todo scroll character field
 	scrollField(fieldType = 'background') {
 		const map = this.fieldMap.get(fieldType);
-		const scrollCol = backgroundColumns.scollColumns[this.scrollIndex];
+		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
 		scrollCol.forEach(({ start, end, type }) => {
 			for (let i = start; i < end; i += 1) {
 				map[i].shift();
 				map[i].push(type);
 			}
 		});
-		this.scrollIndex = 1;
+		this.repeatCol -= 1;
+		// todo: end of scrollColumns
+		if (this.repeatCol === 0) {
+			this.scrollIndex += 1;
+			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
+		}
 		return this.painter.drawFieldMap(map);
 	}
 

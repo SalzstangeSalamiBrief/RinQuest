@@ -30,20 +30,20 @@ export default class SpritePainter {
 			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
-		const canvasCtx = this.canvasMap.get(type).ctx;
+		const { ctx } = this.canvasMap.get(type);
 		for (let row = xMin; row < xMax; row += 1) {
 			for (let col = yMin; col < yMax; col += 1) {
-				canvasCtx.drawImage(img, row * 20, col * 20);
+				ctx.drawImage(img, row * 20, col * 20);
 			}
 		}
 	}
 
 	async drawFieldMap(fieldArray, type = 'background') {
 		this.clearCanvas(type);
-		const canvasCtx = 	this.canvasMap.get(type).ctx;
+		const { ctx } = 	this.canvasMap.get(type);
 		for (let row = 0; row < fieldArray.length; row += 1) {
 			for (let col = 0; col < fieldArray[row].length; col += 1) {
-				canvasCtx.drawImage(
+				ctx.drawImage(
 					this.imagesLoaded.get(fieldArray[row][col]),
 					col * 20,
 					row * 20,
@@ -53,9 +53,9 @@ export default class SpritePainter {
 	}
 
 	async drawCharacter(characterType, [xCoord, yCoord]) {
-		// console.log(characterType, xCoord, yCoord);
+		const { ctx } = this.canvasMap.get('characters');
 		const img = this.imagesLoaded.get(characterType);
-		this.canvasMap.get('characters').ctx.drawImage(img, xCoord, yCoord);
+		ctx.drawImage(img, xCoord * 20, yCoord * 20);
 	}
 
 	clearCanvas(type) {

@@ -23,14 +23,14 @@ export default class MovementAgent {
 		if (xAxis !== yAxis) {
 			if (xAxis !== 0) {
 				newCoords = [
-					this.constructor.calcNewCoordinate(characterCoordAndSize.xCoord, this.stepSize * xAxis),
+					this.constructor.calcNewCoordinate(characterCoordAndSize.xCoord, xAxis),
 					characterCoordAndSize.yCoord,
 				];
 			} else {
 				// yAxis !== 0
 				newCoords = [
 					characterCoordAndSize.xCoord,
-					this.constructor.calcNewCoordinate(characterCoordAndSize.yCoord, this.stepSize * yAxis),
+					this.constructor.calcNewCoordinate(characterCoordAndSize.yCoord, yAxis),
 				];
 			}
 			// todo check collision
@@ -61,18 +61,19 @@ export default class MovementAgent {
 		// check for -x/left movement collision
 		if (newXCoord <= 0) newCalcedCoords[0] = 0;
 		// check for +x/right movement collision
-		if (newXCoord + width > canvasSize.xMax) {
+		if (newXCoord + width > canvasSize.xMax / 20) {
+		// if (newXCoord + width > canvasSize.xMax) {
 			if (type === 'playerCharacter') {
-				newCalcedCoords[0] = canvasSize.xMax - width;
+				newCalcedCoords[0] = canvasSize.xMax / 20 - width;
 			}
 			// todo: else => monster
 		}
 		// check for -y/top movement collision
 		if (newYCoord <= 0) newCalcedCoords[1] = 0;
 		// check for -y/bottom movement collision
-		if (newYCoord + height > canvasSize.yMax) {
+		if (newYCoord + height > canvasSize.yMax / 20) {
 			if (type === 'playerCharacter') {
-				newCalcedCoords[1] = canvasSize.yMax - height;
+				newCalcedCoords[1] = canvasSize.yMax / 20 - height;
 			}
 		}
 		return newCalcedCoords;

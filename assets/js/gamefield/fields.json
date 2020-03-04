@@ -18,13 +18,14 @@
           "imageName": "waterTile"
         }
       ],
-    "scollColumns": 
+    "scrollColumns": 
       [
         [
           {
             "type": "waterTile",
             "start": 0,
-            "end": 16
+            "end": 16,
+            "repeat": 40
           },
           {
             "type": "grassTile",
@@ -41,7 +42,8 @@
           {
             "type": "waterTile",
             "start": 0,
-            "end": 5
+            "end": 5,
+            "repeat": 10
           },
           {
             "type": "grassTile",
