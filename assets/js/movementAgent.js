@@ -6,6 +6,10 @@ export default class MovementAgent {
 		this.stepSize = 20;
 	}
 
+	getPainter() {
+		return this.painter;
+	}
+
 	// destructure character getCoordsAndSize()-object
 	// eslint-disable-next-line class-methods-use-this
 	async moveCharacter(xAxis = 0, yAxis = 0, character) {
@@ -18,6 +22,7 @@ export default class MovementAgent {
 		const characterCoordAndSize = character.getCoordsAndSize();
 		const characterType = character.getType();
 		const canvasSize = this.painter.getCanvasSize();
+		console.log(canvasSize);
 		let newCoords;
 		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
@@ -61,19 +66,19 @@ export default class MovementAgent {
 		// check for -x/left movement collision
 		if (newXCoord <= 0) newCalcedCoords[0] = 0;
 		// check for +x/right movement collision
-		if (newXCoord + width > canvasSize.xMax / 20) {
+		if (newXCoord + width > canvasSize.xMax) {
 		// if (newXCoord + width > canvasSize.xMax) {
 			if (type === 'playerCharacter') {
-				newCalcedCoords[0] = canvasSize.xMax / 20 - width;
+				newCalcedCoords[0] = canvasSize.xMax - width;
 			}
 			// todo: else => monster
 		}
 		// check for -y/top movement collision
 		if (newYCoord <= 0) newCalcedCoords[1] = 0;
 		// check for -y/bottom movement collision
-		if (newYCoord + height > canvasSize.yMax / 20) {
+		if (newYCoord + height > canvasSize.yMax) {
 			if (type === 'playerCharacter') {
-				newCalcedCoords[1] = canvasSize.yMax / 20 - height;
+				newCalcedCoords[1] = canvasSize.yMax - height;
 			}
 		}
 		return newCalcedCoords;

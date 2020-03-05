@@ -6,6 +6,7 @@ export default class GameField {
 			this.scrollIndex = 0;
 			this.fieldMap = new Map();
 			this.painter = painter;
+			// reduce json-size with repeating
 			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 			// parallel init and drawing
 			Promise.all([
@@ -45,7 +46,7 @@ export default class GameField {
 	}
 
 	// todo scroll character field
-	scrollField(fieldType = 'background') {
+	scrollField(fieldType = 'background', movementAgent, character) {
 		const map = this.fieldMap.get(fieldType);
 		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
 		scrollCol.forEach(({ start, end, type }) => {
@@ -54,6 +55,7 @@ export default class GameField {
 				map[i].push(type);
 			}
 		});
+		movementAgent.moveCharacter(-1, 0, character);
 		this.repeatCol -= 1;
 		// todo: end of scrollColumns
 		if (this.repeatCol === 0) {

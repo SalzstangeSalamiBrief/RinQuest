@@ -4,7 +4,11 @@ export default class SpritePainter {
 	constructor() {
 		// this.canvas = canvas;
 		this.canvasMap = new Map();
-		// this.ctx = canvas ? canvas.getContext('2d') : undefined;
+		/**
+		 * xMax = width / 20, yMax = height / 20
+		 * result is that xMax represents the amount of tiles on the xAxis => example: 80
+		 * yAxis is the same
+		 */
 		this.canvasSize = undefined;
 		this.imagesLoaded = new Map();
 		this.imageLoader = new ImageLoaderClass();
@@ -59,7 +63,12 @@ export default class SpritePainter {
 	}
 
 	clearCanvas(type) {
-		this.canvasMap.get(type).ctx.clearRect(0, 0, this.canvasSize.xMax, this.canvasSize.yMax);
+		this.canvasMap.get(type).ctx.clearRect(
+			0,
+			0,
+			this.canvasSize.xMax * 20,
+			this.canvasSize.yMax * 20,
+		);
 	}
 
 	addCanvasAndCtx(canvas, type) {
@@ -77,8 +86,8 @@ export default class SpritePainter {
 		return {
 			xMin: 0,
 			yMin: 0,
-			xMax: canvas.width,
-			yMax: canvas.height,
+			xMax: Math.floor(canvas.width / 20),
+			yMax: Math.floor(canvas.height / 20),
 		};
 	}
 

@@ -48,11 +48,20 @@ export default {
 				// ss
 			case 83:
 				await this.movementAgent.moveCharacter(0, 1, this.player);
+				// await this.gameField.scrollField(
+				// 	'background',
+				// 	this.movementAgent,
+				// 	this.player,
+				// );
 				break;
 				// d
 			case 68:
 				await this.movementAgent.moveCharacter(1, 0, this.player);
-				// await this.gameField.scrollField();
+				// await this.gameField.scrollField(
+				// 	'background',
+				// 	this.movementAgent,
+				// 	this.player,
+				// );
 				break;
 			default:
 				break;
@@ -68,6 +77,7 @@ export default {
 	async mounted() {
 		this.painter.addCanvasAndCtx(document.querySelector('#background-area'), 'background');
 		this.painter.addCanvasAndCtx(document.querySelector('#character-area'), 'characters');
+		window.addEventListener('keydown', this.addKeyListeners);
 		this.gameField = await new GameField(this.painter);
 		this.gameField.getField('background');
 		// await this.painter.drawBackground(
@@ -80,7 +90,6 @@ export default {
 		this.player = new PlayerCharacter();
 		// init player
 		// this.painter.drawCharacter(this.player.getType(), [0, 0]);
-		window.addEventListener('keydown', this.addKeyListeners);
 		// console.log(this.gameField.getField('background'));
 	},
 	beforeDestroy() {
