@@ -19,6 +19,8 @@ export default class ImageLoader {
 			'/game/background/waterTile.png',
 			'/game/background/grassTile.png',
 			'/game/characters/playerCharacter.png',
+			'/game/characters/playerCharacter_moving.png',
+			'/game/characters/playerCharacter_attacking.png',
 		];
 		const promiseArray = [];
 		imagesToLoad.forEach((imgPath) => {

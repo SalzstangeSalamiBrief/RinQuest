@@ -16,10 +16,8 @@ export default class GameField {
 				this.painter.drawBackgroundInit(backgroundColumns.start[1]),
 				this.painter.drawCharacter(
 					initCharacters[0].type,
-					[
-						initCharacters[0].xMin,
-						initCharacters[0].yMin,
-					],
+					initCharacters[0].coords,
+					initCharacters[0].size,
 				),
 			])
 				.then(() => resolve(this));

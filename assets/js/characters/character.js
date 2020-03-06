@@ -27,10 +27,9 @@ export default class Character {
 
 	getCoordsAndSize() {
 		return {
-			xCoord: this.xCoord,
-			yCoord: this.yCoord,
-			width:	this.width,
-			height: this.height,
+			coords: [this.xCoord, this.yCoord],
+			// [width, height]
+			size: [this.width, this.height],
 		};
 	}
 }

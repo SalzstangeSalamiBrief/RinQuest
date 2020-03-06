@@ -19,29 +19,31 @@ export default class MovementAgent {
 			= 1 => positive movement on this axis
 			= -1 negative Movement on this Axis
 		*/
-		const characterCoordAndSize = character.getCoordsAndSize();
+		const {
+			coords: [xCoord, yCoord], size: characterSize,
+		} = character.getCoordsAndSize();
 		const characterType = character.getType();
 		const canvasSize = this.painter.getCanvasSize();
-		console.log(canvasSize);
 		let newCoords;
 		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
 			if (xAxis !== 0) {
 				newCoords = [
-					this.constructor.calcNewCoordinate(characterCoordAndSize.xCoord, xAxis),
-					characterCoordAndSize.yCoord,
+					this.constructor.calcNewCoordinate(xCoord, xAxis),
+					yCoord,
 				];
 			} else {
 				// yAxis !== 0
 				newCoords = [
-					characterCoordAndSize.xCoord,
-					this.constructor.calcNewCoordinate(characterCoordAndSize.yCoord, yAxis),
+					xCoord,
+					this.constructor.calcNewCoordinate(yCoord, yAxis),
 				];
 			}
 			// todo check collision
 			// check for collision with field
 			newCoords = this.checkForFieldCollision(
-				characterCoordAndSize,
+				characterSize[0],
+				characterSize[1],
 				newCoords,
 				characterType,
 				canvasSize,
@@ -51,8 +53,10 @@ export default class MovementAgent {
 			// draw character
 			this.painter.clearCanvas('characters');
 			// TODO: draw each active character again
+			console.log(newCoords);
 			character.setCoords(newCoords);
-			await this.painter.drawCharacter(characterType, newCoords);
+			const typeToDraw = characterType === 'playerCharacter' ? 'playerCharacter_moving' : characterType;
+			await this.painter.drawCharacter(typeToDraw, newCoords, characterSize);
 		}
 	}
 
@@ -61,7 +65,7 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	checkForFieldCollision({ width, height }, [newXCoord, newYCoord], type, canvasSize) {
+	checkForFieldCollision(width, height, [newXCoord, newYCoord], type, canvasSize) {
 		const newCalcedCoords = [newXCoord, newYCoord];
 		// check for -x/left movement collision
 		if (newXCoord <= 0) newCalcedCoords[0] = 0;

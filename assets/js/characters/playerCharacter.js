@@ -5,12 +5,12 @@ export default class PlayerCharacter extends Character {
 	constructor() {
 		// todo starting coords
 		super(
-			initCharacters[0].xMin,
-			initCharacters[0].yMin,
-			//  3 * 20 = 60px
-			3,
-			//  4 * 20 = 80px
-			4,
+			initCharacters[0].coords[0],
+			initCharacters[0].coords[1],
+			//  5 * 20 = 100px
+			5,
+			//  6 * 20 = 120px
+			6,
 			'playerCharacter',
 		);
 		this.HP = 100;

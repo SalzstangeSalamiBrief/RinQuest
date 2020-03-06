@@ -60,8 +60,8 @@
   },
   "initCharacters": [
     {
-      "xMin": 1,
-      "yMin": 17,
+      "coords": [1,17],
+      "size": [5,6],
       "type": "playerCharacter"
     }
   ]

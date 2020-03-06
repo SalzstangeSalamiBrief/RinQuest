@@ -56,10 +56,11 @@ export default class SpritePainter {
 		}
 	}
 
-	async drawCharacter(characterType, [xCoord, yCoord]) {
+	async drawCharacter(characterType, [xCoord, yCoord], [characterWidth, characterHeight]) {
+		// console.log(characterWidth, characterHeight);
 		const { ctx } = this.canvasMap.get('characters');
 		const img = this.imagesLoaded.get(characterType);
-		ctx.drawImage(img, xCoord * 20, yCoord * 20);
+		ctx.drawImage(img, xCoord * 20, yCoord * 20, characterWidth * 20, characterHeight * 20);
 	}
 
 	clearCanvas(type) {
