@@ -1,6 +1,6 @@
-import Character from './character';
+import Entity from './entity';
 
-export default class NonPlayerCharacter extends Character {
+export default class NonPlayerCharacter extends Entity {
 	constructor(type, positionX, positionY) {
 		// todo: width, height to super
 		super(positionX, positionY);

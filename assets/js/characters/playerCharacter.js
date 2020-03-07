@@ -1,9 +1,9 @@
-import Character from './character';
+import Entity from './entity';
 import { initCharacters } from '../gamefield/fields.json';
 
-export default class PlayerCharacter extends Character {
+export default class PlayerCharacter extends Entity {
 	constructor() {
-		// todo starting coords
+		// todo state
 		super(
 			initCharacters[0].coords[0],
 			initCharacters[0].coords[1],

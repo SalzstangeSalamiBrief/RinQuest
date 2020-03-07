@@ -1,5 +1,5 @@
 
-export default class Character {
+export default class Entity {
 	constructor(xCoord = 0, yCoord = 0, width = 0, height = 0, type) {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;

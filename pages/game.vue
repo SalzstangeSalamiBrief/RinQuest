@@ -40,6 +40,11 @@ export default {
 			// check if the movement can continue
 			if (this.canRepeat === false) return;
 			switch (keyCode) {
+			//  space
+			case 32:
+				// todo better display => actual to clunky
+				await this.displayPlayerAttack();
+				break;
 			// w
 			case 87:
 				await this.movementAgent.moveCharacter(0, -1, this.player);
@@ -65,11 +70,6 @@ export default {
 				// 	this.movementAgent,
 				// 	this.player,
 				// );
-				break;
-				//  space
-			case 32:
-				// todo better display => actual to clunky
-				await this.displayPlayerAttack();
 				break;
 			default:
 				break;
