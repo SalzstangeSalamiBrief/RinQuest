@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 
 export default class MovementAgent {
-	constructor(painter) {
+	constructor(painter, gameField = undefined) {
 		this.painter = painter;
+		this.gameField = gameField;
 		this.stepSize = 20;
 	}
 
@@ -12,7 +13,8 @@ export default class MovementAgent {
 
 	// destructure character getCoordsAndSize()-object
 	// eslint-disable-next-line class-methods-use-this
-	async moveCharacter(xAxis = 0, yAxis = 0, character) {
+	async moveCharacter(xAxis = 0, yAxis = 0, entity) {
+		let foundCollision = false;
 		/*
 		xAxis
 			= 0 => not moved on this axis
@@ -20,9 +22,9 @@ export default class MovementAgent {
 			= -1 negative Movement on this Axis
 		*/
 		const {
-			coords: [xCoord, yCoord], size: characterSize,
-		} = character.getCoordsAndSize();
-		const characterType = character.getType();
+			coords: [xCoord, yCoord], size: entitySize,
+		} = entity.getCoordsAndSize();
+		const entityType = entity.getType();
 		const canvasSize = this.painter.getCanvasSize();
 		let newCoords;
 		// TODO dry moveX and moveY merged into one move-function
@@ -41,22 +43,35 @@ export default class MovementAgent {
 			}
 			// todo check collision
 			// check for collision with field
-			newCoords = this.checkForFieldCollision(
-				characterSize[0],
-				characterSize[1],
+			newCoords = this.checkForFieldEdgeCollision(
+				entitySize,
 				newCoords,
-				characterType,
+				entityType,
 				canvasSize,
 			);
+
+			console.log(newCoords[0], newCoords[1], xCoord, yCoord);
+			// check if there was a collision detected by checkForFieldEdgeCollision
+			if (newCoords[0] !== xCoord && newCoords[1] !== yCoord) {
+				foundCollision = true;
+				console.log(foundCollision);
+			}
+			if (!foundCollision) {
+				newCoords = this.checkForFieldCollision(
+					newCoords,
+					entitySize,
+					entityType,
+				);
+			}
+
 			// todo draw if no collision
 			// draw field
 			// draw character
-			this.painter.clearCanvas('characters');
+			this.painter.clearCanvas('entities');
 			// TODO: draw each active character again
-			console.log(newCoords);
-			character.setCoords(newCoords);
-			const typeToDraw = characterType === 'playerCharacter' ? 'playerCharacter_moving' : characterType;
-			await this.painter.drawCharacter(typeToDraw, newCoords, characterSize);
+			entity.setCoords(newCoords);
+			const typeToDraw = entityType === 'playerCharacter' ? 'playerCharacter_moving' : entityType;
+			await this.painter.drawCharacter(typeToDraw, newCoords, entitySize);
 		}
 	}
 
@@ -65,7 +80,7 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	checkForFieldCollision(width, height, [newXCoord, newYCoord], type, canvasSize) {
+	checkForFieldEdgeCollision([width, height], [newXCoord, newYCoord], type, canvasSize) {
 		const newCalcedCoords = [newXCoord, newYCoord];
 		// check for -x/left movement collision
 		if (newXCoord <= 0) newCalcedCoords[0] = 0;
@@ -88,29 +103,16 @@ export default class MovementAgent {
 		return newCalcedCoords;
 	}
 
+	checkForFieldCollision(newCoords, entitySize, entityType) {
+		console.log(entityType);
+		const mergedPartialField = this.gameField.getMergedPartialField(
+			newCoords, entitySize,
+		);
+		// console.log(mergedPartialField);
+		return newCoords;
+	}
 
-	checkForCollision(x, y) {
-		// TODO: push functions
-		// check for x outOfField
-		const collisionObject = {
-			collisionWithX: false,
-			collisionWithY: false,
-			typeOfCollision: [],
-		};
-		if (x <= 0 || x >= this.fieldCoords.xMax) {
-			collisionObject.collisionWithX = true;
-			collisionObject.typeOfCollision.push('outOfField');
-		}
-		if (y <= 0 || y >= this.fieldCoords.yMax) {
-			collisionObject.collisionWithY = true;
-			collisionObject.typeOfCollision.push('outOfField');
-		}
-		// todo: other checks
-		// check for y outOfField
-		// calc collisionX
-		// calc collisionY
-		// calc Type of Collision
-		// todo move
-		return collisionObject;
+	setGameField(gameField) {
+		this.gameField = gameField;
 	}
 }

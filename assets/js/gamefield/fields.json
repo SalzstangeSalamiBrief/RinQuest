@@ -58,10 +58,14 @@
         ]
       ]
   },
-  "initCharacters": [
+  "initEntities": [
     {
       "coords": [1,17],
       "size": [5,6],
+      "xMin": 1,
+      "yMin": 17,
+      "xMax": 6,
+      "yMax": 23,
       "type": "playerCharacter"
     }
   ]

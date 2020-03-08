@@ -1,12 +1,12 @@
 import Entity from './entity';
-import { initCharacters } from '../gamefield/fields.json';
+import { initEntities } from '../gamefield/fields.json';
 
 export default class PlayerCharacter extends Entity {
 	constructor() {
 		// todo state
 		super(
-			initCharacters[0].coords[0],
-			initCharacters[0].coords[1],
+			initEntities[0].coords[0],
+			initEntities[0].coords[1],
 			//  5 * 20 = 100px
 			5,
 			//  6 * 20 = 120px

@@ -1,4 +1,5 @@
-import { backgroundColumns, initCharacters } from './fields.json';
+/* eslint-disable class-methods-use-this */
+import { backgroundColumns, initEntities } from './fields.json';
 // TODO: rename
 export default class GameField {
 	constructor(painter) {
@@ -9,22 +10,26 @@ export default class GameField {
 			// reduce json-size with repeating
 			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 			// parallel init and drawing
-			Promise.all([
+			const promiseArray = [
 				this.initField(backgroundColumns.start, 'background'),
-				this.initField(initCharacters, 'characters'),
-				this.painter.drawBackgroundInit(backgroundColumns.start[0]),
-				this.painter.drawBackgroundInit(backgroundColumns.start[1]),
+				this.initField(initEntities, 'entities'),
 				this.painter.drawCharacter(
-					initCharacters[0].type,
-					initCharacters[0].coords,
-					initCharacters[0].size,
+					initEntities[0].type,
+					initEntities[0].coords,
+					initEntities[0].size,
 				),
-			])
+			];
+			backgroundColumns.start
+				.forEach((backgroundCol) => promiseArray.push(
+					this.painter.drawBackgroundInit(backgroundCol),
+				));
+			Promise.all(promiseArray)
 				.then(() => resolve(this));
 		});
 	}
 
 	async	initField(inputArray, fieldType) {
+		console.log(inputArray);
 		const resultArray = [];
 		// init rows with 0es filled
 		for (let i = 0; i < 43; i += 1) {
@@ -32,14 +37,16 @@ export default class GameField {
 		}
 		// set values according to the inputArray
 		inputArray.forEach(({
-			xMin, yMin, xMax, yMax, imageName,
+			xMin, yMin, xMax, yMax, type,
 		}) => {
+			// console.log(type);
 			for (let row = yMin; row < yMax; row += 1) {
 				for (let col = xMin; col < xMax; col += 1) {
-					resultArray[row][col] = imageName;
+					resultArray[row][col] = type;
 				}
 			}
 		});
+		console.log(resultArray);
 		this.fieldMap.set(fieldType, resultArray);
 	}
 
@@ -65,5 +72,36 @@ export default class GameField {
 
 	getField(type) {
 		return this.fieldMap.get(type);
+	}
+
+	getMergedPartialField([xStart, yStart], [width, height]) {
+		const entitiesField = this.fieldMap.get('entities');
+		console.log(entitiesField);
+		const backgroundField = this.fieldMap.get('background');
+		const mergedPartialField = [];
+		// create full field
+		for (let row = yStart - 1; row < yStart + height + 1; row += 1) {
+			const tempRow = [];
+			// console.log(`row:  ${row}`);
+			for (let col = xStart - 1; col < xStart + width + 1; col += 1) {
+				// only the tiles outside of the entity need to be considered
+				const dontPush = (
+					row >= yStart
+					&& row < yStart + height
+					&& col >= xStart
+					&& col < xStart + width
+				);
+
+				if (!dontPush) {
+					// TODO: Merge entities + background
+					tempRow.push(backgroundField[row][col]);
+				}
+			}
+			mergedPartialField.push(tempRow);
+		}
+
+		// console.log(mergedPartialField);
+		// console.log(xStart, yStart, width, height);
+		return mergedPartialField;
 	}
 }

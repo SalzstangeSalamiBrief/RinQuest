@@ -7,7 +7,7 @@
 		>
 		</canvas>
 		<canvas
-			id="character-area"
+			id="entities-area"
 			width="1600"
 			height="860"
 			style="position: absolute; left: 0; top: 0; z-index: 1;"
@@ -16,7 +16,7 @@
 </template>
 <script>
 import SpritePainter from '../assets/js/spritePainter';
-import PlayerCharacter from '../assets/js/characters/playerCharacter';
+import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
 import GameField from '../assets/js/gamefield/gamefield';
 
@@ -87,13 +87,13 @@ export default {
 		 * TODO Error
 		 * game.vue?105c:80 Uncaught (in promise) TypeError: _this2.painter is not a function
 		 */
-			this.painter.clearCanvas('characters');
+			this.painter.clearCanvas('entities');
 			// todo redraw whole characterCanvas
 			await this.painter.drawCharacter('playerCharacter', coords, size);
 		},
 		async displayPlayerAttack() {
 			const { coords, size } = this.player.getCoordsAndSize();
-			this.painter.clearCanvas('characters');
+			this.painter.clearCanvas('entities');
 			// todo redraw whole characterCanvas
 			await this.painter.drawCharacter('playerCharacter_attacking', coords, size);
 		},
@@ -101,11 +101,12 @@ export default {
 	// todo back to mounted and asyncData; remove store
 	async mounted() {
 		this.painter.addCanvasAndCtx(document.querySelector('#background-area'), 'background');
-		this.painter.addCanvasAndCtx(document.querySelector('#character-area'), 'characters');
+		this.painter.addCanvasAndCtx(document.querySelector('#entities-area'), 'entities');
 		window.addEventListener('keydown', this.keyDownListeners);
 		window.addEventListener('keyup', this.keyUpListener);
 		this.gameField = await new GameField(this.painter);
-		this.gameField.getField('background');
+		this.movementAgent.setGameField(this.gameField);
+		// console.log(this.gameField.getField('entities'));
 		this.player = new PlayerCharacter();
 	},
 	beforeDestroy() {
