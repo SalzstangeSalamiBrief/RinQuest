@@ -17,7 +17,6 @@ export default class SpritePainter {
 	async loadAllImages() {
 		const data = await this.imageLoader.loadAllImages();
 		data.forEach((item) => {
-			console.log(item);
 			if (!this.imagesLoaded.has(item.imageName)) {
 				this.imagesLoaded.set(item.imageName, item.image);
 			}
