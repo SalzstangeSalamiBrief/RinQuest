@@ -68,9 +68,17 @@ export default class MovementAgent {
 			// draw field
 			// draw character
 			this.painter.clearCanvas('entities');
-			// TODO: draw each active character again
+			// TODO: draw each active character again and update entitiesField
 			entity.setCoords(newCoords);
 			const typeToDraw = entityType === 'playerCharacter' ? 'playerCharacter_moving' : entityType;
+			this.gameField.updateEntitiesField(
+				'entities',
+				xCoord, yCoord,
+				entitySize[0],
+				entitySize[1],
+				newCoords[0], newCoords[1],
+				entityType,
+			);
 			await this.painter.drawCharacter(typeToDraw, newCoords, entitySize);
 		}
 	}
@@ -103,12 +111,13 @@ export default class MovementAgent {
 		return newCalcedCoords;
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	checkForFieldCollision(newCoords, entitySize, entityType) {
-		console.log(entityType);
+		console.log(newCoords, entitySize, entityType);
 		const mergedPartialField = this.gameField.getMergedPartialField(
 			newCoords, entitySize,
 		);
-		// console.log(mergedPartialField);
+		console.log(mergedPartialField);
 		return newCoords;
 	}
 

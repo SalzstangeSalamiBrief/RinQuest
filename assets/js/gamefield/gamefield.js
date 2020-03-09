@@ -29,7 +29,6 @@ export default class GameField {
 	}
 
 	async	initField(inputArray, fieldType) {
-		console.log(inputArray);
 		const resultArray = [];
 		// init rows with 0es filled
 		for (let i = 0; i < 43; i += 1) {
@@ -46,7 +45,6 @@ export default class GameField {
 				}
 			}
 		});
-		console.log(resultArray);
 		this.fieldMap.set(fieldType, resultArray);
 	}
 
@@ -70,14 +68,45 @@ export default class GameField {
 		return this.painter.drawFieldMap(map);
 	}
 
+	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType) {
+		const map = this.fieldMap.get(fieldType);
+
+		/**
+		 * TODO: Refactor into something like this to reduce steps
+		 * top:
+		 * 		row - 1; width
+		 * bottom:
+		 * 		row + 1; width
+		 * left:
+		 * 	height; col + 1
+		 * right
+		 * 	height; col -1
+		 */
+		// clear old position
+		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
+			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
+				map[row][col] = 0;
+			}
+		}
+		// insert new position
+		for (let row = newYCoord; row < newYCoord + height; row += 1) {
+			for (let col = newXCoord; col < newXCoord + width; col += 1) {
+				map[row][col] = entityType;
+			}
+		}
+	}
+
 	getField(type) {
 		return this.fieldMap.get(type);
 	}
 
 	getMergedPartialField([xStart, yStart], [width, height]) {
+		// todo: loop only through needed site and not all sites
 		const entitiesField = this.fieldMap.get('entities');
-		console.log(entitiesField);
+		console.log(this.fieldMap.entries());
+		// console.log(entitiesField);
 		const backgroundField = this.fieldMap.get('background');
+		// console.log(backgroundField);
 		const mergedPartialField = [];
 		// create full field
 		for (let row = yStart - 1; row < yStart + height + 1; row += 1) {
@@ -94,7 +123,15 @@ export default class GameField {
 
 				if (!dontPush) {
 					// TODO: Merge entities + background
-					tempRow.push(backgroundField[row][col]);
+					// TODO: bug where wrong piece gets selected
+					console.log(backgroundField[row][col]);
+					console.log('--------------------');
+					console.log(entitiesField[row][col]);
+					if (backgroundField[row][col] === 'grassTile') {
+						tempRow.push(entitiesField[row][col]);
+					} else {
+						tempRow.push(0);
+					}
 				}
 			}
 			mergedPartialField.push(tempRow);

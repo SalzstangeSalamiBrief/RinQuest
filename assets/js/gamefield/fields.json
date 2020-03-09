@@ -8,14 +8,14 @@
           "yMin": 0,
           "xMax": 42,
           "yMax": 43,
-          "imageName": "grassTile"
+          "type": "grassTile"
         },
         {
           "xMin": 42,
           "yMin": 0,
           "xMax": 80,
           "yMax": 43,
-          "imageName": "waterTile"
+          "type": "waterTile"
         }
       ],
     "scrollColumns": 

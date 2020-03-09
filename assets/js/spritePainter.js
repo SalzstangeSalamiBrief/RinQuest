@@ -17,6 +17,7 @@ export default class SpritePainter {
 	async loadAllImages() {
 		const data = await this.imageLoader.loadAllImages();
 		data.forEach((item) => {
+			console.log(item);
 			if (!this.imagesLoaded.has(item.imageName)) {
 				this.imagesLoaded.set(item.imageName, item.image);
 			}
@@ -25,7 +26,7 @@ export default class SpritePainter {
 
 	async drawBackgroundInit(
 		{
-			xMin, yMin, xMax, yMax, imageName, type = 'background',
+			xMin, yMin, xMax, yMax, type: imageName, mapType = 'background',
 		},
 	) {
 		// check if an image already got loaded. if not, then call ImageLoader
@@ -34,7 +35,7 @@ export default class SpritePainter {
 			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
-		const { ctx } = this.canvasMap.get(type);
+		const { ctx } = this.canvasMap.get(mapType);
 		for (let row = xMin; row < xMax; row += 1) {
 			for (let col = yMin; col < yMax; col += 1) {
 				ctx.drawImage(img, row * 20, col * 20);

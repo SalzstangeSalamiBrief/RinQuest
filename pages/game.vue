@@ -35,7 +35,7 @@ export default {
 			this.$router.push({ path: '/' });
 		},
 		async keyDownListeners({ keyCode }) {
-			console.log(keyCode);
+			// console.log(keyCode);
 			this.someKeyIsPressed = true;
 			// check if the movement can continue
 			if (this.canRepeat === false) return;
@@ -106,7 +106,7 @@ export default {
 		window.addEventListener('keyup', this.keyUpListener);
 		this.gameField = await new GameField(this.painter);
 		this.movementAgent.setGameField(this.gameField);
-		// console.log(this.gameField.getField('entities'));
+		console.log(this.gameField.getField('background'));
 		this.player = new PlayerCharacter();
 	},
 	beforeDestroy() {
