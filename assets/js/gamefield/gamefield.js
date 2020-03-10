@@ -100,45 +100,70 @@ export default class GameField {
 		return this.fieldMap.get(type);
 	}
 
-	getMergedPartialField([xStart, yStart], [width, height]) {
-		// todo: loop only through needed site and not all sites
-		const entitiesField = this.fieldMap.get('entities');
-		console.log(this.fieldMap.entries());
-		// console.log(entitiesField);
-		const backgroundField = this.fieldMap.get('background');
-		// console.log(backgroundField);
-		const mergedPartialField = [];
-		// create full field
-		for (let row = yStart - 1; row < yStart + height + 1; row += 1) {
-			const tempRow = [];
-			// console.log(`row:  ${row}`);
-			for (let col = xStart - 1; col < xStart + width + 1; col += 1) {
-				// only the tiles outside of the entity need to be considered
-				const dontPush = (
-					row >= yStart
-					&& row < yStart + height
-					&& col >= xStart
-					&& col < xStart + width
-				);
-
-				if (!dontPush) {
-					// TODO: Merge entities + background
-					// TODO: bug where wrong piece gets selected
-					console.log(backgroundField[row][col]);
-					console.log('--------------------');
-					console.log(entitiesField[row][col]);
-					if (backgroundField[row][col] === 'grassTile') {
-						tempRow.push(entitiesField[row][col]);
-					} else {
-						tempRow.push(0);
-					}
-				}
-			}
-			mergedPartialField.push(tempRow);
+	async getMergedPartialField([xStart, yStart], [width, height], movementDirection) {
+		// calc xStart, yStart, xEnd, yEnd based on movementDirection
+		const movementObject = {};
+		switch (movementDirection) {
+		case 'right':
+			movementObject.xStart = xStart + width;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width + 1;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'left':
+			movementObject.xStart = xStart - 1;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'top':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + 1;
+			break;
+		case 'bottom':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart + height - 1;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + height;
+			break;
+		default: break;
 		}
-
-		// console.log(mergedPartialField);
-		// console.log(xStart, yStart, width, height);
+		// parallelize call of booth methods
+		const [partialEntitiesField, partialBackgroundField] = await Promise.all([
+			this.getPartialField(movementObject, 'entities'),
+			this.getPartialField(movementObject, 'background'),
+		]);
+		// merge both field-arrays
+		const mergedPartialField = [];
+		for (let x = 0; x < partialEntitiesField.length; x += 1) {
+			// if the partialBackgroundField[x] is a grassTile, then push partialEntitiesField[x].
+			// Else: push partialBackgroundField[x]
+			if (partialBackgroundField[x] === 'grassTile') {
+				mergedPartialField.push(partialEntitiesField[x]);
+			} else {
+				mergedPartialField.push(partialBackgroundField[x]);
+			}
+		}
 		return mergedPartialField;
+	}
+
+	/**
+	 * get partial field from [xStart, yStart] to [yStart, yEnd]
+	 * @param {Object} Object
+	 * @param {String} fieldType
+	 */
+	async getPartialField({
+		xStart, xEnd, yStart, yEnd,
+	}, fieldType) {
+		const field = this.fieldMap.get(fieldType);
+		const result = [];
+		for (let row = yStart; row < yEnd; row += 1) {
+			for (let col = xStart; col < xEnd; col += 1) {
+				result.push(field[row][col]);
+			}
+		}
+		return result;
 	}
 }

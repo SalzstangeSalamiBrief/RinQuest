@@ -14,28 +14,31 @@ export default class MovementAgent {
 	// destructure character getCoordsAndSize()-object
 	// eslint-disable-next-line class-methods-use-this
 	async moveCharacter(xAxis = 0, yAxis = 0, entity) {
-		let foundCollision = false;
-		/*
-		xAxis
-			= 0 => not moved on this axis
-			= 1 => positive movement on this axis
-			= -1 negative Movement on this Axis
-		*/
-		const {
-			coords: [xCoord, yCoord], size: entitySize,
-		} = entity.getCoordsAndSize();
-		const entityType = entity.getType();
-		const canvasSize = this.painter.getCanvasSize();
-		let newCoords;
 		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
+			let foundCollision = false;
+			/*
+			xAxis
+				= 0 => not moved on this axis
+				= 1 => positive movement on this axis
+				= -1 negative Movement on this Axis
+			*/
+			const {
+				coords: [xCoord, yCoord], size: entitySize,
+			} = entity.getCoordsAndSize();
+			const entityType = entity.getType();
+			const canvasSize = this.painter.getCanvasSize();
+			let movementDirection;
+			let newCoords;
 			if (xAxis !== 0) {
+				movementDirection = xAxis === 1 ? 'right' : 'left';
 				newCoords = [
 					this.constructor.calcNewCoordinate(xCoord, xAxis),
 					yCoord,
 				];
 			} else {
 				// yAxis !== 0
+				movementDirection = yAxis === 1 ? 'bottom' : 'top';
 				newCoords = [
 					xCoord,
 					this.constructor.calcNewCoordinate(yCoord, yAxis),
@@ -43,24 +46,28 @@ export default class MovementAgent {
 			}
 			// todo check collision
 			// check for collision with field
+			console.log('--------------');
+			console.log(xCoord, yCoord);
 			newCoords = this.checkForFieldEdgeCollision(
 				entitySize,
 				newCoords,
 				entityType,
 				canvasSize,
 			);
-
-			console.log(newCoords[0], newCoords[1], xCoord, yCoord);
+			console.log(newCoords);
+			console.log('--------------');
+			// console.log(newCoords[0], newCoords[1], xCoord, yCoord);
 			// check if there was a collision detected by checkForFieldEdgeCollision
-			if (newCoords[0] !== xCoord && newCoords[1] !== yCoord) {
+			if (newCoords[0] === xCoord && newCoords[1] === yCoord) {
 				foundCollision = true;
-				console.log(foundCollision);
 			}
-			if (!foundCollision) {
-				newCoords = this.checkForFieldCollision(
+			console.log(foundCollision);
+			if (foundCollision === false) {
+				newCoords = await this.checkForFieldCollision(
 					newCoords,
 					entitySize,
 					entityType,
+					movementDirection,
 				);
 			}
 
@@ -112,11 +119,13 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	checkForFieldCollision(newCoords, entitySize, entityType) {
-		console.log(newCoords, entitySize, entityType);
-		const mergedPartialField = this.gameField.getMergedPartialField(
-			newCoords, entitySize,
+	async	checkForFieldCollision(newCoords, entitySize, entityType, movementDirection) {
+		const mergedPartialField = await this.gameField.getMergedPartialField(
+			newCoords,
+			entitySize,
+			movementDirection,
 		);
+		// TODO: check fieldCOllision and set returnvalue
 		console.log(mergedPartialField);
 		return newCoords;
 	}
