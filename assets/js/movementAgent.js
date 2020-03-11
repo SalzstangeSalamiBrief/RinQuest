@@ -46,16 +46,13 @@ export default class MovementAgent {
 			}
 			// todo check collision
 			// check for collision with field
-			console.log('--------------');
-			console.log(xCoord, yCoord);
+
 			newCoords = this.checkForFieldEdgeCollision(
 				entitySize,
 				newCoords,
 				entityType,
 				canvasSize,
 			);
-			console.log(newCoords);
-			console.log('--------------');
 			// console.log(newCoords[0], newCoords[1], xCoord, yCoord);
 			// check if there was a collision detected by checkForFieldEdgeCollision
 			if (newCoords[0] === xCoord && newCoords[1] === yCoord) {
@@ -119,12 +116,37 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	async	checkForFieldCollision(newCoords, entitySize, entityType, movementDirection) {
+	async	checkForFieldCollision(passedCords, entitySize, entityType, movementDirection) {
+		const newCoords = passedCords;
+		// todo: increase extensibility of entityTypes
+		// todo: increase extensibility of tileTypes
 		const mergedPartialField = await this.gameField.getMergedPartialField(
-			newCoords,
+			passedCords,
 			entitySize,
 			movementDirection,
 		);
+		if (entityType === 'playerCharacter') {
+			if (mergedPartialField.includes('flames')) {
+				// todo: calc if hit by Flames
+				return newCoords;
+			}
+			if (mergedPartialField.includes('boarCharacter') || mergedPartialField.includes('dragonCharacter')) {
+				// check state of playerCharacter if entityType === 'playerCharacter'
+				// further calc
+				return newCoords;
+			}
+		}
+		// entity type could be flames, boar or dragon
+		if (entityType === 'boarCharacter' || entityType === 'dragonCharacter') {
+			if (mergedPartialField.includes('playerCharacter')) {
+				// check for state of playerCharacter attacking => dmg to entityType, else dmg player
+				return newCoords;
+			}
+		}
+		if (mergedPartialField.includes('waterTile')) {
+			return passedCords;
+		}
+		// else: calc new coods;
 		// TODO: check fieldCOllision and set returnvalue
 		console.log(mergedPartialField);
 		return newCoords;
