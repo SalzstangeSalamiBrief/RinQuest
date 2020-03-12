@@ -105,9 +105,9 @@ export default class GameField {
 		const movementObject = {};
 		switch (movementDirection) {
 		case 'right':
-			movementObject.xStart = xStart + width;
+			movementObject.xStart = xStart + width - 1;
 			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart + width + 1;
+			movementObject.xEnd = xStart + width;
 			movementObject.yEnd = yStart + height;
 			break;
 		case 'left':
@@ -161,6 +161,7 @@ export default class GameField {
 		const result = [];
 		for (let row = yStart; row < yEnd; row += 1) {
 			for (let col = xStart; col < xEnd; col += 1) {
+				console.log(field[row][col]);
 				result.push(field[row][col]);
 			}
 		}

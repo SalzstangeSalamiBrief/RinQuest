@@ -59,14 +59,16 @@ export default class MovementAgent {
 				foundCollision = true;
 			}
 			console.log(foundCollision);
-			if (foundCollision === false) {
-				newCoords = await this.checkForFieldCollision(
+			if (!foundCollision) {
+				foundCollision = await this.checkForFieldCollision(
 					newCoords,
 					entitySize,
 					entityType,
 					movementDirection,
 				);
 			}
+			// todo check if valid
+			if (foundCollision) newCoords = [xCoord, yCoord];
 
 			// todo draw if no collision
 			// draw field
@@ -117,7 +119,6 @@ export default class MovementAgent {
 
 	// eslint-disable-next-line class-methods-use-this
 	async	checkForFieldCollision(passedCords, entitySize, entityType, movementDirection) {
-		const newCoords = passedCords;
 		// todo: increase extensibility of entityTypes
 		// todo: increase extensibility of tileTypes
 		const mergedPartialField = await this.gameField.getMergedPartialField(
@@ -125,31 +126,31 @@ export default class MovementAgent {
 			entitySize,
 			movementDirection,
 		);
+		console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
 			if (mergedPartialField.includes('flames')) {
 				// todo: calc if hit by Flames
-				return newCoords;
+				return false;
 			}
 			if (mergedPartialField.includes('boarCharacter') || mergedPartialField.includes('dragonCharacter')) {
 				// check state of playerCharacter if entityType === 'playerCharacter'
 				// further calc
-				return newCoords;
+				return false;
 			}
 		}
 		// entity type could be flames, boar or dragon
 		if (entityType === 'boarCharacter' || entityType === 'dragonCharacter') {
 			if (mergedPartialField.includes('playerCharacter')) {
 				// check for state of playerCharacter attacking => dmg to entityType, else dmg player
-				return newCoords;
+				return false;
 			}
 		}
 		if (mergedPartialField.includes('waterTile')) {
-			return passedCords;
+			return true;
 		}
 		// else: calc new coods;
 		// TODO: check fieldCOllision and set returnvalue
-		console.log(mergedPartialField);
-		return newCoords;
+		return false;
 	}
 
 	setGameField(gameField) {
