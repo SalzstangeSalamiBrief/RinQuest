@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { backgroundColumns, initEntities } from './fields.json';
 // TODO: rename
 export default class GameField {
@@ -161,7 +160,6 @@ export default class GameField {
 		const result = [];
 		for (let row = yStart; row < yEnd; row += 1) {
 			for (let col = xStart; col < xEnd; col += 1) {
-				console.log(field[row][col]);
 				result.push(field[row][col]);
 			}
 		}

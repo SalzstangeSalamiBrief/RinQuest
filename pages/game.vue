@@ -106,7 +106,6 @@ export default {
 		window.addEventListener('keyup', this.keyUpListener);
 		this.gameField = await new GameField(this.painter);
 		this.movementAgent.setGameField(this.gameField);
-		console.log(this.gameField.getField('background'));
 		this.player = new PlayerCharacter();
 	},
 	beforeDestroy() {
