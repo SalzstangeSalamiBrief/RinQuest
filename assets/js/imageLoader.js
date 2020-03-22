@@ -22,6 +22,7 @@ export default class ImageLoader {
 			'/game/entities/playerCharacter.png',
 			'/game/entities/playerCharacter_moving.png',
 			'/game/entities/playerCharacter_attacking.png',
+			'/game/entities/npcBoar.png',
 		];
 		const promiseArray = [];
 		imagesToLoad.forEach((imgPath) => {

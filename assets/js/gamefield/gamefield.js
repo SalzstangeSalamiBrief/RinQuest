@@ -12,16 +12,26 @@ export default class GameField {
 			const promiseArray = [
 				this.initField(backgroundColumns.start, 'background'),
 				this.initField(initEntities, 'entities'),
-				this.painter.drawCharacter(
-					initEntities[0].type,
-					initEntities[0].coords,
-					initEntities[0].size,
-				),
 			];
 			backgroundColumns.start
 				.forEach((backgroundCol) => promiseArray.push(
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
+			initEntities.forEach(({ type, coords, size }) => {
+				this.painter.drawCharacter(
+					type, coords, size,
+				);
+			});
+			// this.painter.drawCharacter(
+			// 	initEntities[0].type,
+			// 	initEntities[0].coords,
+			// 	initEntities[0].size,
+			// ),
+			// this.painter.drawCharacter(
+			// 	initEntities[1].type,
+			// 	initEntities[1].coords,
+			// 	initEntities[1].size,
+			// ),
 			Promise.all(promiseArray)
 				.then(() => resolve(this));
 		});

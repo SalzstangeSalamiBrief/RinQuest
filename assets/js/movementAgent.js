@@ -1,7 +1,8 @@
 export default class MovementAgent {
-	constructor(painter, gameField = undefined) {
+	constructor(painter, gameField = undefined, activeEntitiesList = undefined) {
 		this.painter = painter;
 		this.gameField = gameField;
+		this.activeEntitiesList = activeEntitiesList;
 		this.stepSize = 20;
 	}
 
@@ -66,6 +67,7 @@ export default class MovementAgent {
 					entitySize,
 					entityType,
 					movementDirection,
+					entity,
 				);
 				if (foundCollision) newCoords = [xCoord, yCoord];
 			}
@@ -75,7 +77,8 @@ export default class MovementAgent {
 			// set new coords on the entity
 			entity.setCoords(newCoords);
 			// calc which enityType has to be drawn
-			const typeToDraw = entityType === 'playerCharacter' ? 'playerCharacter_moving' : entityType;
+			// const typeToDraw = entityType === 'playerCharacter' ?
+			// 'playerCharacter_moving' : entityType;
 			// update the entitiesField gamefield
 			// todo: possible Bugs with moving npcs?
 			this.gameField.updateEntitiesField(
@@ -87,7 +90,19 @@ export default class MovementAgent {
 				entityType,
 			);
 			// draw character
-			await this.painter.drawCharacter(typeToDraw, newCoords, entitySize);
+			// draw all characters in the entities list
+			// const promiseArrayEntitiesToDraw = [];
+			this.activeEntitiesList.drawActiveEntitiesList();
+			// console.log(this.activeEntitiesList.getActiveEntitiesList());
+			// this.activeEntitiesList.getActiveEntitiesList().forEach((activeEntity) => {
+			// 	const { size, coords } = activeEntity.getCoordsAndSize();
+			// 	const type = activeEntity.getType();
+			// 	// promiseArrayEntitiesToDraw.push(
+			// 	this.painter.drawCharacter(type, coords, size);
+			// 	// );
+			// });
+			// await Promise.all(promiseArrayEntitiesToDraw);
+			// await this.painter.drawCharacter(typeToDraw, newCoords, entitySize);
 		}
 	}
 
@@ -129,7 +144,8 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	async	checkForFieldCollision(passedCords, entitySize, entityType, movementDirection) {
+	async	checkForFieldCollision(passedCords, entitySize, entityType, movementDirection, entity) {
+		console.log(entity);
 		// todo: increase extensibility of entityTypes
 		// todo: increase extensibility of tileTypes
 		const mergedPartialField = await this.gameField.getMergedPartialField(
@@ -143,10 +159,16 @@ export default class MovementAgent {
 				// todo: calc if hit by Flames
 				return false;
 			}
-			if (mergedPartialField.includes('boarCharacter') || mergedPartialField.includes('dragonCharacter')) {
+			if (mergedPartialField.includes('npcBoar') || mergedPartialField.includes('npcDragon')) {
 				// check state of playerCharacter if entityType === 'playerCharacter'
 				// further calc
-				return false;
+				if (entity.getState() === 'attacking') {
+					console.log('ATTACK');
+				} else {
+					entity.changeHP(20);
+					console.log('got dmg');
+				}
+				return true;
 			}
 		}
 		// entity type could be flames, boar or dragon
@@ -166,5 +188,9 @@ export default class MovementAgent {
 
 	setGameField(gameField) {
 		this.gameField = gameField;
+	}
+
+	setActiveEntityList(list) {
+		this.activeEntitiesList = list;
 	}
 }

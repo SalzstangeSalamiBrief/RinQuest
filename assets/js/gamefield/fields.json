@@ -67,6 +67,15 @@
       "xMax": 6,
       "yMax": 23,
       "type": "playerCharacter"
+    },
+    {
+      "coords": [25,17],
+      "size": [7,5],
+      "xMin": 25,
+      "yMin": 17,
+      "xMax": 32,
+      "yMax": 22,
+      "type": "npcBoar"
     }
   ]
 }

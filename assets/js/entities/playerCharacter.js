@@ -16,6 +16,8 @@ export default class PlayerCharacter extends Entity {
 		this.HP = 100;
 		this.textContainer = textContainer;
 		this.backgroundContainer = backgroundContainer;
+		// possible States: idle, moving, attacking
+		this.state = 'idle';
 	}
 
 	changeHP(damageReceived) {
@@ -29,5 +31,13 @@ export default class PlayerCharacter extends Entity {
 		// update hpBar-width and current numerical current hp of the player
 		this.textContainer.textContent = this.HP;
 		this.backgroundContainer.style.width = `${this.HP}%`;
+	}
+
+	setState(state) {
+		this.state = state;
+	}
+
+	getState() {
+		return this.state;
 	}
 }

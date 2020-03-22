@@ -31,6 +31,8 @@ import SpritePainter from '../assets/js/spritePainter';
 import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
 import GameField from '../assets/js/gamefield/gamefield';
+import ActiveEntityList from '../assets/js/ActiveEntityList';
+import NonPlayerCharacter from '../assets/js/entities/nonPlayerCharacter';
 
 export default {
 	name: 'game',
@@ -40,6 +42,7 @@ export default {
 			canRepeatMovement: true,
 			someKeyIsPressed: false,
 			gameField: undefined,
+			activeEntityList: undefined,
 		};
 	},
 	methods: {
@@ -47,6 +50,7 @@ export default {
 			this.$router.push({ path: '/' });
 		},
 		async keyDownListeners({ keyCode }) {
+			// todo: improve movement + attacking
 			// console.log(keyCode);
 			this.someKeyIsPressed = true;
 			// check if the movement can continue
@@ -56,19 +60,23 @@ export default {
 			case 32:
 				// todo better display => actual to clunky
 				await this.displayPlayerAttack();
-				this.player.changeHP(10);
+				// this.player.changeHP(10);
+				this.player.setState('attacking');
 				break;
 			// w
 			case 87:
 				await this.movementAgent.moveCharacter(0, -1, this.player);
+				this.player.setState('moving');
 				break;
 				// a
 			case 65:
 				await this.movementAgent.moveCharacter(-1, 0, this.player);
+				this.player.setState('moving');
 				break;
 				// ss
 			case 83:
 				await this.movementAgent.moveCharacter(0, 1, this.player);
+				this.player.setState('moving');
 				// await this.gameField.scrollField(
 				// 	'background',
 				// 	this.movementAgent,
@@ -78,6 +86,7 @@ export default {
 				// d
 			case 68:
 				await this.movementAgent.moveCharacter(1, 0, this.player);
+				this.player.setState('moving');
 				// await this.gameField.scrollField(
 				// 	'background',
 				// 	this.movementAgent,
@@ -95,20 +104,25 @@ export default {
 		},
 		async keyUpListener() {
 			this.someKeyIsPressed = false;
-			const { coords, size } = this.player.getCoordsAndSize();
+			// const { coords, size } = this.player.getCoordsAndSize();
 			/**
 		 * TODO Error
 		 * game.vue?105c:80 Uncaught (in promise) TypeError: _this2.painter is not a function
 		 */
+			this.player.setState('idle');
 			this.painter.clearCanvas('entities');
 			// todo redraw whole characterCanvas
-			await this.painter.drawCharacter('playerCharacter', coords, size);
+			// await this.painter.drawCharacter('playerCharacter', coords, size);
+			// this.painter.drawCharacter('playerCharacter', coords, size);
+			this.activeEntityList.drawActiveEntitiesList();
 		},
 		async displayPlayerAttack() {
-			const { coords, size } = this.player.getCoordsAndSize();
+			// const { coords, size } = this.player.getCoordsAndSize();
 			this.painter.clearCanvas('entities');
 			// todo redraw whole characterCanvas
-			await this.painter.drawCharacter('playerCharacter_attacking', coords, size);
+			// await this.painter.drawCharacter('playerCharacter_attacking', coords, size);
+			// this.painter.drawCharacter('playerCharacter_attacking', coords, size);
+			this.activeEntityList.drawActiveEntitiesList();
 		},
 	},
 	// todo back to mounted and asyncData; remove store
@@ -117,12 +131,25 @@ export default {
 		this.painter.addCanvasAndCtx(document.querySelector('#entities-area'), 'entities');
 		window.addEventListener('keydown', this.keyDownListeners);
 		window.addEventListener('keyup', this.keyUpListener);
+
 		this.gameField = await new GameField(this.painter);
 		this.movementAgent.setGameField(this.gameField);
+
 		this.player = new PlayerCharacter(
 			document.querySelector('.hp-bar__text--current'),
 			document.querySelector('.hp-bar__background'),
 		);
+		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
+		const dummyNPC = new NonPlayerCharacter(
+			25,
+			17,
+			7,
+			5,
+			'npcBoar',
+		);
+
+		this.activeEntityList.addEntity(dummyNPC);
+		this.movementAgent.setActiveEntityList(this.activeEntityList);
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.addKeyListeners);

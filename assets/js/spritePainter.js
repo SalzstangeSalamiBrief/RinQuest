@@ -56,7 +56,7 @@ export default class SpritePainter {
 		}
 	}
 
-	async drawCharacter(characterType, [xCoord, yCoord], [characterWidth, characterHeight]) {
+	drawCharacter(characterType, [xCoord, yCoord], [characterWidth, characterHeight]) {
 		// console.log(characterWidth, characterHeight);
 		const { ctx } = this.canvasMap.get('entities');
 		const img = this.imagesLoaded.get(characterType);
@@ -64,6 +64,7 @@ export default class SpritePainter {
 	}
 
 	clearCanvas(type) {
+		console.log('tt');
 		this.canvasMap.get(type).ctx.clearRect(
 			0,
 			0,

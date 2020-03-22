@@ -1,20 +1,15 @@
 import Entity from './entity';
 
 export default class NonPlayerCharacter extends Entity {
-	constructor(type, positionX, positionY) {
+	constructor(positionX, positionY, height, width, type) {
 		// todo: width, height to super
-		super(positionX, positionY);
-		this.type = type;
+		super(positionX, positionY, height, width, type);
 		// todo: maybe not needed
 		this.isAlive = true;
 	}
 
 	removeNPC() {
 		this.isAlive = false;
-	}
-
-	getType() {
-		return this.type;
 	}
 
 	getIsAlive() {
