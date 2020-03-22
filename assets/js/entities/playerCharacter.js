@@ -2,7 +2,7 @@ import Entity from './entity';
 import { initEntities } from '../gamefield/fields.json';
 
 export default class PlayerCharacter extends Entity {
-	constructor() {
+	constructor(textContainer, backgroundContainer) {
 		// todo state
 		super(
 			initEntities[0].coords[0],
@@ -14,15 +14,20 @@ export default class PlayerCharacter extends Entity {
 			'playerCharacter',
 		);
 		this.HP = 100;
+		this.textContainer = textContainer;
+		this.backgroundContainer = backgroundContainer;
 	}
 
 	changeHP(damageReceived) {
-		const newHP = this.hp - damageReceived;
+		const newHP = this.HP - damageReceived;
 		if (newHP <= 0) {
 			this.HP = 0;
 			// todo: END GAME
-			return;
+		} else {
+			this.HP = newHP;
 		}
-		this.HP = newHP;
+		// update hpBar-width and current numerical current hp of the player
+		this.textContainer.textContent = this.HP;
+		this.backgroundContainer.style.width = `${this.HP}%`;
 	}
 }

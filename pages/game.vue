@@ -1,17 +1,29 @@
 <template>
-  <div class="flex--row flex-center" style="position: relative">
+  <div class="flex--row center-flex canvas-container">
     <canvas
 			id="background-area"
 			width="1600"
 			height="860"
+			class="full-container"
 		>
 		</canvas>
 		<canvas
 			id="entities-area"
 			width="1600"
 			height="860"
-			style="position: absolute; left: 0; top: 0; z-index: 1;"
+			class="full-container"
 		></canvas>
+		<div class="hp-bar">
+			<div class="hp-bar__container">
+				<div class="hp-bar__text full-container flex--row center-flex">
+					<span class="hp-bar__text--current">
+						100
+					</span>
+					/100
+				</div>
+				<div class="hp-bar__background"></div>
+			</div>
+		</div>
   </div>
 </template>
 <script>
@@ -44,6 +56,7 @@ export default {
 			case 32:
 				// todo better display => actual to clunky
 				await this.displayPlayerAttack();
+				this.player.changeHP(10);
 				break;
 			// w
 			case 87:
@@ -106,7 +119,10 @@ export default {
 		window.addEventListener('keyup', this.keyUpListener);
 		this.gameField = await new GameField(this.painter);
 		this.movementAgent.setGameField(this.gameField);
-		this.player = new PlayerCharacter();
+		this.player = new PlayerCharacter(
+			document.querySelector('.hp-bar__text--current'),
+			document.querySelector('.hp-bar__background'),
+		);
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.addKeyListeners);
@@ -121,8 +137,48 @@ export default {
 };
 </script>
 <style>
-canvas{
+/* canvas{
 	height: 100%;
 	width: 100%;
+} */
+
+#entities-area{
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.canvas-container{
+	position: relative
+}
+.hp-bar{
+	position: absolute;
+	z-index: 2;
+	top: 10px;
+	left: 10px;
+}
+
+.hp-bar__container{
+	position: relative;
+	border: 2px solid black;
+	width: 25rem;
+	height: 2.5rem;
+	background: white;
+}
+
+.hp-bar__text{
+	text-align: center;
+	vertical-align: middle;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.hp-bar__background{
+	background: green;
+	width: 100%;
+	height: 100%;
 }
 </style>

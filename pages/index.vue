@@ -46,4 +46,7 @@ export default {
 	section * {
 		margin: 1rem 0;
 	}
+	button{
+		width: 100%;
+	}
 </style>
