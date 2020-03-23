@@ -51,7 +51,6 @@ export default {
 		},
 		async keyDownListeners({ keyCode }) {
 			// todo: improve movement + attacking
-			// console.log(keyCode);
 			this.someKeyIsPressed = true;
 			// check if the movement can continue
 			if (this.canRepeat === false) return;
@@ -60,7 +59,6 @@ export default {
 			case 32:
 				// todo better display => actual to clunky
 				await this.displayPlayerAttack();
-				// this.player.changeHP(10);
 				this.player.setState('attacking');
 				break;
 			// w
@@ -77,21 +75,11 @@ export default {
 			case 83:
 				await this.movementAgent.moveCharacter(0, 1, this.player);
 				this.player.setState('moving');
-				// await this.gameField.scrollField(
-				// 	'background',
-				// 	this.movementAgent,
-				// 	this.player,
-				// );
 				break;
 				// d
 			case 68:
 				await this.movementAgent.moveCharacter(1, 0, this.player);
 				this.player.setState('moving');
-				// await this.gameField.scrollField(
-				// 	'background',
-				// 	this.movementAgent,
-				// 	this.player,
-				// );
 				break;
 			default:
 				break;
@@ -104,24 +92,13 @@ export default {
 		},
 		async keyUpListener() {
 			this.someKeyIsPressed = false;
-			// const { coords, size } = this.player.getCoordsAndSize();
-			/**
-		 * TODO Error
-		 * game.vue?105c:80 Uncaught (in promise) TypeError: _this2.painter is not a function
-		 */
 			this.player.setState('idle');
 			this.painter.clearCanvas('entities');
 			// todo redraw whole characterCanvas
-			// await this.painter.drawCharacter('playerCharacter', coords, size);
-			// this.painter.drawCharacter('playerCharacter', coords, size);
 			this.activeEntityList.drawActiveEntitiesList();
 		},
 		async displayPlayerAttack() {
-			// const { coords, size } = this.player.getCoordsAndSize();
 			this.painter.clearCanvas('entities');
-			// todo redraw whole characterCanvas
-			// await this.painter.drawCharacter('playerCharacter_attacking', coords, size);
-			// this.painter.drawCharacter('playerCharacter_attacking', coords, size);
 			this.activeEntityList.drawActiveEntitiesList();
 		},
 	},
@@ -146,6 +123,7 @@ export default {
 			7,
 			5,
 			'npcBoar',
+			0,
 		);
 
 		this.activeEntityList.addEntity(dummyNPC);
@@ -164,10 +142,6 @@ export default {
 };
 </script>
 <style>
-/* canvas{
-	height: 100%;
-	width: 100%;
-} */
 
 #entities-area{
 	position: absolute;

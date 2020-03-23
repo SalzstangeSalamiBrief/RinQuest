@@ -75,7 +75,8 @@
       "yMin": 17,
       "xMax": 32,
       "yMax": 22,
-      "type": "npcBoar"
+      "type": "npcBoar",
+      "id": 0
     }
   ]
 }

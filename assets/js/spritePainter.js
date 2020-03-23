@@ -64,7 +64,6 @@ export default class SpritePainter {
 	}
 
 	clearCanvas(type) {
-		console.log('tt');
 		this.canvasMap.get(type).ctx.clearRect(
 			0,
 			0,
