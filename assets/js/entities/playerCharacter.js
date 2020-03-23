@@ -38,6 +38,8 @@ export default class PlayerCharacter extends Entity {
 	}
 
 	getState() {
-		return this.state;
+		const { type, state } = this;
+		const suffix = state === 'idle' ? '' : `_${state}`;
+		return `${type}${suffix}`;
 	}
 }

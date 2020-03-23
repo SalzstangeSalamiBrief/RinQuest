@@ -22,16 +22,6 @@ export default class GameField {
 					type, coords, size,
 				);
 			});
-			// this.painter.drawCharacter(
-			// 	initEntities[0].type,
-			// 	initEntities[0].coords,
-			// 	initEntities[0].size,
-			// ),
-			// this.painter.drawCharacter(
-			// 	initEntities[1].type,
-			// 	initEntities[1].coords,
-			// 	initEntities[1].size,
-			// ),
 			Promise.all(promiseArray)
 				.then(() => resolve(this));
 		});
@@ -47,7 +37,6 @@ export default class GameField {
 		inputArray.forEach(({
 			xMin, yMin, xMax, yMax, type,
 		}) => {
-			// console.log(type);
 			for (let row = yMin; row < yMax; row += 1) {
 				for (let col = xMin; col < xMax; col += 1) {
 					resultArray[row][col] = type;

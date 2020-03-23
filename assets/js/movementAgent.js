@@ -72,7 +72,7 @@ export default class MovementAgent {
 				if (foundCollision) newCoords = [xCoord, yCoord];
 			}
 			// draw character
-			this.painter.clearCanvas('entities');
+			// this.painter.clearCanvas('entities');
 			// TODO: draw each active character again and update entitiesField
 			// set new coords on the entity
 			entity.setCoords(newCoords);

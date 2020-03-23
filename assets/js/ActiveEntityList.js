@@ -9,12 +9,15 @@ export default class ActiveEntitiesList {
 	}
 
 	drawActiveEntitiesList() {
+		// clear canvas
+		this.painter.clearCanvas('entities');
+		// draw each entity of the activeEntitiesList on the canvas
 		this.activeEntitiesList.forEach((activeEntity) => {
 			const { size, coords } = activeEntity.getCoordsAndSize();
-			const type = activeEntity.getType();
-			// promiseArrayEntitiesToDraw.push(
+			let type = activeEntity.getType();
+			// change type if the actual entity is the playercharacter
+			if (type === 'playerCharacter') type = activeEntity.getState();
 			this.painter.drawCharacter(type, coords, size);
-			// );
 		});
 	}
 

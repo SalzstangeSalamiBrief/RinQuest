@@ -54,12 +54,13 @@ export default {
 			this.someKeyIsPressed = true;
 			// check if the movement can continue
 			if (this.canRepeat === false) return;
+
+			console.log(this.player.getType());
 			switch (keyCode) {
 			//  space
 			case 32:
 				// todo better display => actual to clunky
 				await this.displayPlayerAttack();
-				this.player.setState('attacking');
 				break;
 			// w
 			case 87:
@@ -99,6 +100,7 @@ export default {
 		},
 		async displayPlayerAttack() {
 			this.painter.clearCanvas('entities');
+			this.player.setState('attacking');
 			this.activeEntityList.drawActiveEntitiesList();
 		},
 	},
