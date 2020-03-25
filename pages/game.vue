@@ -101,6 +101,7 @@ export default {
 		async displayPlayerAttack() {
 			this.painter.clearCanvas('entities');
 			this.player.setState('attacking');
+			this.movementAgent.attack(this.player);
 			this.activeEntityList.drawActiveEntitiesList();
 		},
 	},

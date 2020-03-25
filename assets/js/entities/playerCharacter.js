@@ -37,9 +37,13 @@ export default class PlayerCharacter extends Entity {
 		this.state = state;
 	}
 
-	getState() {
+	getPlayerTypeToDraw() {
 		const { type, state } = this;
 		const suffix = state === 'idle' ? '' : `_${state}`;
 		return `${type}${suffix}`;
+	}
+
+	getState() {
+		return this.state;
 	}
 }

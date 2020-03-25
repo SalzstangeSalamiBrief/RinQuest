@@ -163,6 +163,10 @@ export default class MovementAgent {
 				// check state of playerCharacter if entityType === 'playerCharacter'
 				// further calc
 				if (entity.getState() === 'attacking') {
+					// different handling for boar and dragon beacause of hp
+					if (mergedPartialField.includes('npcBoar')) {
+						this.activeEntitiesList.removeNPC();
+					}
 					console.log('ATTACK');
 				} else {
 					entity.changeHP(20);
@@ -184,6 +188,30 @@ export default class MovementAgent {
 		// else: calc new coods;
 		// TODO: check fieldCOllision and set returnvalue
 		return false;
+	}
+
+	// /**
+	//  *
+	//  * @param {PlayerObject} entity
+	//  * @param {Array} passedCoords
+	//  */
+	async attack(entity) {
+		const { size, coords } = entity.getCoordsAndSize();
+		const entityState = entity.getState();
+		const mergedPartialField = await this.gameField.getMergedPartialField(
+			[coords[0] + 1, coords[1]],
+			size,
+			'right',
+		);
+		if (entityState === 'attacking') {
+			if (mergedPartialField.includes('npcBoar')) {
+				this.activeEntitiesList.removeNPC();
+				this.activeEntitiesList.drawActiveEntitiesList();
+			}
+			if (mergedPartialField.includes('npcDragon')) {
+				console.log('attack Dragon');
+			}
+		}
 	}
 
 	setGameField(gameField) {
