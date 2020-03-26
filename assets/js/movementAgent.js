@@ -4,6 +4,12 @@ export default class MovementAgent {
 		this.gameField = gameField;
 		this.activeEntitiesList = activeEntitiesList;
 		this.stepSize = 20;
+		this.regexDragon = /npcDragon/;
+		this.regexBoar = /npcBoar/;
+		this.regexFlames = /entityFlames/;
+		this.regexNPCs = new RegExp('npcBoar|npcDraong');
+		this.regexPlayer = /playerCharacter/;
+		this.regexWaterTile = /waterTile/;
 	}
 
 	getPainter() {
@@ -155,16 +161,17 @@ export default class MovementAgent {
 		);
 		console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
-			if (mergedPartialField.includes('flames')) {
+			if (this.constructor.checkIfArrayIncludesString(this.regexFlames, mergedPartialField)) {
 				// todo: calc if hit by Flames
 				return false;
 			}
-			if (mergedPartialField.includes('npcBoar') || mergedPartialField.includes('npcDragon')) {
+			if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
 				// check state of playerCharacter if entityType === 'playerCharacter'
 				// further calc
+				console.log('hit some entity');
 				if (entity.getState() === 'attacking') {
 					// different handling for boar and dragon beacause of hp
-					if (mergedPartialField.includes('npcBoar')) {
+					if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 						this.activeEntitiesList.removeNPC();
 					}
 					console.log('ATTACK');
@@ -176,13 +183,13 @@ export default class MovementAgent {
 			}
 		}
 		// entity type could be flames, boar or dragon
-		if (entityType === 'boarCharacter' || entityType === 'dragonCharacter') {
-			if (mergedPartialField.includes('playerCharacter')) {
+		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
+			if (this.constructor.checkIfArrayIncludesString(this.regexPlayer, mergedPartialField)) {
 				// check for state of playerCharacter attacking => dmg to entityType, else dmg player
 				return false;
 			}
 		}
-		if (mergedPartialField.includes('waterTile')) {
+		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
 			return true;
 		}
 		// else: calc new coods;
@@ -204,14 +211,39 @@ export default class MovementAgent {
 			'right',
 		);
 		if (entityState === 'attacking') {
-			if (mergedPartialField.includes('npcBoar')) {
-				this.activeEntitiesList.removeNPC();
+			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
+				const { type, id } = 	this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
+				this.activeEntitiesList.removeNPC(id);
+				this.gameField.removeFromEntitiesField(type, id);
+				console.log(this.gameField.getField('entities'));
+				// remove from gamefield
 				this.activeEntitiesList.drawActiveEntitiesList();
 			}
-			if (mergedPartialField.includes('npcDragon')) {
+			if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
 				console.log('attack Dragon');
 			}
 		}
+	}
+
+	static checkIfArrayIncludesString(regex, item) {
+		const itemsToCheck = [...item];
+		let isIncluded = false;
+		for (let i = 0; i < itemsToCheck.length; i += 1) {
+			isIncluded = isIncluded || regex.test(item[i]);
+		}
+		return isIncluded;
+	}
+
+	static getTypeOfEntity(regex, arr) {
+		let result;
+		for (let i = 0; i < arr.length; i += 1) {
+			result = arr[i].match(regex);
+			if (result !== undefined) {
+				break;
+			}
+		}
+		const [type, id] = result.input.split('_');
+		return { type, id };
 	}
 
 	setGameField(gameField) {

@@ -35,11 +35,12 @@ export default class GameField {
 		}
 		// set values according to the inputArray
 		inputArray.forEach(({
-			xMin, yMin, xMax, yMax, type,
+			xMin, yMin, xMax, yMax, type, id = undefined,
 		}) => {
 			for (let row = yMin; row < yMax; row += 1) {
 				for (let col = xMin; col < xMax; col += 1) {
-					resultArray[row][col] = type;
+					const suffix = id !== undefined ? `_${id}` : '';
+					resultArray[row][col] = `${type}${suffix}`;
 				}
 			}
 		});
@@ -90,6 +91,25 @@ export default class GameField {
 		for (let row = newYCoord; row < newYCoord + height; row += 1) {
 			for (let col = newXCoord; col < newXCoord + width; col += 1) {
 				map[row][col] = entityType;
+			}
+		}
+	}
+
+	/**
+	 * remove and entity from the entitiesField
+	 * @param {String} entityType
+	 * @param {*} id
+	 * @param {String} fieldType
+	 */
+	removeFromEntitiesField(entityType = undefined, id = undefined) {
+		const entitiesMap = this.fieldMap.get('entities');
+		const maxRows = entitiesMap.length;
+		const maxCols = entitiesMap[0].length;
+		for (let row = 0; row < maxRows; row += 1) {
+			for (let col = 0; col < maxCols; col += 1) {
+				if (entitiesMap[row][col] === `${entityType}_${id}`) {
+					entitiesMap[row][col] = 0;
+				}
 			}
 		}
 	}

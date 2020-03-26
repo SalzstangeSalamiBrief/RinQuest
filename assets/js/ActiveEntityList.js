@@ -24,10 +24,14 @@ export default class ActiveEntitiesList {
 	}
 
 	removeNPC(id = undefined) {
+		// no id is given => remove first entry in list
 		if (id === undefined) {
 			return this.activeEntitiesList.shift();
 		}
-		const indexToDelete = this.activeEntitiesList.findIndex(id);
+		// an id is given: search for the index and delete the entry
+		const indexToDelete = this.activeEntitiesList.findIndex(
+			(item) => item.getID === parseInt(id, 10),
+		);
 		return this.activeEntitiesList.splice(indexToDelete, 1);
 	}
 
