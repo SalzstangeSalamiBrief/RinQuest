@@ -55,7 +55,7 @@ export default {
 			// check if the movement can continue
 			if (this.canRepeat === false) return;
 
-			console.log(this.player.getType());
+			// console.log(this.player.getType());
 			switch (keyCode) {
 			//  space
 			case 32:
@@ -71,6 +71,11 @@ export default {
 			case 65:
 				await this.movementAgent.moveCharacter(-1, 0, this.player);
 				this.player.setState('moving');
+				// await this.movementAgent.moveCharacter(
+				// 	-1,
+				// 	0,
+				// 	this.activeEntityList.getActiveEntitiesList()[0],
+				// );
 				break;
 				// ss
 			case 83:

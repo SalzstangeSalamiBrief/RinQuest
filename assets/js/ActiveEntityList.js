@@ -38,4 +38,8 @@ export default class ActiveEntitiesList {
 	getActiveEntitiesList() {
 		return this.activeEntitiesList;
 	}
+
+	getPlayerEntity() {
+		return this.playerEntity;
+	}
 }

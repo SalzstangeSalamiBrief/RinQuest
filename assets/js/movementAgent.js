@@ -54,6 +54,7 @@ export default class MovementAgent {
 					this.constructor.calcNewCoordinate(yCoord, yAxis),
 				];
 			}
+			const entityID = entityType === 'playerCharacter' ? undefined : entity.getID();
 			// todo check collision
 			// check for collision with field
 			// destructure calcCoords and if a collision is found into existing variables
@@ -65,21 +66,18 @@ export default class MovementAgent {
 				newCoords,
 				entityType,
 				canvasSize,
+				entityID,
 			)
 			);
 			if (!foundCollision) {
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
-					entitySize,
-					entityType,
 					movementDirection,
 					entity,
 				);
 				if (foundCollision) newCoords = [xCoord, yCoord];
 			}
 			// draw character
-			// this.painter.clearCanvas('entities');
-			// TODO: draw each active character again and update entitiesField
 			// set new coords on the entity
 			entity.setCoords(newCoords);
 			// calc which enityType has to be drawn
@@ -87,6 +85,7 @@ export default class MovementAgent {
 			// 'playerCharacter_moving' : entityType;
 			// update the entitiesField gamefield
 			// todo: possible Bugs with moving npcs?
+			// todo: check if moving npcs gets updated
 			this.gameField.updateEntitiesField(
 				'entities',
 				xCoord, yCoord,
@@ -95,20 +94,8 @@ export default class MovementAgent {
 				newCoords[0], newCoords[1],
 				entityType,
 			);
-			// draw character
-			// draw all characters in the entities list
-			// const promiseArrayEntitiesToDraw = [];
+			// draw all entitites
 			this.activeEntitiesList.drawActiveEntitiesList();
-			// console.log(this.activeEntitiesList.getActiveEntitiesList());
-			// this.activeEntitiesList.getActiveEntitiesList().forEach((activeEntity) => {
-			// 	const { size, coords } = activeEntity.getCoordsAndSize();
-			// 	const type = activeEntity.getType();
-			// 	// promiseArrayEntitiesToDraw.push(
-			// 	this.painter.drawCharacter(type, coords, size);
-			// 	// );
-			// });
-			// await Promise.all(promiseArrayEntitiesToDraw);
-			// await this.painter.drawCharacter(typeToDraw, newCoords, entitySize);
 		}
 	}
 
@@ -117,13 +104,24 @@ export default class MovementAgent {
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	checkForFieldEdgeCollision([width, height], [newXCoord, newYCoord], type, canvasSize) {
+	checkForFieldEdgeCollision(
+		[width, height],
+		[newXCoord, newYCoord],
+		type,
+		canvasSize,
+		id = undefined,
+	) {
 		const newCalcedCoords = [newXCoord, newYCoord];
 		let collisionDetected = false;
 		// check for -x/left movement collision
 		if (newXCoord <= 0) {
 			collisionDetected = true;
-			newCalcedCoords[0] = 0;
+			if (type === 'playerCharacter') {
+				newCalcedCoords[0] = 0;
+			} else {
+				newCalcedCoords[0] = 0;
+				this.activeEntitiesList.removeNPC(id);
+			}
 		}
 		// check for +x/right movement collision
 		if (newXCoord + width > canvasSize.xMax) {
@@ -149,9 +147,18 @@ export default class MovementAgent {
 		return { newCalcedCoords, collisionDetected };
 	}
 
+	// foundCollision = await this.checkForFieldCollision(
+	// 	newCoords,
+	// 	entitySize,
+	// 	entityType,
+	// 	movementDirection,
+	// 	entity,
+	// );
+
 	// eslint-disable-next-line class-methods-use-this
-	async	checkForFieldCollision(passedCords, entitySize, entityType, movementDirection, entity) {
-		console.log(entity);
+	async	checkForFieldCollision(passedCords, movementDirection, entity) {
+		const { size: entitySize } = entity.getCoordsAndSize();
+		const entityType = entity.getType();
 		// todo: increase extensibility of entityTypes
 		// todo: increase extensibility of tileTypes
 		const mergedPartialField = await this.gameField.getMergedPartialField(
@@ -161,26 +168,10 @@ export default class MovementAgent {
 		);
 		console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
-			if (this.constructor.checkIfArrayIncludesString(this.regexFlames, mergedPartialField)) {
-				// todo: calc if hit by Flames
-				return false;
-			}
-			if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
-				// check state of playerCharacter if entityType === 'playerCharacter'
-				// further calc
-				console.log('hit some entity');
-				if (entity.getState() === 'attacking') {
-					// different handling for boar and dragon beacause of hp
-					if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
-						this.activeEntitiesList.removeNPC();
-					}
-					console.log('ATTACK');
-				} else {
-					entity.changeHP(20);
-					console.log('got dmg');
-				}
-				return true;
-			}
+			return this.checkForFieldCollisionPlayer(mergedPartialField, entity);
+		}
+		if (entityType === 'npcBoar') {
+			return this.checkForFieldCollisionBoar(mergedPartialField, entity);
 		}
 		// entity type could be flames, boar or dragon
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
@@ -188,9 +179,6 @@ export default class MovementAgent {
 				// check for state of playerCharacter attacking => dmg to entityType, else dmg player
 				return false;
 			}
-		}
-		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
-			return true;
 		}
 		// else: calc new coods;
 		// TODO: check fieldCOllision and set returnvalue
@@ -252,5 +240,65 @@ export default class MovementAgent {
 
 	setActiveEntityList(list) {
 		this.activeEntitiesList = list;
+	}
+
+	/**
+ * Calculate fieldCollisions for boars
+ * @param {Array} mergedPartialField
+ * @param {Entity} entity
+ */
+	checkForFieldCollisionBoar(mergedPartialField, entity) {
+		// if a playercharacter got hit
+		if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
+			const playerEntity = this.activeEntitiesList.getPlayerEntity();
+			// check if the player character is attacking
+			if (playerEntity.getState() === 'attacking') {
+				// remove this npc
+				this.activeEntitiesList.removeNPC(entity.getID());
+			} else if (entity.getDealtDamage() === false) {
+				// player is not Attacking => set dealtDamage and decrease hp of the player
+				entity.setDealtDamage();
+				playerEntity.changeHP(20);
+			}
+			// return false to let the boar pass
+		}
+		return false;
+	}
+
+	checkForFieldCollisionPlayer(mergedPartialField, entity) {
+		let result = false;
+		// check if a waterTile gets hit
+		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
+			result = true;
+		}
+		// check if a flame gets hit
+		if (this.constructor.checkIfArrayIncludesString(this.regexFlames, mergedPartialField)) {
+			// todo: calc if hit by Flames
+			result = false;
+		}
+		// check if an npc gets hit
+		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
+			// check state of playerCharacter if entityType === 'playerCharacter'
+			// further calc
+			console.log('hit some entity');
+			// if the player is in attacking state,
+			if (entity.getState() === 'attacking') {
+				// different handling for boar and dragon beacause of hp
+				// if a boar gets hgit, remove it
+				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
+					this.activeEntitiesList.removeNPC();
+				}
+				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
+					// if a dragon gets hit, deal damage to the dragon
+					console.log('hitDragon');
+				}
+				console.log('ATTACK');
+			} else {
+				entity.changeHP(20);
+				console.log('got dmg');
+			}
+			result = true;
+		}
+		return result;
 	}
 }

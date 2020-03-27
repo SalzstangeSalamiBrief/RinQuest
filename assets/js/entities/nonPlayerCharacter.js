@@ -7,6 +7,22 @@ export default class NonPlayerCharacter extends Entity {
 		// todo: maybe not needed
 		this.isAlive = true;
 		this.id = id;
+		this.dealtDamage = false;
+	}
+
+	// TODO: two kinds of movement?
+	moveCharacter() {
+		// straight movement
+		const { xCoord } = this;
+		this.setX(xCoord + 20);
+	}
+
+	setDealtDamage() {
+		this.dealtDamage = true;
+	}
+
+	getDealtDamage() {
+		return this.dealtDamage;
 	}
 
 	removeNPC() {

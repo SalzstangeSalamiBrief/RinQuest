@@ -69,18 +69,6 @@ export default class GameField {
 
 	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType) {
 		const map = this.fieldMap.get(fieldType);
-
-		/**
-		 * TODO: Refactor into something like this to reduce steps
-		 * top:
-		 * 		row - 1; width
-		 * bottom:
-		 * 		row + 1; width
-		 * left:
-		 * 	height; col + 1
-		 * right
-		 * 	height; col -1
-		 */
 		// clear old position
 		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
 			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
@@ -120,34 +108,10 @@ export default class GameField {
 
 	async getMergedPartialField([xStart, yStart], [width, height], movementDirection) {
 		// calc xStart, yStart, xEnd, yEnd based on movementDirection
-		const movementObject = {};
-		switch (movementDirection) {
-		case 'right':
-			movementObject.xStart = xStart + width - 1;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + height;
-			break;
-		case 'left':
-			movementObject.xStart = xStart - 1;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart;
-			movementObject.yEnd = yStart + height;
-			break;
-		case 'top':
-			movementObject.xStart = xStart;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + 1;
-			break;
-		case 'bottom':
-			movementObject.xStart = xStart;
-			movementObject.yStart = yStart + height - 1;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + height;
-			break;
-		default: break;
-		}
+		const movementObject = this.constructor.calcMovementDirection(
+			movementDirection, xStart, yStart, width, height,
+		);
+
 		// parallelize call of booth methods
 		const [partialEntitiesField, partialBackgroundField] = await Promise.all([
 			this.getPartialField(movementObject, 'entities'),
@@ -183,5 +147,45 @@ export default class GameField {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Calc an Object with coords for the movement direction
+	 * @param {String} movementDirection
+	 * @param {Number} xStart
+	 * @param {Number} yStart
+	 * @param {Number} width
+	 * @param {Number} height
+	 */
+	static calcMovementDirection(movementDirection, xStart, yStart, width, height) {
+		const movementObject = {};
+		switch (movementDirection) {
+		case 'right':
+			movementObject.xStart = xStart + width - 1;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'left':
+			movementObject.xStart = xStart - 1;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'top':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + 1;
+			break;
+		case 'bottom':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart + height - 1;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + height;
+			break;
+		default: break;
+		}
+		return movementObject;
 	}
 }
