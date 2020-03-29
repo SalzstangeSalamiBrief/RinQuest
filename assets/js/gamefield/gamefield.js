@@ -57,7 +57,8 @@ export default class GameField {
 				map[i].push(type);
 			}
 		});
-		movementAgent.moveCharacter(-1, 0, character);
+		// todo: needed?
+		movementAgent.moveCharacter({ xAxis: -1, yAxis: 0, entity: character });
 		this.repeatCol -= 1;
 		// todo: end of scrollColumns
 		if (this.repeatCol === 0) {

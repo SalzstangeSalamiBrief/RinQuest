@@ -294,6 +294,7 @@ export default class MovementAgent {
 				}
 				console.log('ATTACK');
 			} else {
+				// todo: get id from mergedPartialField, set damageDealt to this entity
 				entity.changeHP(20);
 				console.log('got dmg');
 			}

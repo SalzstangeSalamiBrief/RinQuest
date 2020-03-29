@@ -26,7 +26,7 @@ export default class Game {
 	createGameLogic() {
 		this.gameLoop = setInterval(() => {
 			if (this.isPlayerMoving) {
-				this.movementAgent.moveCharacter(playerMovement);
+				this.movementAgent.moveCharacter(this.playerMovement);
 				// todo determine player attacking/moving display
 			}
 			// todo: loop gamefield
