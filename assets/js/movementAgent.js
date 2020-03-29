@@ -23,7 +23,7 @@ export default class MovementAgent {
  * @param {Number} yAxis
  * @param {Object} entity
  */
-	async moveCharacter(xAxis = 0, yAxis = 0, entity) {
+	async moveCharacter({ xAxis = 0, yAxis = 0, entity }) {
 		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
 			let foundCollision = false;

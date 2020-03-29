@@ -64,12 +64,12 @@ export default {
 				break;
 			// w
 			case 87:
-				await this.movementAgent.moveCharacter(0, -1, this.player);
+				await this.movementAgent.moveCharacter({ xAxis: 0, yAxis: -1, entity: this.player });
 				this.player.setState('moving');
 				break;
 				// a
 			case 65:
-				await this.movementAgent.moveCharacter(-1, 0, this.player);
+				await this.movementAgent.moveCharacter({ xAxis: -1, yAxis: 0, entity: this.player });
 				this.player.setState('moving');
 				// await this.movementAgent.moveCharacter(
 				// 	-1,
@@ -79,12 +79,12 @@ export default {
 				break;
 				// ss
 			case 83:
-				await this.movementAgent.moveCharacter(0, 1, this.player);
+				await this.movementAgent.moveCharacter({ xAxis: 0, yAxis: 1, entity: this.player });
 				this.player.setState('moving');
 				break;
 				// d
 			case 68:
-				await this.movementAgent.moveCharacter(1, 0, this.player);
+				await this.movementAgent.moveCharacter({ xAxis: 1, yAxis: 0, entity: this.player });
 				this.player.setState('moving');
 				break;
 			default:
