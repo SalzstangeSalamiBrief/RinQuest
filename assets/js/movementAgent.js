@@ -95,8 +95,8 @@ export default class MovementAgent {
 				entityType,
 			);
 			// draw all entitites
-			this.activeEntitiesList.drawActiveEntitiesList();
 		}
+		this.activeEntitiesList.drawActiveEntitiesList();
 	}
 
 	static calcNewCoordinate(coord, step) {
@@ -198,13 +198,16 @@ export default class MovementAgent {
 			size,
 			'right',
 		);
+		console.log(mergedPartialField);
 		if (entityState === 'attacking') {
 			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 				const { type, id } = 	this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
 				this.activeEntitiesList.removeNPC(id);
 				this.gameField.removeFromEntitiesField(type, id);
 				console.log(this.gameField.getField('entities'));
-				// remove from gamefield
+				// todo remove from gamefield
+
+				// this.gameField.removeFromEntitiesField(type, id);
 				this.activeEntitiesList.drawActiveEntitiesList();
 			}
 			if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
@@ -265,6 +268,12 @@ export default class MovementAgent {
 		return false;
 	}
 
+
+	/**
+	 * Calculate fieldCollisions for player
+	 * @param {Array} mergedPartialField
+	 * @param {Entity} entity
+	 */
 	checkForFieldCollisionPlayer(mergedPartialField, entity) {
 		let result = false;
 		// check if a waterTile gets hit
@@ -286,7 +295,9 @@ export default class MovementAgent {
 				// different handling for boar and dragon beacause of hp
 				// if a boar gets hgit, remove it
 				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
-					this.activeEntitiesList.removeNPC();
+					const { id, type } = this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
+					this.gameField.removeFromEntitiesField(type, id);
+					this.activeEntitiesList.removeNPC(id);
 				}
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
 					// if a dragon gets hit, deal damage to the dragon
@@ -302,4 +313,17 @@ export default class MovementAgent {
 		}
 		return result;
 	}
+
+	// static getCollisionEntity(mergedPartialField) {
+	// 	const res = { id: 0, type: undefined };
+	// 	for (let i = 0; i < mergedPartialField.length; i += 1) {
+	// 		if (mergedPartialField[i].match(this.regexNPCs)) {
+	// 			const [type, id] = mergedPartialField[i].split('_');
+	// 			res.type = type;
+	// 			res.id = id;
+	// 			break;
+	// 		}
+	// 	}
+	// 	return res;
+	// }
 }

@@ -33,44 +33,40 @@ import MovementAgent from '../assets/js/movementAgent';
 import GameField from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
 import NonPlayerCharacter from '../assets/js/entities/nonPlayerCharacter';
+import GameLoop from '../assets/js/game';
 
 export default {
 	name: 'game',
 	data() {
 		return {
 			player: undefined,
-			canRepeatMovement: true,
-			someKeyIsPressed: false,
 			gameField: undefined,
 			activeEntityList: undefined,
+			gameLoop: false,
 		};
 	},
 	methods: {
 		debuggingBackToIndex() {
 			this.$router.push({ path: '/' });
 		},
-		async keyDownListeners({ keyCode }) {
-			// todo: improve movement + attacking
-			this.someKeyIsPressed = true;
-			// check if the movement can continue
-			if (this.canRepeat === false) return;
 
-			// console.log(this.player.getType());
+		async keyDownListeners({ keyCode }) {
 			switch (keyCode) {
 			//  space
 			case 32:
 				// todo better display => actual to clunky
-				await this.displayPlayerAttack();
+				// await this.displayPlayerAttack();
+				this.gameLoop.setPlayerStates({ isAttacking: true });
 				break;
 			// w
 			case 87:
-				await this.movementAgent.moveCharacter({ xAxis: 0, yAxis: -1, entity: this.player });
-				this.player.setState('moving');
+				this.gameLoop.setPlayerStates({ isMoving: true });
+				this.gameLoop.setPlayerMovement(0, -1);
 				break;
 				// a
 			case 65:
-				await this.movementAgent.moveCharacter({ xAxis: -1, yAxis: 0, entity: this.player });
-				this.player.setState('moving');
+				this.gameLoop.setPlayerStates({ isMoving: true });
+				this.gameLoop.setPlayerMovement(-1, 0);
 				// await this.movementAgent.moveCharacter(
 				// 	-1,
 				// 	0,
@@ -79,35 +75,54 @@ export default {
 				break;
 				// ss
 			case 83:
-				await this.movementAgent.moveCharacter({ xAxis: 0, yAxis: 1, entity: this.player });
-				this.player.setState('moving');
+				this.gameLoop.setPlayerStates({ isMoving: true });
+				this.gameLoop.setPlayerMovement(0, 1);
 				break;
 				// d
 			case 68:
-				await this.movementAgent.moveCharacter({ xAxis: 1, yAxis: 0, entity: this.player });
-				this.player.setState('moving');
+				this.gameLoop.setPlayerStates({ isMoving: true });
+				this.gameLoop.setPlayerMovement(1, 0);
 				break;
 			default:
 				break;
 			}
-			// set interval for moving a character to 50ms
-			this.canRepeat = false;
-			setTimeout(() => {
-				this.canRepeat = true;
-			}, 50);
 		},
-		async keyUpListener() {
-			this.someKeyIsPressed = false;
-			this.player.setState('idle');
-			this.painter.clearCanvas('entities');
-			// todo redraw whole characterCanvas
-			this.activeEntityList.drawActiveEntitiesList();
-		},
-		async displayPlayerAttack() {
-			this.painter.clearCanvas('entities');
-			this.player.setState('attacking');
-			this.movementAgent.attack(this.player);
-			this.activeEntityList.drawActiveEntitiesList();
+		async keyUpListener({ keyCode }) {
+			switch (keyCode) {
+			//  space
+			case 32:
+				// todo better display => actual to clunky
+				// await this.displayPlayerAttack();
+				this.gameLoop.setPlayerStates({ isAttacking: false });
+				break;
+			// w
+			case 87:
+				this.gameLoop.setPlayerStates({ isMoving: false });
+				this.gameLoop.setPlayerMovement(0, 0);
+				break;
+				// a
+			case 65:
+				this.gameLoop.setPlayerStates({ isMoving: false });
+				this.gameLoop.setPlayerMovement(0, 0);
+				// await this.movementAgent.moveCharacter(
+				// 	-1,
+				// 	0,
+				// 	this.activeEntityList.getActiveEntitiesList()[0],
+				// );
+				break;
+				// ss
+			case 83:
+				this.gameLoop.setPlayerStates({ isMoving: false });
+				this.gameLoop.setPlayerMovement(0, 0);
+				break;
+				// d
+			case 68:
+				this.gameLoop.setPlayerStates({ isMoving: false });
+				this.gameLoop.setPlayerMovement(0, 0);
+				break;
+			default:
+				break;
+			}
 		},
 	},
 	// todo back to mounted and asyncData; remove store
@@ -136,6 +151,8 @@ export default {
 
 		this.activeEntityList.addEntity(dummyNPC);
 		this.movementAgent.setActiveEntityList(this.activeEntityList);
+		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gameField);
+		this.gameLoop.createGameLoop();
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.addKeyListeners);
