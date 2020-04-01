@@ -20,7 +20,7 @@ export default class PlayerCharacter extends Entity {
 		this.state = 'idle';
 	}
 
-	changeHP(damageReceived) {
+	changeHP(damageReceived = 20) {
 		const newHP = this.HP - damageReceived;
 		if (newHP <= 0) {
 			this.HP = 0;

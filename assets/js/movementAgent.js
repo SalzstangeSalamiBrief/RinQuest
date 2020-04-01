@@ -33,7 +33,8 @@ export default class MovementAgent {
 				= 1 => positive movement on this axis
 				= -1 negative Movement on this Axis
 			*/
-			const {
+			let {
+				// eslint-disable-next-line prefer-const
 				coords: [xCoord, yCoord], size: entitySize,
 			} = entity.getCoordsAndSize();
 			const entityType = entity.getType();
@@ -75,7 +76,10 @@ export default class MovementAgent {
 					movementDirection,
 					entity,
 				);
-				if (foundCollision) newCoords = [xCoord, yCoord];
+				if (foundCollision) {
+					({ coords: [xCoord, yCoord] } = entity.getCoordsAndSize());
+					newCoords = [xCoord, yCoord];
+				}
 			}
 			// draw character
 			// set new coords on the entity
@@ -228,9 +232,11 @@ export default class MovementAgent {
 	static getTypeOfEntity(regex, arr) {
 		let result;
 		for (let i = 0; i < arr.length; i += 1) {
-			result = arr[i].match(regex);
-			if (result !== undefined) {
-				break;
+			if (typeof arr[i] === 'string') {
+				result = arr[i].match(regex);
+				if (result !== undefined) {
+					break;
+				}
 			}
 		}
 		const [type, id] = result.input.split('_');
@@ -261,11 +267,14 @@ export default class MovementAgent {
 			} else if (entity.getDealtDamage() === false) {
 				// player is not Attacking => set dealtDamage and decrease hp of the player
 				entity.setDealtDamage();
-				playerEntity.changeHP(20);
+				playerEntity.changeHP();
 			}
+			// todo: move behind playerEntity or remove
+			// entity.setCoords();
 			// return false to let the boar pass
 		}
-		return false;
+
+		return true;
 	}
 
 
@@ -290,12 +299,13 @@ export default class MovementAgent {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
 			console.log('hit some entity');
+			const { id, type } = this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
 				// different handling for boar and dragon beacause of hp
 				// if a boar gets hgit, remove it
+
 				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
-					const { id, type } = this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
 					this.gameField.removeFromEntitiesField(type, id);
 					this.activeEntitiesList.removeNPC(id);
 				}
@@ -306,10 +316,19 @@ export default class MovementAgent {
 				console.log('ATTACK');
 			} else {
 				// todo: get id from mergedPartialField, set damageDealt to this entity
-				entity.changeHP(20);
-				console.log('got dmg');
+				// this.activeEntitiesList.getNPCEntityByID(id).setDealtDamage();
+				// entity.changeHP();
+				const npcEntity =	this.activeEntitiesList.getNPCEntityByID(id);
+				if (type.match(this.regexBoar)) {
+					if (!npcEntity.getDealtDamage()) {
+						entity.changeHP();
+						npcEntity.setDealtDamage();
+					}
+					console.log(this.gameField.getField('entities'));
+					result = true;
+				}
 			}
-			result = true;
+			// result = true;
 		}
 		return result;
 	}

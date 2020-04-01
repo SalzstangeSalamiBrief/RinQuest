@@ -12,7 +12,7 @@ export default class ActiveEntitiesList {
 	drawActiveEntitiesList() {
 		// clear canvas
 		this.painter.clearCanvas('entities');
-		const tempEntityList = [this.playerEntity, ...this.activeEntitiesList];
+		const tempEntityList = [...this.activeEntitiesList, this.playerEntity];
 		// draw each entity of the activeEntitiesList on the canvas
 		tempEntityList.forEach((activeEntity) => {
 			const { size, coords } = activeEntity.getCoordsAndSize();
@@ -30,7 +30,7 @@ export default class ActiveEntitiesList {
 		}
 		// an id is given: search for the index and delete the entry
 		const indexToDelete = this.activeEntitiesList.findIndex(
-			(item) => item.getID === parseInt(id, 10),
+			(item) => item.getID() === parseInt(id, 10),
 		);
 		return this.activeEntitiesList.splice(indexToDelete, 1);
 	}
@@ -41,5 +41,12 @@ export default class ActiveEntitiesList {
 
 	getPlayerEntity() {
 		return this.playerEntity;
+	}
+
+	getNPCEntityByID(id) {
+		const index = this.activeEntitiesList.findIndex(
+			(item) => item.getID() === parseInt(id, 10),
+		);
+		return this.activeEntitiesList[index];
 	}
 }

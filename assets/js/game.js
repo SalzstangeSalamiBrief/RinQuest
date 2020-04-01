@@ -41,7 +41,10 @@ export default class Game {
 	}
 
 	createGameLoop() {
-		this.gameLoop = setInterval(() => {
+		this.gameLoop = setInterval(async () => {
+			if (this.isPlayerAttacking) {
+				await this.movementAgent.attack(this.playerMovement.entity);
+			}
 			this.movementAgent.moveCharacter(this.playerMovement);
 			// todo !important: attacking while standing still
 			// todo: loop gamefield
