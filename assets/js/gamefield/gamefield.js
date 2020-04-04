@@ -144,6 +144,7 @@ export default class GameField {
 		const result = [];
 		for (let row = yStart; row < yEnd; row += 1) {
 			for (let col = xStart; col < xEnd; col += 1) {
+				// todo split(' ') and flat
 				result.push(field[row][col]);
 			}
 		}
