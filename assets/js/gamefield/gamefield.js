@@ -31,8 +31,9 @@ export default class GameField {
 		const resultArray = [];
 		// init rows with 0es filled
 		for (let i = 0; i < 43; i += 1) {
-			resultArray.push(new Array(80).fill(0));
+			resultArray.push(new Array(80).fill(''));
 		}
+		console.log(resultArray);
 		// set values according to the inputArray
 		inputArray.forEach(({
 			xMin, yMin, xMax, yMax, type, id = undefined,
@@ -73,13 +74,15 @@ export default class GameField {
 		// clear old position
 		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
 			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
-				map[row][col] = 0;
+				map[row][col] = '';
 			}
 		}
 		// insert new position
 		for (let row = newYCoord; row < newYCoord + height; row += 1) {
 			for (let col = newXCoord; col < newXCoord + width; col += 1) {
-				map[row][col] = entityType;
+				// todo check if no bugs
+				map[row][col] += ` ${entityType}`;
+				map[row][col].trim();
 			}
 		}
 	}
@@ -96,8 +99,9 @@ export default class GameField {
 		const maxCols = entitiesMap[0].length;
 		for (let row = 0; row < maxRows; row += 1) {
 			for (let col = 0; col < maxCols; col += 1) {
+				// TODO: remove from partial string
 				if (entitiesMap[row][col] === `${entityType}_${id}`) {
-					entitiesMap[row][col] = 0;
+					entitiesMap[row][col] = '';
 				}
 			}
 		}
@@ -124,12 +128,12 @@ export default class GameField {
 			// if the partialBackgroundField[x] is a grassTile, then push partialEntitiesField[x].
 			// Else: push partialBackgroundField[x]
 			if (partialBackgroundField[x] === 'grassTile') {
-				mergedPartialField.push(partialEntitiesField[x]);
+				mergedPartialField.push(partialEntitiesField[x].split(' '));
 			} else {
 				mergedPartialField.push(partialBackgroundField[x]);
 			}
 		}
-		return mergedPartialField;
+		return mergedPartialField.flat();
 	}
 
 	/**

@@ -153,6 +153,8 @@ export default {
 		this.movementAgent.setActiveEntityList(this.activeEntityList);
 		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gameField);
 		this.gameLoop.createGameLoop();
+		console.log(this.gameField.getField('background'));
+		console.log(this.gameField.getField('entities'));
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.addKeyListeners);
