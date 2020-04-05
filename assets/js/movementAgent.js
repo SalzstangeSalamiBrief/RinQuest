@@ -325,7 +325,7 @@ export default class MovementAgent {
 						npcEntity.setDealtDamage();
 					}
 					console.log(this.gameField.getField('entities'));
-					result = true;
+					result = false;
 				}
 			}
 			// result = true;

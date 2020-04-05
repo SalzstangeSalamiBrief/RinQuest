@@ -33,7 +33,6 @@ export default class GameField {
 		for (let i = 0; i < 43; i += 1) {
 			resultArray.push(new Array(80).fill(''));
 		}
-		console.log(resultArray);
 		// set values according to the inputArray
 		inputArray.forEach(({
 			xMin, yMin, xMax, yMax, type, id = undefined,
@@ -69,12 +68,13 @@ export default class GameField {
 		return this.painter.drawFieldMap(map);
 	}
 
-	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType) {
+	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType, id = '') {
 		const map = this.fieldMap.get(fieldType);
+		const entityToUpdate = `${entityType}${id !== '' ? '_' : ''}${id}`;
 		// clear old position
 		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
 			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
-				map[row][col] = '';
+				map[row][col] = this.constructor.removeEntryFromCell(entityToUpdate, map[row][col]);
 			}
 		}
 		// insert new position
@@ -91,20 +91,36 @@ export default class GameField {
 	 * remove and entity from the entitiesField
 	 * @param {String} entityType
 	 * @param {*} id
-	 * @param {String} fieldType
 	 */
-	removeFromEntitiesField(entityType = undefined, id = undefined) {
-		const entitiesMap = this.fieldMap.get('entities');
-		const maxRows = entitiesMap.length;
-		const maxCols = entitiesMap[0].length;
+	removeFromEntitiesField(entityType = undefined, id = '') {
+		const entityToRemove = `${entityType}${id !== '' ? '_' : ''}${id}`;
+		const map = this.fieldMap.get('entities');
+		const maxRows = map.length;
+		const maxCols = map[0].length;
 		for (let row = 0; row < maxRows; row += 1) {
 			for (let col = 0; col < maxCols; col += 1) {
-				// TODO: remove from partial string
-				if (entitiesMap[row][col] === `${entityType}_${id}`) {
-					entitiesMap[row][col] = '';
-				}
+				map[row][col]	= this.constructor.removeEntryFromCell(entityToRemove, map[row][col]);
 			}
 		}
+	}
+
+	/**
+	 * Remove an entry from the given cell
+	 * @param {String} entityToUpdate
+	 * @param {String} cell
+	 */
+	static removeEntryFromCell(entityToRemove, cell) {
+		// split corresponding entry by the separator space
+		const entries = cell.split(' ');
+		// loop through all entries
+		for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
+			// if the entry with the index is found, remove it
+			if (entityToRemove === entries[entryIndex]) {
+				entries.splice(entryIndex, 1);
+			}
+		}
+		// join the splitted array and trim it
+		return entries.join(' ').trim();
 	}
 
 	getField(type) {
