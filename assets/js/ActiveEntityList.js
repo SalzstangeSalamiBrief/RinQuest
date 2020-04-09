@@ -1,8 +1,9 @@
 export default class ActiveEntitiesList {
-	constructor(initPlayer, painter) {
+	constructor(initPlayer, painter, gamefield) {
 		this.playerEntity = initPlayer;
 		this.activeEntitiesList = [];
 		this.painter = painter;
+		this.gamefield = gamefield;
 	}
 
 	addEntity(entity) {
@@ -23,16 +24,26 @@ export default class ActiveEntitiesList {
 		});
 	}
 
+	/**
+	 * Remove a NPC by its id from the activeEntitiesList and the entities-gamefield
+	 * @param {String} id
+	 */
 	removeNPC(id = undefined) {
-		// no id is given => remove first entry in list
-		if (id === undefined) {
-			return this.activeEntitiesList.shift();
-		}
+		// no id passed,  dont execute remove f urther
+		if (id === undefined) return;
 		// an id is given: search for the index and delete the entry
 		const indexToDelete = this.activeEntitiesList.findIndex(
 			(item) => item.getID() === parseInt(id, 10),
 		);
-		return this.activeEntitiesList.splice(indexToDelete, 1);
+		const entityToRemove = this.activeEntitiesList[indexToDelete];
+		if (entityToRemove) {
+			this.gamefield.removeFromEntitiesField(
+				entityToRemove.getType(),
+				entityToRemove.getID(),
+			);
+			// eslint-disable-next-line consistent-return
+			return this.activeEntitiesList.splice(indexToDelete, 1);
+		}
 	}
 
 	getActiveEntitiesList() {

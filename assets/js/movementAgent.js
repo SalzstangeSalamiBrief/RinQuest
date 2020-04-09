@@ -70,6 +70,7 @@ export default class MovementAgent {
 				entityID,
 			)
 			);
+			// console.log(foundCollision, entityID);
 			if (!foundCollision) {
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
@@ -81,6 +82,10 @@ export default class MovementAgent {
 					newCoords = [xCoord, yCoord];
 				}
 			}
+			//  else if (foundCollision && typeof entityID === 'string') {
+			// 	// console.log('hihihi');
+			// 	this.activeEntitiesList.removeNPC(entityID);
+			// }
 			// draw character
 			// set new coords on the entity
 			entity.setCoords(newCoords);
@@ -90,16 +95,28 @@ export default class MovementAgent {
 			// update the entitiesField gamefield
 			// todo: possible Bugs with moving npcs?
 			// todo: check if moving npcs gets updated
-			this.gameField.updateEntitiesField(
-				'entities',
-				xCoord, yCoord,
-				entitySize[0],
-				entitySize[1],
-				newCoords[0], newCoords[1],
-				entityType,
-			);
-			// draw all entitites
+			const entityTypeToUpdate = entityType === 'playerCharacter'
+				? 'playerCharacter' : `${entityType}_${entity.getID()}`;
+			if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
+				this.activeEntitiesList.removeNPC(entityID);
+			} else {
+				this.gameField.updateEntitiesField(
+					'entities',
+					xCoord, yCoord,
+					entitySize[0],
+					entitySize[1],
+					newCoords[0], newCoords[1],
+					entityTypeToUpdate,
+				);
+				// update coords of entity
+				entity.setCoords(newCoords);
+			}
+
+			// if(entityTypeToUpdate !== 'playerCharacter'){
+			// 	if()
+			// }
 		}
+		// draw all entitites
 		this.activeEntitiesList.drawActiveEntitiesList();
 	}
 
@@ -273,8 +290,8 @@ export default class MovementAgent {
 			// entity.setCoords();
 			// return false to let the boar pass
 		}
-
-		return true;
+		// todo possible bug for future movements
+		return false;
 	}
 
 

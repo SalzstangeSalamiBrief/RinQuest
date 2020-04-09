@@ -45,7 +45,18 @@ export default class Game {
 			if (this.isPlayerAttacking) {
 				await this.movementAgent.attack(this.playerMovement.entity);
 			}
+			// move player
 			this.movementAgent.moveCharacter(this.playerMovement);
+			// move each active npc entity on the field
+			this.activeEntityList.getActiveEntitiesList().forEach((entity) => {
+				const { xAxis, yAxis } = entity.constructor.getMovementPattern();
+				this.movementAgent.moveCharacter({
+					xAxis,
+					yAxis,
+					entity,
+				});
+			});
+
 			// todo !important: attacking while standing still
 			// todo: loop gamefield
 			// todo activeNpcs movement/logic

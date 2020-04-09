@@ -80,9 +80,11 @@ export default class GameField {
 		// insert new position
 		for (let row = newYCoord; row < newYCoord + height; row += 1) {
 			for (let col = newXCoord; col < newXCoord + width; col += 1) {
-				// todo check if no bugs
-				map[row][col] += ` ${entityType}`;
-				map[row][col].trim();
+				// check if the entity already exists in the cell
+				if (!(new RegExp(entityToUpdate).test(map[row][col]))) {
+					// if the entity does not exist in the cell, add it
+					map[row][col] = (`${map[row][col]} ${entityToUpdate}`).trim();
+				}
 			}
 		}
 	}
@@ -99,7 +101,9 @@ export default class GameField {
 		const maxCols = map[0].length;
 		for (let row = 0; row < maxRows; row += 1) {
 			for (let col = 0; col < maxCols; col += 1) {
-				map[row][col]	= this.constructor.removeEntryFromCell(entityToRemove, map[row][col]);
+				if (new RegExp(entityToRemove).test(map[row][col])) {
+					map[row][col]	= this.constructor.removeEntryFromCell(entityToRemove, map[row][col]);
+				}
 			}
 		}
 	}
@@ -111,7 +115,8 @@ export default class GameField {
 	 */
 	static removeEntryFromCell(entityToRemove, cell) {
 		// split corresponding entry by the separator space
-		const entries = cell.split(' ');
+		const entries = [...cell.split(' ')];
+		// const entries = cell.split(' ');
 		// loop through all entries
 		for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
 			// if the entry with the index is found, remove it

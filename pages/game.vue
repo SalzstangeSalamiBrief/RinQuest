@@ -32,7 +32,7 @@ import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
 import GameField from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
-import NonPlayerCharacter from '../assets/js/entities/nonPlayerCharacter';
+import NPCBoar from '../assets/js/entities/npcBoar';
 import GameLoop from '../assets/js/game';
 
 export default {
@@ -139,8 +139,8 @@ export default {
 			document.querySelector('.hp-bar__text--current'),
 			document.querySelector('.hp-bar__background'),
 		);
-		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
-		const dummyNPC = new NonPlayerCharacter(
+		this.activeEntityList = new ActiveEntityList(this.player, this.painter, this.gameField);
+		const dummyNPC = new NPCBoar(
 			25,
 			17,
 			7,
@@ -153,8 +153,6 @@ export default {
 		this.movementAgent.setActiveEntityList(this.activeEntityList);
 		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gameField);
 		this.gameLoop.createGameLoop();
-		console.log(this.gameField.getField('background'));
-		console.log(this.gameField.getField('entities'));
 	},
 	beforeDestroy() {
 		window.removeEventListener('keydown', this.addKeyListeners);
