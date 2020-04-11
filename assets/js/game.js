@@ -48,14 +48,16 @@ export default class Game {
 			// move player
 			this.movementAgent.moveCharacter(this.playerMovement);
 			// move each active npc entity on the field
+
 			this.activeEntityList.getActiveEntitiesList().forEach((entity) => {
-				const { xAxis, yAxis } = entity.constructor.getMovementPattern();
+				const { xAxis, yAxis } = entity.getMovementPattern();
 				this.movementAgent.moveCharacter({
 					xAxis,
 					yAxis,
 					entity,
 				});
 			});
+
 
 			// todo !important: attacking while standing still
 			// todo: loop gamefield

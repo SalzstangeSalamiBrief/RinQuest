@@ -147,6 +147,7 @@ export default {
 			5,
 			'npcBoar',
 			0,
+			'waveMovement',
 		);
 
 		this.activeEntityList.addEntity(dummyNPC);
