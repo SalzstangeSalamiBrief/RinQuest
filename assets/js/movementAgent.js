@@ -260,8 +260,8 @@ export default class MovementAgent {
 		return { type, id };
 	}
 
-	setGameField(gameField) {
-		this.gameField = gameField;
+	setGamefield(gamefield) {
+		this.gameField = gamefield;
 	}
 
 	setActiveEntityList(list) {

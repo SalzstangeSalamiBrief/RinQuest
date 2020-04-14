@@ -1,8 +1,9 @@
 import { backgroundColumns, initEntities } from './fields.json';
 // TODO: rename
 export default class GameField {
-	constructor(painter) {
+	constructor(painter, activeEntityList) {
 		return new Promise((resolve) => {
+			this.activeEntityList = activeEntityList;
 			this.scrollIndex = 0;
 			this.fieldMap = new Map();
 			this.painter = painter;
@@ -17,11 +18,17 @@ export default class GameField {
 				.forEach((backgroundCol) => promiseArray.push(
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
-			initEntities.forEach(({ type, coords, size }) => {
-				this.painter.drawCharacter(
-					type, coords, size,
-				);
+			console.log(this.activeEntityList.getAllEntities());
+			this.activeEntityList.getAllEntities().forEach((entity) => {
+				const { coords, size } = entity.getCoordsAndSize();
+				const type = entity.getType();
+				this.painter.drawCharacter(type, coords, size);
 			});
+			// initEntities.forEach(({ type, coords, size }) => {
+			// 	this.painter.drawCharacter(
+			// 		type, coords, size,
+			// 	);
+			// });
 			Promise.all(promiseArray)
 				.then(() => resolve(this));
 		});

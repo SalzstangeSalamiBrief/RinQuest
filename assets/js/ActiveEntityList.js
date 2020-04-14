@@ -1,9 +1,9 @@
 export default class ActiveEntitiesList {
-	constructor(initPlayer, painter, gamefield) {
+	constructor(initPlayer, painter) {
 		this.playerEntity = initPlayer;
 		this.activeEntitiesList = [];
 		this.painter = painter;
-		this.gamefield = gamefield;
+		this.gamefield = undefined;
 	}
 
 	addEntity(entity) {
@@ -46,12 +46,20 @@ export default class ActiveEntitiesList {
 		}
 	}
 
+	setGamefield(gamefield) {
+		this.gamefield = gamefield;
+	}
+
 	getActiveEntitiesList() {
 		return this.activeEntitiesList;
 	}
 
 	getPlayerEntity() {
 		return this.playerEntity;
+	}
+
+	getAllEntities() {
+		return [this.playerEntity, ...this.activeEntitiesList];
 	}
 
 	getNPCEntityByID(id) {

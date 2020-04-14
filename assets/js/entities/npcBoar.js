@@ -1,8 +1,9 @@
 import NPC from './nonPlayerCharacter';
 
 export default class Boar extends NPC {
-	constructor(positionX, positionY, height, width, type, id, movementType = 'straightMovement') {
-		super(positionX, positionY, height, width, type, id);
+	constructor(posX, posY, type, id, movementType = 'straightMovement') {
+		// height: 5, width: 7
+		super(posX, posY, 7, 5, type, id);
 		this.dealtDamage = false;
 		this.movementType = movementType;
 		/*

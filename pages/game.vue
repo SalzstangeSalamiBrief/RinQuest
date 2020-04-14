@@ -30,9 +30,10 @@
 import SpritePainter from '../assets/js/spritePainter';
 import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
-import GameField from '../assets/js/gamefield/gamefield';
+import Gamefield from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
-import NPCBoar from '../assets/js/entities/npcBoar';
+// import NPCBoar from '../assets/js/entities/npcBoar';
+import NPCDragon from '../assets/js/entities/npcDragon';
 import GameLoop from '../assets/js/game';
 
 export default {
@@ -40,7 +41,7 @@ export default {
 	data() {
 		return {
 			player: undefined,
-			gameField: undefined,
+			gamefield: undefined,
 			activeEntityList: undefined,
 			gameLoop: false,
 		};
@@ -132,27 +133,24 @@ export default {
 		window.addEventListener('keydown', this.keyDownListeners);
 		window.addEventListener('keyup', this.keyUpListener);
 
-		this.gameField = await new GameField(this.painter);
-		this.movementAgent.setGameField(this.gameField);
 
 		this.player = new PlayerCharacter(
 			document.querySelector('.hp-bar__text--current'),
 			document.querySelector('.hp-bar__background'),
 		);
-		this.activeEntityList = new ActiveEntityList(this.player, this.painter, this.gameField);
-		const dummyNPC = new NPCBoar(
+		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
+		const dummyNPC = new NPCDragon(
 			25,
 			17,
-			7,
-			5,
-			'npcBoar',
-			0,
-			'waveMovement',
+			'npcDragon',
 		);
 
 		this.activeEntityList.addEntity(dummyNPC);
+		this.gamefield = await new Gamefield(this.painter, this.activeEntityList);
+		this.activeEntityList.setGamefield(this.gamefield);
+		this.movementAgent.setGamefield(this.gamefield);
 		this.movementAgent.setActiveEntityList(this.activeEntityList);
-		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gameField);
+		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gamefield);
 		this.gameLoop.createGameLoop();
 	},
 	beforeDestroy() {
