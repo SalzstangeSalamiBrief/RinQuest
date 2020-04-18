@@ -72,9 +72,10 @@
       "xMin": 25,
       "yMin": 17,
       "xMax": 32,
-      "yMax": 26,
-      "type": "npcDragon",
+      "yMax": 22,
+      "type": "npcBoar",
       "id": 0
     }
+
   ]
 }

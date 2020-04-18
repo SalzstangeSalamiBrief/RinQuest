@@ -12,8 +12,7 @@ export default class Boar extends NPC {
 			then create this.movemenGenerator which is used to iterate over the movemen-array
 	*/
 		if (movementType === 'waveMovement') {
-			this.movement = this.constructor.createWaveMovementArray();
-			this.movementGenerator = this.constructor.waveMovementGenerator(this.movement.length);
+			this.movementGenerator = this.constructor.waveMovementGenerator(24);
 		} else {
 			this.movement = this.constructor.createStraightMovement();
 		}
@@ -33,10 +32,25 @@ export default class Boar extends NPC {
 	 * Else it is movementType waveMovement: return the entry at a given index in the movementArray
 	 */
 	getMovementPattern() {
+		// straight movement
 		if (this.movementType === 'straightMovement') {
 			return this.movement;
 		}
-		return this.movement[this.movementGenerator.next().value];
+		// wave movement
+		const result = { xAxis: 0, yAxis: 0 };
+		const stepIndex = this.movementGenerator.next().value;
+		// straight left movement
+		if (stepIndex % 2 === 0) {
+			result.xAxis = -1;
+			return result;
+		} if (stepIndex < 12) {
+			// top movement
+			result.yAxis = -1;
+		} else {
+			// bottom movement
+			result.yAxis = 1;
+		}
+		return result;
 	}
 
 	/**
@@ -45,7 +59,7 @@ export default class Boar extends NPC {
 	 * @param {Number} maxLength
 	 */
 	static* waveMovementGenerator(maxLength) {
-		let index = 3;
+		let index = 0;
 		while (true) {
 			if (index < maxLength - 1) {
 				index += 1;
@@ -54,24 +68,6 @@ export default class Boar extends NPC {
 			}
 			yield index;
 		}
-	}
-
-	/**
-	 * create an array for wave-like movements from top-left to bottom-left and so on
-	 */
-	static createWaveMovementArray() {
-		const resArray = [];
-		// push inclination movement (1x left, 1x top each) top the top left
-		for (let i = 0; i < 6; i += 1) {
-			resArray.push({ xAxis: -1, yAxis: 0 });
-			resArray.push({ xAxis: 0, yAxis: -1 });
-		}
-		// push inclination movement (1x left, 1x bottom each) top the bottom left
-		for (let i = 0; i < 6; i += 1) {
-			resArray.push({ xAxis: -1, yAxis: 0 });
-			resArray.push({ xAxis: 0, yAxis: 1 });
-		}
-		return resArray;
 	}
 
 	/**
