@@ -12,6 +12,8 @@ export default class Game {
 		this.isPlayerAttacking = false;
 		this.isPlayerMoving = false;
 		this.gameLoop = undefined;
+		// needed for checking if the finish screen will be shown
+		this.gameIsFinished = false;
 	}
 
 	setPlayerStates({ isMoving = undefined, isAttacking = undefined }) {

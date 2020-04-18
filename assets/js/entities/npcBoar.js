@@ -60,6 +60,7 @@ export default class Boar extends NPC {
 	 */
 	static* waveMovementGenerator(maxLength) {
 		let index = 0;
+		// todo: refactor: replace maxLength and 23
 		while (true) {
 			if (index < maxLength - 1) {
 				index += 1;
