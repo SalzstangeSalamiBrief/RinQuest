@@ -1,3 +1,5 @@
+import NPCFlame from './entities/npcFlame';
+
 export default class Game {
 	constructor(activeEntityList, movementAgent, gameField) {
 		this.activeEntityList = activeEntityList;
@@ -14,6 +16,7 @@ export default class Game {
 		this.gameLoop = undefined;
 		// needed for checking if the finish screen will be shown
 		this.gameIsFinished = false;
+		this.flameIndexGenerator = this.constructor.generateFlameIndex();
 	}
 
 	setPlayerStates({ isMoving = undefined, isAttacking = undefined }) {
@@ -59,12 +62,39 @@ export default class Game {
 					entity,
 				});
 			});
+			const activeDragon = this.activeEntityList.getDragon();
+			if (activeDragon !== undefined) {
+				if (activeDragon.getBreathsFire() === true) {
+					const index = this.flameIndexGenerator.next().value;
+					const { coords: { xAxis, yAxis } } = activeDragon.getCoordsAndSize();
+					this.activeEntityList.addEntity(new NPCFlame(
+						xAxis - 1,
+						yAxis - 1,
+						index,
+					));
+					console.log(this.activeEntityList.getActiveEntitiesList());
+					// todo bug: flames get not drawn
+					// todo add movementPattern for flames and remove them
 
+					// for (let i = 100; i < 109; i += 1) {
+					console.log('BREATHHHHH');
+					// }
+					// todo spawn one flame each
+				}
+			}
 
 			// todo !important: attacking while standing still
 			// todo: loop gamefield
 			// todo activeNpcs movement/logic
 			// todo condition for finish
 		}, 100);
+	}
+
+	static* generateFlameIndex() {
+		let index = 100;
+		while (true) {
+			index += 1;
+			yield index;
+		}
 	}
 }

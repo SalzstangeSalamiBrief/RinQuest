@@ -1,6 +1,7 @@
 import NPC from './nonPlayerCharacter';
 
 export default class Boar extends NPC {
+	// todo: change type to static npcBoar
 	constructor(posX, posY, type, id, movementType = 'straightMovement') {
 		// height: 5, width: 7
 		super(posX, posY, 7, 5, type, id);

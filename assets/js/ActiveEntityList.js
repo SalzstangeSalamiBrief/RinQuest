@@ -4,6 +4,7 @@ export default class ActiveEntitiesList {
 		this.activeEntitiesList = [];
 		this.painter = painter;
 		this.gamefield = undefined;
+		this.dragon = undefined;
 	}
 
 	addEntity(entity) {
@@ -67,5 +68,21 @@ export default class ActiveEntitiesList {
 			(item) => item.getID() === parseInt(id, 10),
 		);
 		return this.activeEntitiesList[index];
+	}
+
+	getDragon() {
+		if (this.dragon === undefined) {
+			let dragon;
+			const list = this.activeEntitiesList;
+			for (let i = 0; i < list.length; i += 1) {
+				if (list[i].getType() === 'npcDragon') {
+					dragon = list[i];
+					break;
+				}
+			}
+			this.dragon = dragon;
+			return dragon;
+		}
+		return this.dragon;
 	}
 }

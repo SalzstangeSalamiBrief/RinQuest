@@ -7,7 +7,7 @@ export default class MovementAgent {
 		this.regexDragon = /npcDragon/;
 		this.regexBoar = /npcBoar/;
 		this.regexFlames = /entityFlames/;
-		this.regexNPCs = new RegExp('npcBoar|npcDraong');
+		this.regexNPCs = new RegExp('npcBoar|npcDragon');
 		this.regexPlayer = /playerCharacter/;
 		this.regexWaterTile = /waterTile/;
 	}
@@ -187,12 +187,12 @@ export default class MovementAgent {
 			entitySize,
 			movementDirection,
 		);
-		console.log(mergedPartialField);
+		// console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
 			return this.checkForFieldCollisionPlayer(mergedPartialField, entity);
 		}
-		if (entityType === 'npcBoar') {
-			return this.checkForFieldCollisionBoar(mergedPartialField, entity);
+		if (entityType !== 'playerCharacter') {
+			return this.checkForFieldCollisionNPC(mergedPartialField, entity);
 		}
 		// entity type could be flames, boar or dragon
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
@@ -219,13 +219,13 @@ export default class MovementAgent {
 			size,
 			'right',
 		);
-		console.log(mergedPartialField);
+		// console.log(mergedPartialField);
 		if (entityState === 'attacking') {
 			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 				const { type, id } = 	this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
 				this.activeEntitiesList.removeNPC(id);
 				this.gameField.removeFromEntitiesField(type, id);
-				console.log(this.gameField.getField('entities'));
+				// console.log(this.gameField.getField('entities'));
 				// todo remove from gamefield
 
 				// this.gameField.removeFromEntitiesField(type, id);
@@ -273,9 +273,10 @@ export default class MovementAgent {
  * @param {Array} mergedPartialField
  * @param {Entity} entity
  */
-	checkForFieldCollisionBoar(mergedPartialField, entity) {
+	checkForFieldCollisionNPC(mergedPartialField, entity) {
 		// if a playercharacter got hit
 		if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
+			console.log('NPC HIT DRAGON');
 			const playerEntity = this.activeEntitiesList.getPlayerEntity();
 			// check if the player character is attacking
 			if (playerEntity.getState() === 'attacking') {
@@ -316,7 +317,7 @@ export default class MovementAgent {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
 			console.log('hit some entity');
-			const { id, type } = this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
+			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
 				// different handling for boar and dragon beacause of hp
@@ -336,12 +337,13 @@ export default class MovementAgent {
 				// this.activeEntitiesList.getNPCEntityByID(id).setDealtDamage();
 				// entity.changeHP();
 				const npcEntity =	this.activeEntitiesList.getNPCEntityByID(id);
-				if (type.match(this.regexBoar)) {
+				// if (type.match(this.regexBoar)) {
+				if (type.match(this.regexNPCs)) {
 					if (!npcEntity.getDealtDamage()) {
 						entity.changeHP();
 						npcEntity.setDealtDamage();
 					}
-					console.log(this.gameField.getField('entities'));
+					// console.log(this.gameField.getField('entities'));
 					result = false;
 				}
 			}

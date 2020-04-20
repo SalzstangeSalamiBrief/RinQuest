@@ -1,16 +1,16 @@
 import NPC from './nonPlayerCharacter';
 
 export default class Dragon extends NPC {
-	constructor(posX, posY, type) {
+	constructor(posX, posY) {
 		// id is per default 99
 		// height = 9, width = 7, id = 99
-		super(posX, posY, 10, 10, type, 99);
+		super(posX, posY, 10, 10, 'npcDragon', 99);
 		this.dealtDamage = false;
-		this.tempMovement = { xAxis: 0, yAxis: 0 };
 		this.movement = this.constructor.movementGenerator();
 		this.hp = 100;
 		// check if the dragon is allowed to move
 		this.canMove = true;
+		this.breathsFire = false;
 	}
 
 	/**
@@ -26,10 +26,19 @@ export default class Dragon extends NPC {
 	 */
 	getMovementPattern() {
 		const result = { xAxis: 0, yAxis: 0 };
-		// only move every second call
-		if (this.canMove === true) {
+		// only move every second call and if the dragon is not breathing fire
+		if (this.canMove && !this.breathsFire) {
 			const stepIndex = this.movement.next().value;
-			result.yAxis = stepIndex <= 6 ? -1 : 1;
+			// at stepIndex === 4 the dragon is on the most left side of his movementPattern
+			// and breaths fire
+			if (stepIndex === 4) {
+				this.breathsFire = true;
+				setTimeout(() => { this.breathsFire = false; }, 1050);
+			}
+			// if the dragon is not breathing fire, then move
+			if (!this.breathsFire) {
+				result.xAxis = stepIndex <= 4 ? -1 : 1;
+			}
 		}
 		this.canMove = !this.canMove;
 		return result;
@@ -39,10 +48,20 @@ export default class Dragon extends NPC {
 	 * Generator for generating an index which is used for calculation the movementPattern
 	 */
 	static* movementGenerator() {
-		let index = 3;
+		let index = 2;
 		while (true) {
-			index = index <= 12 ? index + 1 : 0;
+			// index = index <= 12 ? index + 1 : 0;
+			index = index <= 7 ? index + 1 : 0;
 			yield index;
 		}
+	}
+	// todo: breath fire
+
+	getDealtDamage() {
+		return this.dealtDamage;
+	}
+
+	getBreathsFire() {
+		return this.breathsFire;
 	}
 }
