@@ -1,21 +1,32 @@
-export default class ActiveEntitiesList {
+export default class activeNPCsList {
 	constructor(initPlayer, painter) {
 		this.playerEntity = initPlayer;
-		this.activeEntitiesList = [];
+		this.activeNPCsList = [];
 		this.painter = painter;
 		this.gamefield = undefined;
 		this.dragon = undefined;
+		this.activeFlamesList = [];
 	}
 
 	addEntity(entity) {
-		this.activeEntitiesList.push(entity);
+		const type = entity.getType();
+		if (type === 'flame') {
+			this.activeFlamesList.push(entity);
+		} else {
+			this.activeNPCsList.push(entity);
+		}
+		const { coords, size } = entity.getCoordsAndSize();
+		this.painter.drawCharacter(type, coords, size);
 	}
 
 	drawActiveEntitiesList() {
 		// clear canvas
 		this.painter.clearCanvas('entities');
-		const tempEntityList = [...this.activeEntitiesList, this.playerEntity];
-		// draw each entity of the activeEntitiesList on the canvas
+		const tempEntityList = [
+			...this.activeNPCsList,
+			...this.activeFlamesList,
+			this.playerEntity];
+		// draw each entity of the activeNPCsList on the canvas
 		tempEntityList.forEach((activeEntity) => {
 			const { size, coords } = activeEntity.getCoordsAndSize();
 			let type = activeEntity.getType();
@@ -26,24 +37,24 @@ export default class ActiveEntitiesList {
 	}
 
 	/**
-	 * Remove a NPC by its id from the activeEntitiesList and the entities-gamefield
+	 * Remove a NPC by its id from the activeNPCsList and the entities-gamefield
 	 * @param {String} id
 	 */
 	removeNPC(id = undefined) {
 		// no id passed,  dont execute remove f urther
 		if (id === undefined) return;
 		// an id is given: search for the index and delete the entry
-		const indexToDelete = this.activeEntitiesList.findIndex(
+		const indexToDelete = this.activeNPCsList.findIndex(
 			(item) => item.getID() === parseInt(id, 10),
 		);
-		const entityToRemove = this.activeEntitiesList[indexToDelete];
+		const entityToRemove = this.activeNPCsList[indexToDelete];
 		if (entityToRemove) {
 			this.gamefield.removeFromEntitiesField(
 				entityToRemove.getType(),
 				entityToRemove.getID(),
 			);
 			// eslint-disable-next-line consistent-return
-			return this.activeEntitiesList.splice(indexToDelete, 1);
+			return this.activeNPCsList.splice(indexToDelete, 1);
 		}
 	}
 
@@ -51,29 +62,33 @@ export default class ActiveEntitiesList {
 		this.gamefield = gamefield;
 	}
 
-	getActiveEntitiesList() {
-		return this.activeEntitiesList;
+	getActiveNPCsList() {
+		return this.activeNPCsList;
 	}
 
 	getPlayerEntity() {
 		return this.playerEntity;
 	}
 
+	getFlameEntities() {
+		return this.activeFlamesList;
+	}
+
 	getAllEntities() {
-		return [this.playerEntity, ...this.activeEntitiesList];
+		return [this.playerEntity, ...this.activeFlamesList, ...this.activeNPCsList];
 	}
 
 	getNPCEntityByID(id) {
-		const index = this.activeEntitiesList.findIndex(
+		const index = this.activeNPCsList.findIndex(
 			(item) => item.getID() === parseInt(id, 10),
 		);
-		return this.activeEntitiesList[index];
+		return this.activeNPCsList[index];
 	}
 
 	getDragon() {
 		if (this.dragon === undefined) {
 			let dragon;
-			const list = this.activeEntitiesList;
+			const list = this.activeNPCsList;
 			for (let i = 0; i < list.length; i += 1) {
 				if (list[i].getType() === 'npcDragon') {
 					dragon = list[i];

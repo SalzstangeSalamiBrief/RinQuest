@@ -1,4 +1,4 @@
-import NPCFlame from './entities/npcFlame';
+import NPCFlame from './entities/flame';
 
 export default class Game {
 	constructor(activeEntityList, movementAgent, gameField) {
@@ -54,41 +54,115 @@ export default class Game {
 			this.movementAgent.moveCharacter(this.playerMovement);
 			// move each active npc entity on the field
 
-			this.activeEntityList.getActiveEntitiesList().forEach((entity) => {
-				const { xAxis, yAxis } = entity.getMovementPattern();
-				this.movementAgent.moveCharacter({
-					xAxis,
-					yAxis,
-					entity,
-				});
-			});
-			const activeDragon = this.activeEntityList.getDragon();
-			if (activeDragon !== undefined) {
-				if (activeDragon.getBreathsFire() === true) {
-					const index = this.flameIndexGenerator.next().value;
-					const { coords: { xAxis, yAxis } } = activeDragon.getCoordsAndSize();
-					this.activeEntityList.addEntity(new NPCFlame(
-						xAxis - 1,
-						yAxis - 1,
-						index,
-					));
-					console.log(this.activeEntityList.getActiveEntitiesList());
-					// todo bug: flames get not drawn
-					// todo add movementPattern for flames and remove them
 
-					// for (let i = 100; i < 109; i += 1) {
-					console.log('BREATHHHHH');
-					// }
-					// todo spawn one flame each
+			this.activeEntityList.getActiveNPCsList().forEach((entity) => {
+				const entityType = entity.getType();
+				// check if the entity is of type flame
+
+				// move entity
+				this.moveEntity(entity);
+				switch (entityType) {
+				case 'flame':
+					this.constructor.flameHandler(entity);
+					break;
+				case 'npcDragon':
+					this.dragonHandler(entity);
+					break;
+				default:
+					break;
 				}
-			}
+				// const { xAxis: xAxisMovement, yAxis: yAxisMovement } = entity.getMovementPattern();
+				// this.movementAgent.moveCharacter({
+				// 	xAxisMovement,
+				// 	yAxisMovement,
+				// 	entity,
+				// });
 
+				// if entityType === dragon, spit fire
+				// if (entityType === 'npcDragon') {
+				// const activeDragon = this.activeEntityList.getDragon();
+				// if (activeDragon !== undefined) {
+				// if (entity.getBreathsFire() === true) {
+				// 	const index = this.flameIndexGenerator.next().value;
+				// 	const { coords: [xAxisPos, yAxisPos] } = entity.getCoordsAndSize();
+				// 	// todo remove try catchj
+				// 	try {
+				// 		this.activeEntityList.addEntity(new NPCFlame(
+				// 			xAxisPos - 2,
+				// 			yAxisPos + 2,
+				// 			index,
+				// 		));
+
+				// 		clearInterval(this.gameLoop);
+				// 	} catch (err) {
+				// 		console.error(err);
+				// 		clearInterval(this.gameLoop);
+				// 	}
+				// 	for (let i = 0; i < 10; i += 1) {
+				// 		setTimeout(() => { console.log(i); }, 50);
+				// 	}
+
+				// console.log(this.activeEntityList.getActiveNPCsList());
+				// todo bug: flames get not drawn
+				// todo add movementPattern for flames and remove them
+
+				// for (let i = 100; i < 109; i += 1) {
+				// console.log('BREATHHHHH');
+				// }
+				// todo spawn one flame each
+				// }
+				// }
+				// }
+			});
+			console.log('gameLoop');
 			// todo !important: attacking while standing still
 			// todo: loop gamefield
 			// todo activeNpcs movement/logic
 			// todo condition for finish
 		}, 100);
 	}
+
+	moveEntity(entity) {
+		const { xAxis: xAxisMovement, yAxis: yAxisMovement } = entity.getMovementPattern();
+		this.movementAgent.moveCharacter({
+			xAxisMovement,
+			yAxisMovement,
+			entity,
+		});
+	}
+
+	static flameHandler(entity) {
+		// check if the TTL of the flame is equal to 0
+		if (entity.getTTL() === 0) {
+			// remove flame
+			this.activeEntityList.removeNPC(entity.getID());
+		}
+	}
+
+	dragonHandler(entity) {
+		if (entity.getBreathsFire() === true) {
+			const index = this.flameIndexGenerator.next().value;
+			const { coords: [xAxisPos, yAxisPos] } = entity.getCoordsAndSize();
+			// add a new flame
+			this.activeEntityList.addEntity(new NPCFlame(
+				xAxisPos - 2,
+				yAxisPos + 2,
+				index,
+			));
+			// todo move flames , for 20 movements, async??
+			for (let i = 0; i < 20; i += 1) {
+				this.activeEntityList.getFlameEntities().forEach((flame) => {
+					this.moveEntity(flame);
+				});
+			}
+			// for (let i = 0; i < 10; i += 1) {
+
+			// 	setTimeout(() => { console.log(i); }, 50);
+			// }
+			clearInterval(this.gameLoop);
+		}
+	}
+
 
 	static* generateFlameIndex() {
 		let index = 100;
