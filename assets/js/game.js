@@ -19,6 +19,11 @@ export default class Game {
 		this.flameIndexGenerator = this.constructor.generateFlameIndex();
 	}
 
+	/**
+	 * Calculate the state of the user based on the fact if the player attacks or is moving
+	 * @param {Boolean} isMoving
+	 * @param {Boolean} isAttacking
+	 */
 	setPlayerStates({ isMoving = undefined, isAttacking = undefined }) {
 		let newState = '';
 		const evalIsMoving = isMoving !== undefined ? isMoving : this.isPlayerMoving;
@@ -47,87 +52,108 @@ export default class Game {
 
 	createGameLoop() {
 		// if loop index is equal to 5, move characters;
-		// 5 * 30 ms => 150ms for one movement
+		// 5 * 20 ms => 100ms for one movement
 		let loopIndex = 0;
 		this.gameLoop = setInterval(async () => {
 			if (this.isPlayerAttacking) {
 				await this.movementAgent.attack(this.playerMovement.entity);
 			}
 			// move player
-			this.movementAgent.moveCharacter(this.playerMovement);
 			// move each active npc entity on the field
+			// move flames each time loopIndex % 3 is equal to 0
+			if (loopIndex % 3 === 0) {
+				this.activeEntityList.getFlameEntities().forEach((flame) => {
+					const flameIsAlive = this.flameHandler(flame);
+					if (flameIsAlive === true) {
+						this.moveEntity(flame);
+					}
+				});
+			}
 
-			this.activeEntityList.getFlameEntities().forEach((flame) => {
-				const flameIsAlive = this.constructor.flameHandler(flame);
-				if (flameIsAlive === true) {
-					this.moveEntity(flame);
-				}
-			});
-			// TODO: Bug: flames not moving, dragon not moving
-			this.activeEntityList.getActiveNPCsList().forEach((entity) => {
-				if (loopIndex === 5) {
+
+			// Move the npc and player character
+			if (loopIndex === 5) {
+				// move player character
+				this.movementAgent.moveCharacter(this.playerMovement);
+				// loop through the activeNPCsList
+				this.activeEntityList.getActiveNPCsList().forEach((entity) => {
+					// move a entity
 					this.moveEntity(entity);
+					// if the type of the entity is npcDragon, create flames
 					if (entity.getType() === 'npcDragon') {
 						this.dragonHandler(entity);
 					}
 					loopIndex = 0;
-				} else {
-					loopIndex += 1;
-				}
-			});
-			console.log('gameLoop');
-			console.log(loopIndex);
+				});
+			} else {
+				loopIndex += 1;
+			}
+			console.log(this.gameField.getField('entities'));
+			// console.log('gameLoop');
+			// console.log(loopIndex);
 			// clearInterval(this.gameLoop);
-			// todo !important: attacking while standing still
 			// todo: loop gamefield
-			// todo activeNpcs movement/logic
 			// todo condition for finish
-		}, 100);
+		}, 20);
 	}
 
+	/**
+	 * Move the passed Entity
+	 * @param {Entity} entity
+	 */
 	moveEntity(entity) {
-		const { xAxis: xAxisMovement, yAxis: yAxisMovement } = entity.getMovementPattern();
+		const { xAxis, yAxis } = entity.getMovementPattern();
+		console.log({
+			xAxis,
+			yAxis,
+			entity,
+		});
 		this.movementAgent.moveCharacter({
-			xAxisMovement,
-			yAxisMovement,
+			xAxis,
+			yAxis,
 			entity,
 		});
 	}
 
-	static flameHandler(entity) {
+	// todo bug: flames invisible, not moving
+	flameHandler(entity) {
 		// check if the TTL of the flame is equal to 0
 		if (entity.getTTL() === 0) {
+			// clearInterval(this.gameLoop);
 			// remove flame
-			this.activeEntityList.removeNPC(entity.getID());
+			this.activeEntityList.removeEntity(entity.getID(), 'flame');
 			return undefined;
 		}
 		return true;
 	}
 
+	/**
+	 * Handler for the dragon. Creates a new flame if the dragon breaths fire
+	 * @param {npcDragon} entity
+	 */
 	dragonHandler(entity) {
+		// check if the dragon breaths fire
 		if (entity.getBreathsFire() === true) {
+			// get the next index from the flameIndexGenerator
 			const index = this.flameIndexGenerator.next().value;
+			// get Coords from the passed dragon
 			const { coords: [xAxisPos, yAxisPos] } = entity.getCoordsAndSize();
-			// add a new flame
-			this.activeEntityList.addEntity(new NPCFlame(
+			// create a new flame
+			const newFlame = new NPCFlame(
 				xAxisPos - 2,
 				yAxisPos + 2,
 				index,
-			));
-			// todo move flames , for 20 movements, async??
-			// for (let i = 0; i < 20; i += 1) {
-			// 	this.activeEntityList.getFlameEntities().forEach((flame) => {
-			// 		this.moveEntity(flame);
-			// 	});
-			// }
-			// for (let i = 0; i < 10; i += 1) {
-
-			// 	setTimeout(() => { console.log(i); }, 50);
-			// }
+			);
+			// add the created flame to the flameEntityList
+			this.activeEntityList.addEntity(newFlame);
+			// add the created Flame to the entity map of the gameField
+			this.gameField.addEntityAtCoords(newFlame);
 		}
 	}
 
-
+	/**
+ * Generator for a integer gt 100
+ */
 	static* generateFlameIndex() {
 		let index = 100;
 		while (true) {

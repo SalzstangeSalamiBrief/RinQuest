@@ -15,6 +15,7 @@ export default class activeNPCsList {
 		} else {
 			this.activeNPCsList.push(entity);
 		}
+		// add to gamefield[entities]
 		const { coords, size } = entity.getCoordsAndSize();
 		this.painter.drawCharacter(type, coords, size);
 	}
@@ -39,22 +40,24 @@ export default class activeNPCsList {
 	/**
 	 * Remove a NPC by its id from the activeNPCsList and the entities-gamefield
 	 * @param {String} id
+	 * @param {String} entityType
 	 */
-	removeNPC(id = undefined) {
-		// no id passed,  dont execute remove f urther
+	removeEntity(id = undefined, entityType = 'npc') {
+		// no id passed,  dont execute remove further
 		if (id === undefined) return;
+		const list = entityType === 'npc' ? this.activeNPCsList : this.activeFlamesList;
 		// an id is given: search for the index and delete the entry
-		const indexToDelete = this.activeNPCsList.findIndex(
+		const indexToDelete = list.findIndex(
 			(item) => item.getID() === parseInt(id, 10),
 		);
-		const entityToRemove = this.activeNPCsList[indexToDelete];
+		const entityToRemove = list[indexToDelete];
 		if (entityToRemove) {
 			this.gamefield.removeFromEntitiesField(
 				entityToRemove.getType(),
 				entityToRemove.getID(),
 			);
 			// eslint-disable-next-line consistent-return
-			return this.activeNPCsList.splice(indexToDelete, 1);
+			return list.splice(indexToDelete, 1);
 		}
 	}
 
@@ -78,6 +81,10 @@ export default class activeNPCsList {
 		return [this.playerEntity, ...this.activeFlamesList, ...this.activeNPCsList];
 	}
 
+	/**
+	 * Get a NPC by the passed ID from the activeNPCsList
+	 * @param {Number} id
+	 */
 	getNPCEntityByID(id) {
 		const index = this.activeNPCsList.findIndex(
 			(item) => item.getID() === parseInt(id, 10),
@@ -85,7 +92,11 @@ export default class activeNPCsList {
 		return this.activeNPCsList[index];
 	}
 
+	/**
+	 * get the active dragon of the game
+	 */
 	getDragon() {
+		// if dragon is undefined, search for it in the activeNPCsList and set the dragon variable
 		if (this.dragon === undefined) {
 			let dragon;
 			const list = this.activeNPCsList;

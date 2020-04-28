@@ -70,7 +70,7 @@ export default class MovementAgent {
 				entityID,
 			)
 			);
-			// console.log(foundCollision, entityID);
+			console.log(foundCollision, entityID);
 			if (!foundCollision) {
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
@@ -84,7 +84,7 @@ export default class MovementAgent {
 			}
 			//  else if (foundCollision && typeof entityID === 'string') {
 			// 	// console.log('hihihi');
-			// 	this.activeEntitiesList.removeNPC(entityID);
+			// 	this.activeEntitiesList.removeEntity(entityID);
 			// }
 			// draw character
 			// set new coords on the entity
@@ -98,7 +98,7 @@ export default class MovementAgent {
 			const entityTypeToUpdate = entityType === 'playerCharacter'
 				? 'playerCharacter' : `${entityType}_${entity.getID()}`;
 			if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
-				this.activeEntitiesList.removeNPC(entityID);
+				this.activeEntitiesList.removeEntity(entityID);
 			} else {
 				this.gameField.updateEntitiesField(
 					'entities',
@@ -141,7 +141,7 @@ export default class MovementAgent {
 				newCalcedCoords[0] = 0;
 			} else {
 				newCalcedCoords[0] = 0;
-				this.activeEntitiesList.removeNPC(id);
+				this.activeEntitiesList.removeEntity(id);
 			}
 		}
 		// check for +x/right movement collision
@@ -223,7 +223,7 @@ export default class MovementAgent {
 		if (entityState === 'attacking') {
 			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 				const { type, id } = 	this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
-				this.activeEntitiesList.removeNPC(id);
+				this.activeEntitiesList.removeEntity(id);
 				this.gameField.removeFromEntitiesField(type, id);
 				// console.log(this.gameField.getField('entities'));
 				// todo remove from gamefield
@@ -232,6 +232,13 @@ export default class MovementAgent {
 				this.activeEntitiesList.drawActiveEntitiesList();
 			}
 			if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
+				const dragon = this.activeEntitiesList.getDragon();
+				const dragonIsAlive = dragon.decreaseDragonHP();
+				if (!dragonIsAlive) {
+					// remove dragon
+					// remove dragon from the active npcsList
+					// end game
+				}
 				console.log('attack Dragon');
 			}
 		}
@@ -281,7 +288,7 @@ export default class MovementAgent {
 			// check if the player character is attacking
 			if (playerEntity.getState() === 'attacking') {
 				// remove this npc
-				this.activeEntitiesList.removeNPC(entity.getID());
+				this.activeEntitiesList.removeEntity(entity.getID());
 			} else if (entity.getDealtDamage() === false) {
 				// player is not Attacking => set dealtDamage and decrease hp of the player
 				entity.setDealtDamage();
@@ -325,7 +332,7 @@ export default class MovementAgent {
 
 				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 					this.gameField.removeFromEntitiesField(type, id);
-					this.activeEntitiesList.removeNPC(id);
+					this.activeEntitiesList.removeEntity(id);
 				}
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
 					// if a dragon gets hit, deal damage to the dragon

@@ -135,6 +135,26 @@ export default class GameField {
 		return entries.join(' ').trim();
 	}
 
+	addEntityAtCoords(entityToAdd) {
+		const { size: [width, height], coords: [xCoord, yCoord] } = entityToAdd.getCoordsAndSize();
+		const maxXCoord = xCoord + width;
+		const maxYCoord = yCoord + height;
+		const entryToAdd = `${entityToAdd.getType()}_${entityToAdd.getID()}`;
+		const map = this.fieldMap.get('entities');
+		console.log({
+			xCoord, yCoord, maxXCoord, maxYCoord,
+		});
+		for (let row = yCoord; row < maxYCoord; row += 1) {
+			for (let col = xCoord; col < maxXCoord; col += 1) {
+				map[row][col] += ` ${entryToAdd}`;
+				console.log('-----------');
+				console.log(map[row][col]);
+				console.log('-----------');
+				map[row][col].trim();
+			}
+		}
+	}
+
 	getField(type) {
 		return this.fieldMap.get(type);
 	}

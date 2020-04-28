@@ -55,6 +55,18 @@ export default class Dragon extends NPC {
 			yield index;
 		}
 	}
+
+	/**
+	 * Decrease the HP of this object by a passed value (default 20)
+	 * @param {Number} damage
+	 */
+	decreaseDragonHP(damage = 20) {
+		this.HP -= damage;
+		if (this.HP <= 0) {
+			return true;
+		}
+		return false;
+	}
 	// todo: breath fire
 
 	getDealtDamage() {
