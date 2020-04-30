@@ -5,7 +5,6 @@ export default class Boar extends NPC {
 	constructor(posX, posY, type, id, movementType = 'straightMovement') {
 		// height: 5, width: 7
 		super(posX, posY, 7, 5, type, id);
-		this.dealtDamage = false;
 		this.movementType = movementType;
 		/*
 		calculate different values for movement by the given movementTypebundleRenderer.renderToStream
@@ -17,14 +16,6 @@ export default class Boar extends NPC {
 		} else {
 			this.movement = this.constructor.createStraightMovement();
 		}
-	}
-
-	setDealtDamage() {
-		this.dealtDamage = true;
-	}
-
-	getDealtDamage() {
-		return this.dealtDamage;
 	}
 
 	/**

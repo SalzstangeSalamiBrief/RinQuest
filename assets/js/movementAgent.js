@@ -70,7 +70,7 @@ export default class MovementAgent {
 				entityID,
 			)
 			);
-			console.log(foundCollision, entityID);
+			// console.log(foundCollision, entityID);
 			if (!foundCollision) {
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
@@ -221,35 +221,50 @@ export default class MovementAgent {
 		);
 		// console.log(mergedPartialField);
 		if (entityState === 'attacking') {
+			// decide for the used regex (regexBoar or regexDragon)
+			let regexOfEntity;
 			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
-				const { type, id } = 	this.constructor.getTypeOfEntity(this.regexBoar, mergedPartialField);
-				this.activeEntitiesList.removeEntity(id);
-				this.gameField.removeFromEntitiesField(type, id);
-				// console.log(this.gameField.getField('entities'));
-				// todo remove from gamefield
-
-				// this.gameField.removeFromEntitiesField(type, id);
-				this.activeEntitiesList.drawActiveEntitiesList();
+				regexOfEntity = 'regexBoar';
 			}
 			if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
-				const dragon = this.activeEntitiesList.getDragon();
-				const dragonIsAlive = dragon.decreaseDragonHP();
-				if (!dragonIsAlive) {
-					// remove dragon
-					// remove dragon from the active npcsList
-					// end game
+				regexOfEntity = 'regexDragon';
+			}
+			// regexOfEntity is not undefined
+			if (regexOfEntity !== undefined) {
+				const { type, id } = this.constructor.getTypeOfEntity(
+					this[regexOfEntity], mergedPartialField,
+				);
+
+				if (regexOfEntity === 'regexBoar') {
+					this.activeEntitiesList.removeEntity(id);
+					this.gameField.removeFromEntitiesField(type, id);
 				}
-				console.log('attack Dragon');
+				if (regexOfEntity === 'regexDragon') {
+					this.activeEntitiesList.removeEntity(id);
+					this.gameField.removeFromEntitiesField(type, id);
+					// 	const dragon = this.activeEntitiesList.getDragon();
+					// 	console.log(dragon);
+					// 	const dragonIsAlive = dragon.decreaseDragonHP();
+					// 	if (!dragonIsAlive) {
+					// 		this.activeEntitiesList.removeEntity(id);
+					// 		this.gameField.removeFromEntitiesField(type, id);
+					// 		// remove dragon
+					// 		// remove dragon from the active npcsList
+					// 		// end game
+					// 	}
+				}
 			}
 		}
 	}
 
 	static checkIfArrayIncludesString(regex, item) {
+		console.log(item);
 		const itemsToCheck = [...item];
 		let isIncluded = false;
 		for (let i = 0; i < itemsToCheck.length; i += 1) {
 			isIncluded = isIncluded || regex.test(item[i]);
 		}
+		console.log(isIncluded);
 		return isIncluded;
 	}
 
@@ -289,11 +304,12 @@ export default class MovementAgent {
 			if (playerEntity.getState() === 'attacking') {
 				// remove this npc
 				this.activeEntitiesList.removeEntity(entity.getID());
-			} else if (entity.getDealtDamage() === false) {
-				// player is not Attacking => set dealtDamage and decrease hp of the player
-				entity.setDealtDamage();
-				playerEntity.changeHP();
 			}
+			// else if (entity.getDealtDamage() === false) {
+			// 	// player is not Attacking => set dealtDamage and decrease hp of the player
+			// 	entity.setDealtDamage();
+			playerEntity.changeHP();
+			// }
 			// todo: move behind playerEntity or remove
 			// entity.setCoords();
 			// return false to let the boar pass
@@ -334,9 +350,11 @@ export default class MovementAgent {
 					this.gameField.removeFromEntitiesField(type, id);
 					this.activeEntitiesList.removeEntity(id);
 				}
+				console.log(mergedPartialField);
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
 					// if a dragon gets hit, deal damage to the dragon
 					console.log('hitDragon');
+					this.gameField.removeFromEntitiesField(type, id);
 				}
 				console.log('ATTACK');
 			} else {

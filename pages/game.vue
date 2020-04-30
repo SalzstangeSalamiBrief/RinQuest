@@ -24,6 +24,7 @@
 				<div class="hp-bar__background"></div>
 			</div>
 		</div>
+		<!-- create HP-bar for dragon -->
   </div>
 </template>
 <script>

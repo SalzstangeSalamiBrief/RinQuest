@@ -5,7 +5,6 @@ export default class Flame extends NPC {
 		super(posX, posY, 2, 2, 'flame', id);
 		this.movement = { xAxis: 0, yAxis: 0 };
 		this.TTL = 20;
-		this.dealtDamage = false;
 	}
 
 	/**
@@ -24,14 +23,6 @@ export default class Flame extends NPC {
 		}
 		this.TTL -= 1;
 		return this.movement;
-	}
-
-	setDealtDamage() {
-		this.dealtDamage = true;
-	}
-
-	getDealtDamage() {
-		return this.dealtDamage;
 	}
 
 	getTTL() {

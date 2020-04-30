@@ -60,8 +60,8 @@ export default class Game {
 			}
 			// move player
 			// move each active npc entity on the field
-			// move flames each time loopIndex % 3 is equal to 0
-			if (loopIndex % 3 === 0) {
+			// move flames each time loopIndex % 3 === 1
+			if (loopIndex % 3 === 1) {
 				this.activeEntityList.getFlameEntities().forEach((flame) => {
 					const flameIsAlive = this.flameHandler(flame);
 					if (flameIsAlive === true) {
@@ -83,12 +83,12 @@ export default class Game {
 					if (entity.getType() === 'npcDragon') {
 						this.dragonHandler(entity);
 					}
-					loopIndex = 0;
 				});
+				loopIndex = 0;
 			} else {
 				loopIndex += 1;
 			}
-			console.log(this.gameField.getField('entities'));
+			// console.log(this.gameField.getField('entities'));
 			// console.log('gameLoop');
 			// console.log(loopIndex);
 			// clearInterval(this.gameLoop);
@@ -103,11 +103,11 @@ export default class Game {
 	 */
 	moveEntity(entity) {
 		const { xAxis, yAxis } = entity.getMovementPattern();
-		console.log({
-			xAxis,
-			yAxis,
-			entity,
-		});
+		// console.log({
+		// 	xAxis,
+		// 	yAxis,
+		// 	entity,
+		// });
 		this.movementAgent.moveCharacter({
 			xAxis,
 			yAxis,

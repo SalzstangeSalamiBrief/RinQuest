@@ -18,9 +18,13 @@ export default class PlayerCharacter extends Entity {
 		this.backgroundContainer = backgroundContainer;
 		// possible States: idle, moving, attacking
 		this.state = 'idle';
+		this.gotDamage = false;
 	}
 
 	changeHP(damageReceived = 20) {
+		// if the player already got damage in the last 1.5 sec, dont deal new damage
+		if (this.gotDamage) return;
+		// calc new HP
 		const newHP = this.HP - damageReceived;
 		if (newHP <= 0) {
 			this.HP = 0;
@@ -29,6 +33,7 @@ export default class PlayerCharacter extends Entity {
 			this.HP = newHP;
 		}
 		// update hpBar-width and current numerical current hp of the player
+		this.setGotDamage();
 		this.textContainer.textContent = this.HP;
 		this.backgroundContainer.style.width = `${this.HP}%`;
 	}
@@ -45,5 +50,14 @@ export default class PlayerCharacter extends Entity {
 
 	getState() {
 		return this.state;
+	}
+
+	setGotDamage() {
+		this.gotDamage = true;
+		setTimeout(() => { this.gotDamage = false; }, 1500);
+	}
+
+	getGotDamage() {
+		return this.gotDamage;
 	}
 }

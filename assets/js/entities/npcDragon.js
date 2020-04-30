@@ -5,20 +5,17 @@ export default class Dragon extends NPC {
 		// id is per default 99
 		// height = 9, width = 7, id = 99
 		super(posX, posY, 10, 10, 'npcDragon', 99);
-		this.dealtDamage = false;
 		this.movement = this.constructor.movementGenerator();
 		this.hp = 100;
 		// check if the dragon is allowed to move
 		this.canMove = true;
 		this.breathsFire = false;
-	}
-
-	/**
-	 * set the value of dealtDamage to true and reverse the value to false after 1.5sec
-	 */
-	setDealtDamage() {
-		this.dealtDamage = true;
-		setTimeout(() => { this.dealtDamage = false; }, 1500);
+		// TODO:
+		// grab both dom-elems via selector
+		// set visible to true (default false)
+		// todo: change their textContent and bg if hp is changed
+		this.dragonHPTextContainer = 'dragonHPTextContainer';
+		this.dragonBackgroundContainer = 'dragonBackgroundContainer';
 	}
 
 	/**
@@ -56,11 +53,12 @@ export default class Dragon extends NPC {
 		}
 	}
 
+	// TODO: TEMP damage default 100
 	/**
 	 * Decrease the HP of this object by a passed value (default 20)
 	 * @param {Number} damage
 	 */
-	decreaseDragonHP(damage = 20) {
+	decreaseDragonHP(damage = 100) {
 		this.HP -= damage;
 		if (this.HP <= 0) {
 			return true;
@@ -68,10 +66,6 @@ export default class Dragon extends NPC {
 		return false;
 	}
 	// todo: breath fire
-
-	getDealtDamage() {
-		return this.dealtDamage;
-	}
 
 	getBreathsFire() {
 		return this.breathsFire;
