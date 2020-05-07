@@ -2,9 +2,9 @@ import NPC from './nonPlayerCharacter';
 
 export default class Boar extends NPC {
 	// todo: change type to static npcBoar
-	constructor(posX, posY, type, id, movementType = 'straightMovement') {
+	constructor(posX, posY, id, movementType = 'straightMovement') {
 		// height: 5, width: 7
-		super(posX, posY, 7, 5, type, id);
+		super(posX, posY, 7, 5, 'npcBoar', id);
 		this.movementType = movementType;
 		/*
 		calculate different values for movement by the given movementTypebundleRenderer.renderToStream

@@ -14,8 +14,9 @@ export default class Dragon extends NPC {
 		// grab both dom-elems via selector
 		// set visible to true (default false)
 		// todo: change their textContent and bg if hp is changed
-		this.dragonHPTextContainer = 'dragonHPTextContainer';
-		this.dragonBackgroundContainer = 'dragonBackgroundContainer';
+		this.dragonHPTextContainer = 	document.querySelector('.hp-bar__text--current.dragon');
+		this.dragonBackgroundContainer = document.querySelector('.hp-bar__background.dragon');
+		this.gotDamage = false;
 	}
 
 	/**
@@ -56,16 +57,33 @@ export default class Dragon extends NPC {
 	// TODO: TEMP damage default 100
 	/**
 	 * Decrease the HP of this object by a passed value (default 20)
+	 * return true if the dragon is still alive
+	 * return false if the dragon is not alive (hp <= 0)
 	 * @param {Number} damage
 	 */
 	decreaseDragonHP(damage = 100) {
-		this.HP -= damage;
-		if (this.HP <= 0) {
-			return true;
+		// dragon got already damage in the last 1.5s
+		if (this.gotDamage === true) return true;
+		this.hp -= damage;
+		this.setGotDamage();
+		if (this.hp <= 0) {
+			return false;
 		}
-		return false;
+		return true;
 	}
-	// todo: breath fire
+
+	setGotDamage() {
+		this.gotDamage = true;
+		console.log(this.gotDamage);
+		this.dragonHPTextContainer.textContent = this.hp;
+		this.dragonBackgroundContainer.style.width = `${this.hp}%`;
+		this.gotDamage = false;
+		setTimeout(() => { this.gotDamage = false; }, 1500);
+	}
+
+	getGotDamage() {
+		return this.gotDamage;
+	}
 
 	getBreathsFire() {
 		return this.breathsFire;

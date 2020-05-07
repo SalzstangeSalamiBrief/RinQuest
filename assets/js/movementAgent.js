@@ -240,31 +240,21 @@ export default class MovementAgent {
 					this.gameField.removeFromEntitiesField(type, id);
 				}
 				if (regexOfEntity === 'regexDragon') {
-					this.activeEntitiesList.removeEntity(id);
-					this.gameField.removeFromEntitiesField(type, id);
-					// 	const dragon = this.activeEntitiesList.getDragon();
-					// 	console.log(dragon);
-					// 	const dragonIsAlive = dragon.decreaseDragonHP();
-					// 	if (!dragonIsAlive) {
-					// 		this.activeEntitiesList.removeEntity(id);
-					// 		this.gameField.removeFromEntitiesField(type, id);
-					// 		// remove dragon
-					// 		// remove dragon from the active npcsList
-					// 		// end game
-					// 	}
+					console.log('func Attack');
+					this.damageDragon();
 				}
 			}
 		}
 	}
 
 	static checkIfArrayIncludesString(regex, item) {
-		console.log(item);
+		// console.log(item);
 		const itemsToCheck = [...item];
 		let isIncluded = false;
 		for (let i = 0; i < itemsToCheck.length; i += 1) {
 			isIncluded = isIncluded || regex.test(item[i]);
 		}
-		console.log(isIncluded);
+		// console.log(isIncluded);
 		return isIncluded;
 	}
 
@@ -303,12 +293,16 @@ export default class MovementAgent {
 			// check if the player character is attacking
 			if (playerEntity.getState() === 'attacking') {
 				// remove this npc
-				this.activeEntitiesList.removeEntity(entity.getID());
+				if (!(entity.getType() === 'npcDragon')) {
+					// console.log('func checkForFieldCollisionNPC');
+					this.activeEntitiesList.removeEntity(entity.getID());
+				}
+			} else {
+				playerEntity.changeHP();
 			}
 			// else if (entity.getDealtDamage() === false) {
 			// 	// player is not Attacking => set dealtDamage and decrease hp of the player
 			// 	entity.setDealtDamage();
-			playerEntity.changeHP();
 			// }
 			// todo: move behind playerEntity or remove
 			// entity.setCoords();
@@ -339,12 +333,11 @@ export default class MovementAgent {
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
-			console.log('hit some entity');
 			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
-				// different handling for boar and dragon beacause of hp
-				// if a boar gets hgit, remove it
+				// different handling for boar and dragon because of hp
+				// if a boar gets hit, remove it
 
 				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
 					this.gameField.removeFromEntitiesField(type, id);
@@ -352,29 +345,41 @@ export default class MovementAgent {
 				}
 				console.log(mergedPartialField);
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
+					// console.log('func checkForFieldCollisionPlayer');
+					this.damageDragon();
 					// if a dragon gets hit, deal damage to the dragon
-					console.log('hitDragon');
-					this.gameField.removeFromEntitiesField(type, id);
 				}
-				console.log('ATTACK');
 			} else {
 				// todo: get id from mergedPartialField, set damageDealt to this entity
-				// this.activeEntitiesList.getNPCEntityByID(id).setDealtDamage();
-				// entity.changeHP();
-				const npcEntity =	this.activeEntitiesList.getNPCEntityByID(id);
+				// const npcEntity =	this.activeEntitiesList.getNPCEntityByID(id);
 				// if (type.match(this.regexBoar)) {
-				if (type.match(this.regexNPCs)) {
-					if (!npcEntity.getDealtDamage()) {
-						entity.changeHP();
-						npcEntity.setDealtDamage();
-					}
-					// console.log(this.gameField.getField('entities'));
-					result = false;
-				}
+				// if (type.match(this.regexNPCs)) {
+				// 	if (!npcEntity.getDealtDamage()) {
+				// 		entity.changeHP();
+				// 		npcEntity.setDealtDamage();
+				// 	}
+				// 	// console.log(this.gameField.getField('entities'));
+				// 	result = false;
+				// }
+				result = false;
 			}
 			// result = true;
 		}
 		return result;
+	}
+
+	damageDragon() {
+		const activeDragon = this.activeEntitiesList.getDragon();
+		// TODO: FIX bug: Dragon loses 100HP in under 1 second
+		// if (activeDragon.getGotDamage() === false) {
+		const dragonIsAlive = activeDragon.decreaseDragonHP(20);
+		// console.log(dragonIsAlive);
+		if (!dragonIsAlive) {
+			const id = activeDragon.getID();
+			this.activeEntitiesList.removeEntity(id);
+			this.gameField.removeFromEntitiesField('npcDragon', id);
+		}
+		// }
 	}
 
 	// static getCollisionEntity(mergedPartialField) {

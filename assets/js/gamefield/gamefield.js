@@ -18,7 +18,7 @@ export default class GameField {
 				.forEach((backgroundCol) => promiseArray.push(
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
-			console.log(this.activeEntityList.getAllEntities());
+			// console.log(this.activeEntityList.getAllEntities());
 			this.activeEntityList.getAllEntities().forEach((entity) => {
 				const { coords, size } = entity.getCoordsAndSize();
 				const type = entity.getType();
@@ -147,9 +147,9 @@ export default class GameField {
 		for (let row = yCoord; row < maxYCoord; row += 1) {
 			for (let col = xCoord; col < maxXCoord; col += 1) {
 				map[row][col] += ` ${entryToAdd}`;
-				console.log('-----------');
-				console.log(map[row][col]);
-				console.log('-----------');
+				// console.log('-----------');
+				// console.log(map[row][col]);
+				// console.log('-----------');
 				map[row][col].trim();
 			}
 		}

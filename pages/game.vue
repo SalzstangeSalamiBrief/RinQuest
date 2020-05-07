@@ -13,18 +13,31 @@
 			height="860"
 			class="full-container"
 		></canvas>
-		<div class="hp-bar">
+		<div class="hp-bar player">
+			<p class="hp-bar__label">Player</p>
 			<div class="hp-bar__container">
 				<div class="hp-bar__text full-container flex--row center-flex">
-					<span class="hp-bar__text--current">
+					<span class="hp-bar__text--current player">
 						100
 					</span>
 					/100
 				</div>
-				<div class="hp-bar__background"></div>
+				<div class="hp-bar__background player"></div>
 			</div>
 		</div>
 		<!-- create HP-bar for dragon -->
+		<div class="hp-bar dragon">
+			<p class="hp-bar__label">Dragon</p>
+			<div class="hp-bar__container">
+				<div class="hp-bar__text full-container flex--row center-flex">
+					<span class="hp-bar__text--current dragon">
+						100
+					</span>
+					/100
+				</div>
+				<div class="hp-bar__background dragon"></div>
+			</div>
+		</div>
   </div>
 </template>
 <script>
@@ -136,8 +149,8 @@ export default {
 
 
 		this.player = new PlayerCharacter(
-			document.querySelector('.hp-bar__text--current'),
-			document.querySelector('.hp-bar__background'),
+			document.querySelector('.hp-bar__text--current.player'),
+			document.querySelector('.hp-bar__background.player'),
 		);
 		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
 		const dummyNPC = new NPCDragon(
@@ -187,8 +200,16 @@ export default {
 .hp-bar{
 	position: absolute;
 	z-index: 2;
+}
+
+.hp-bar.player{
 	top: 10px;
 	left: 10px;
+}
+
+.hp-bar.dragon{
+	bottom: 10px;
+	left: calc(50% - 12.5rem);
 }
 
 .hp-bar__container{
@@ -212,5 +233,19 @@ export default {
 	background: green;
 	width: 100%;
 	height: 100%;
+}
+/* TODO: Better contrast colors */
+.hp-bar.dragon div{
+	color: white;
+}
+
+.hp-bar__background.dragon{
+	background: red;
+}
+
+.hp-bar__label{
+	font-weight: 600;
+	display: inline-block;
+	padding: 2px;
 }
 </style>
