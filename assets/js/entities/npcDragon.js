@@ -54,44 +54,6 @@ export default class Dragon extends NPC {
 		}
 	}
 
-	// TODO: TEMP damage default 100
-	/**
-	 * Decrease the HP of this object by a passed value (default 20)
-	 * return true if the dragon is still alive
-	 * return false if the dragon is not alive (hp <= 0)
-	 * @param {Number} damage
-	 */
-	decreaseDragonHP(damageReceived = 100) {
-		// dragon got already damage in the last 1.5s
-		if (this.gotDamage) return true;
-		// else calc new HP
-		const newHP = this.hp - damageReceived;
-		// init dragonIsAlive with true
-		let dragonIsAlive = true;
-		if (newHP <= 0) {
-			// if newHP is lt 0 => hp = 0 && dragonIsAlive = false
-			this.hp = 0;
-			dragonIsAlive = false;
-		} else {
-			// else set hp = newHP
-			this.hp = newHP;
-		}
-		this.setGotDamage();
-		return dragonIsAlive;
-	}
-
-	/**
-	 * Set gotDamage to true
-	 * Set HPTextContainer with new Hp and adjust width of the background
-	 * Set timeout to set gotDamage to false after 1.5sec
-	 */
-	setGotDamage() {
-		this.gotDamage = true;
-		this.dragonHPTextContainer.textContent = this.hp;
-		this.dragonBackgroundContainer.style.width = `${this.hp}%`;
-		setTimeout(() => { this.gotDamage = false; }, 1500);
-	}
-
 	getGotDamage() {
 		return this.gotDamage;
 	}

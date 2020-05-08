@@ -1,0 +1,33 @@
+    {
+      "coords": [25,17],
+      "xMin": 25,
+      "yMin": 17,
+      "xMax": 32,
+      "yMax": 22,
+      "type": "npcBoar",
+      "id": 0
+    }
+
+
+    // const dummyNPC = new NPCDragon(
+    //  25,
+    //  17,
+    //  'npcDragon',
+    // );
+    const dummyNPC = new NPCBoar(
+      25,
+      17,
+      0,
+      'waveMovement',
+    );
+
+
+    {
+      "coords": [25,17],
+      "xMin": 25,
+      "yMin": 17,
+      "xMax": 32,
+      "yMax": 26,
+      "type": "npcDragon",
+      "id": 99
+    }

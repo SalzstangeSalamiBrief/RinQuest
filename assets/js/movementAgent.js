@@ -298,7 +298,7 @@ export default class MovementAgent {
 					this.activeEntitiesList.removeEntity(entity.getID());
 				}
 			} else {
-				playerEntity.changeHP();
+				playerEntity.decreaseHP();
 			}
 			// else if (entity.getDealtDamage() === false) {
 			// 	// player is not Attacking => set dealtDamage and decrease hp of the player
@@ -333,6 +333,8 @@ export default class MovementAgent {
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
+			console.log(mergedPartialField);
+			// TODO: REmove Boar properly from gamefield etc.
 			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
@@ -372,7 +374,7 @@ export default class MovementAgent {
 		const activeDragon = this.activeEntitiesList.getDragon();
 		// TODO: FIX bug: Dragon loses 100HP in under 1 second
 		// if (activeDragon.getGotDamage() === false) {
-		const dragonIsAlive = activeDragon.decreaseDragonHP(20);
+		const dragonIsAlive = activeDragon.decreaseHP(20);
 		// console.log(dragonIsAlive);
 		if (!dragonIsAlive) {
 			const id = activeDragon.getID();
