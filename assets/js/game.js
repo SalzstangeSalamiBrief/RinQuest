@@ -55,9 +55,6 @@ export default class Game {
 		// 5 * 20 ms => 100ms for one movement
 		let loopIndex = 0;
 		this.gameLoop = setInterval(async () => {
-			if (this.isPlayerAttacking) {
-				await this.movementAgent.attack(this.playerMovement.entity);
-			}
 			// move player
 			// move each active npc entity on the field
 			// move flames each time loopIndex % 3 === 1
@@ -73,17 +70,23 @@ export default class Game {
 
 			// Move the npc and player character
 			if (loopIndex === 5) {
+				// // if player is in attacking state execute attack
+				// if (this.isPlayerAttacking) {
+				// 	await this.movementAgent.attack(this.playerMovement.entity);
+				// }
+				// else: player is not in attacking state
 				// move player character
-				this.movementAgent.moveCharacter(this.playerMovement);
+				await this.movementAgent.moveCharacter(this.playerMovement);
 				// loop through the activeNPCsList
-				this.activeEntityList.getActiveNPCsList().forEach((entity) => {
+				await 	this.activeEntityList.getActiveNPCsList().forEach(async (entity) => {
 					// move a entity
-					this.moveEntity(entity);
+					await this.moveEntity(entity);
 					// if the type of the entity is npcDragon, create flames
 					if (entity.getType() === 'npcDragon') {
 						this.dragonHandler(entity);
 					}
 				});
+
 				loopIndex = 0;
 			} else {
 				loopIndex += 1;

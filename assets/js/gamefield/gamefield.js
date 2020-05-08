@@ -141,9 +141,9 @@ export default class GameField {
 		const maxYCoord = yCoord + height;
 		const entryToAdd = `${entityToAdd.getType()}_${entityToAdd.getID()}`;
 		const map = this.fieldMap.get('entities');
-		console.log({
-			xCoord, yCoord, maxXCoord, maxYCoord,
-		});
+		// console.log({
+		// 	xCoord, yCoord, maxXCoord, maxYCoord,
+		// });
 		for (let row = yCoord; row < maxYCoord; row += 1) {
 			for (let col = xCoord; col < maxXCoord; col += 1) {
 				map[row][col] += ` ${entryToAdd}`;

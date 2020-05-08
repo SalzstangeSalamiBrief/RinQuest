@@ -61,23 +61,34 @@ export default class Dragon extends NPC {
 	 * return false if the dragon is not alive (hp <= 0)
 	 * @param {Number} damage
 	 */
-	decreaseDragonHP(damage = 100) {
+	decreaseDragonHP(damageReceived = 100) {
 		// dragon got already damage in the last 1.5s
-		if (this.gotDamage === true) return true;
-		this.hp -= damage;
-		this.setGotDamage();
-		if (this.hp <= 0) {
-			return false;
+		if (this.gotDamage) return true;
+		// else calc new HP
+		const newHP = this.hp - damageReceived;
+		// init dragonIsAlive with true
+		let dragonIsAlive = true;
+		if (newHP <= 0) {
+			// if newHP is lt 0 => hp = 0 && dragonIsAlive = false
+			this.hp = 0;
+			dragonIsAlive = false;
+		} else {
+			// else set hp = newHP
+			this.hp = newHP;
 		}
-		return true;
+		this.setGotDamage();
+		return dragonIsAlive;
 	}
 
+	/**
+	 * Set gotDamage to true
+	 * Set HPTextContainer with new Hp and adjust width of the background
+	 * Set timeout to set gotDamage to false after 1.5sec
+	 */
 	setGotDamage() {
 		this.gotDamage = true;
-		console.log(this.gotDamage);
 		this.dragonHPTextContainer.textContent = this.hp;
 		this.dragonBackgroundContainer.style.width = `${this.hp}%`;
-		this.gotDamage = false;
 		setTimeout(() => { this.gotDamage = false; }, 1500);
 	}
 
