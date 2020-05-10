@@ -16,7 +16,8 @@ $ npm run build
 
 For detailed explanation on how things work, checkout [Nuxt.js](https://github.com/nuxt/nuxt.js), [Electron.js](https://electronjs.org/), and [electron-builder](https://www.electron.build/).
 ```
-
+## Bugs/TODOs:
+* Remove tryCatch from MovementAgent (was only for temp "relieve" of the bug)
 ## Inspiration
 The Inspiration for creating this game came from the second season of the anime [New Game!!](https://myanimelist.net/anime/34914/New_Game) from [Studio Doga Kobo](http://www.dogakobo.com). In this anime the character "Sakura Nene" created a game named "Nene Quest", which is the inspiration for this project.
 

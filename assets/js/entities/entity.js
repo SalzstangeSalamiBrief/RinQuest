@@ -59,7 +59,8 @@ export default class Entity {
 		this.gotDamage = true;
 		this.textContainer.textContent = this.HP;
 		this.backgroundContainer.style.width = `${this.HP}%`;
-		setTimeout(() => { this.gotDamage = false; }, 1500);
+		const timeoutDelay = this.type === 'playerCharacter' ? 500 : 1500;
+		setTimeout(() => { this.gotDamage = false; }, timeoutDelay);
 	}
 
 	setX(xCoord) {
@@ -85,5 +86,12 @@ export default class Entity {
 			// [width, height]
 			size: [this.width, this.height],
 		};
+	}
+
+	getHP() {
+		if (this.HP) {
+			return this.HP;
+		}
+		return undefined;
 	}
 }

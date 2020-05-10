@@ -231,9 +231,19 @@ export default class MovementAgent {
 			}
 			// regexOfEntity is not undefined
 			if (regexOfEntity !== undefined) {
-				const { type, id } = this.constructor.getTypeOfEntity(
-					this[regexOfEntity], mergedPartialField,
-				);
+				let id;
+				let type;
+				try {
+					({ type, id } = this.constructor.getTypeOfEntity(
+						this[regexOfEntity], mergedPartialField,
+					));
+				} catch (err) {
+					console.log('err func attack');
+					throw err;
+				}
+				// const { type, id } = this.constructor.getTypeOfEntity(
+				// 	this[regexOfEntity], mergedPartialField,
+				// );
 
 				if (regexOfEntity === 'regexBoar') {
 					this.activeEntitiesList.removeEntity(id);
@@ -259,6 +269,7 @@ export default class MovementAgent {
 	}
 
 	static getTypeOfEntity(regex, arr) {
+		// console.log(regex, arr);
 		let result;
 		for (let i = 0; i < arr.length; i += 1) {
 			if (typeof arr[i] === 'string') {
@@ -286,29 +297,34 @@ export default class MovementAgent {
  * @param {Entity} entity
  */
 	checkForFieldCollisionNPC(mergedPartialField, entity) {
-		// if a playercharacter got hit
+		// if a playerCharacter got hit
 		if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
 			console.log('NPC HIT DRAGON');
 			const playerEntity = this.activeEntitiesList.getPlayerEntity();
+			const entityType = entity.getType();
+			const id = entity.getID();
 			// check if the player character is attacking
 			if (playerEntity.getState() === 'attacking') {
-				// remove this npc
-				if (!(entity.getType() === 'npcDragon')) {
+				// remove this npc if its not a dragon
+				if (entityType !== 'npcDragon') {
 					// console.log('func checkForFieldCollisionNPC');
-					this.activeEntitiesList.removeEntity(entity.getID());
+					this.activeEntitiesList.removeEntity(id);
+					this.gameField.removeFromEntitiesField(entityType, id);
 				}
 			} else {
-				playerEntity.decreaseHP();
+				// deal damage to the player
+				const playerGotDamage = playerEntity.decreaseHP();
+				// if the hp of the player got decreased
+				if (playerGotDamage === false) {
+					// if the entity is from type flame
+					if (entityType === 'flame') {
+						// remove flame
+						this.activeEntitiesList.removeEntity(id);
+						this.gameField.removeFromEntitiesField(entityType, id);
+					}
+				}
 			}
-			// else if (entity.getDealtDamage() === false) {
-			// 	// player is not Attacking => set dealtDamage and decrease hp of the player
-			// 	entity.setDealtDamage();
-			// }
-			// todo: move behind playerEntity or remove
-			// entity.setCoords();
-			// return false to let the boar pass
 		}
-		// todo possible bug for future movements
 		return false;
 	}
 
@@ -326,7 +342,9 @@ export default class MovementAgent {
 		}
 		// check if a flame gets hit
 		if (this.constructor.checkIfArrayIncludesString(this.regexFlames, mergedPartialField)) {
-			// todo: calc if hit by Flames
+			// todo: decide if needed
+			// -- if yes: calc if hit by Flames
+			// - but not already calculated by the npcCollision
 			result = false;
 		}
 		// check if an npc gets hit
@@ -335,7 +353,15 @@ export default class MovementAgent {
 			// further calc
 			console.log(mergedPartialField);
 			// TODO: REmove Boar properly from gamefield etc.
-			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
+			// const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
+			let id;
+			let type;
+			try {
+				({ id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField));
+			} catch (err) {
+				console.log('err func checkForFieldCollisionPlayer');
+				throw err;
+			}
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
 				// different handling for boar and dragon because of hp

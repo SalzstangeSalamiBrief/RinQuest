@@ -70,12 +70,11 @@ export default class Game {
 
 			// Move the npc and player character
 			if (loopIndex === 5) {
-				// // if player is in attacking state execute attack
-				// if (this.isPlayerAttacking) {
-				// 	await this.movementAgent.attack(this.playerMovement.entity);
-				// }
-				// else: player is not in attacking state
-				// move player character
+				// if player is in attacking state execute attack
+				if (this.isPlayerAttacking) {
+					await this.movementAgent.attack(this.playerMovement.entity);
+				}
+				// move player
 				await this.movementAgent.moveCharacter(this.playerMovement);
 				// loop through the activeNPCsList
 				await 	this.activeEntityList.getActiveNPCsList().forEach(async (entity) => {

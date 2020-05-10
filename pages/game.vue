@@ -46,8 +46,8 @@ import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
 import Gamefield from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
-import NPCBoar from '../assets/js/entities/npcBoar';
-// import NPCDragon from '../assets/js/entities/npcDragon';
+// import NPCBoar from '../assets/js/entities/npcBoar';
+import NPCDragon from '../assets/js/entities/npcDragon';
 import GameLoop from '../assets/js/game';
 
 export default {
@@ -150,17 +150,17 @@ export default {
 
 		this.player = new PlayerCharacter();
 		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
-		// const dummyNPC = new NPCDragon(
-		// 	25,
-		// 	17,
-		// 	'npcDragon',
-		// );
-		const dummyNPC = new NPCBoar(
+		const dummyNPC = new NPCDragon(
 			25,
 			17,
-			0,
-			'waveMovement',
+			'npcDragon',
 		);
+		// const dummyNPC = new NPCBoar(
+		// 	25,
+		// 	17,
+		// 	0,
+		// 	'waveMovement',
+		// );
 		this.activeEntityList.addEntity(dummyNPC);
 		this.gamefield = await new Gamefield(this.painter, this.activeEntityList);
 		this.activeEntityList.setGamefield(this.gamefield);
@@ -178,7 +178,17 @@ export default {
 		await painter.loadAllImages();
 		return { painter, movementAgent };
 	},
-
+	computed: {
+		computedPlayerHP() {
+			console.log(`computed: ${this.activeEntityList.getPlayerEntity().getHP()}`);
+			return this.activeEntityList.getPlayerEntity().getHP();
+		},
+	},
+	watch: {
+		watchedPlayerHP() {
+			console.log(`watched: ${this.activeEntityList.getPlayerEntity().getHP()}`);
+		},
+	},
 };
 </script>
 <style>
