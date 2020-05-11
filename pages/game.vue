@@ -166,7 +166,9 @@ export default {
 		this.activeEntityList.setGamefield(this.gamefield);
 		this.movementAgent.setGamefield(this.gamefield);
 		this.movementAgent.setActiveEntityList(this.activeEntityList);
-		this.gameLoop = new GameLoop(this.activeEntityList, this.movementAgent, this.gamefield);
+		this.gameLoop = new GameLoop(
+			this.activeEntityList, this.movementAgent, this.gamefield, this.$store,
+		);
 		this.gameLoop.createGameLoop();
 	},
 	beforeDestroy() {
@@ -179,14 +181,19 @@ export default {
 		return { painter, movementAgent };
 	},
 	computed: {
-		computedPlayerHP() {
-			console.log(`computed: ${this.activeEntityList.getPlayerEntity().getHP()}`);
-			return this.activeEntityList.getPlayerEntity().getHP();
+		gameState() {
+			return this.gameLoop.gameState;
 		},
 	},
 	watch: {
-		watchedPlayerHP() {
-			console.log(`watched: ${this.activeEntityList.getPlayerEntity().getHP()}`);
+		gameState(newState) {
+			console.log(`watched GameState: ${newState}`);
+			if (newState !== 'running') {
+				// todo decide which page is displayed
+				this.$router.push('/');
+			}
+			// TODO
+			// this.$router.route('/');
 		},
 	},
 };

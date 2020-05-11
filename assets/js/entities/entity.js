@@ -89,7 +89,7 @@ export default class Entity {
 	}
 
 	getHP() {
-		if (this.HP) {
+		if (this.HP !== undefined) {
 			return this.HP;
 		}
 		return undefined;

@@ -15,7 +15,7 @@ export default class Game {
 		this.isPlayerMoving = false;
 		this.gameLoop = undefined;
 		// needed for checking if the finish screen will be shown
-		this.gameIsFinished = false;
+		this.gameState = 'running';
 		this.flameIndexGenerator = this.constructor.generateFlameIndex();
 	}
 
@@ -90,12 +90,15 @@ export default class Game {
 			} else {
 				loopIndex += 1;
 			}
-			// console.log(this.gameField.getField('entities'));
-			// console.log('gameLoop');
-			// console.log(loopIndex);
-			// clearInterval(this.gameLoop);
-			// todo: loop gamefield
-			// todo condition for finish
+			// calc if game is finished
+			const activePlayer = this.activeEntityList.getPlayerEntity();
+			const activeDragon = this.activeEntityList.getDragon();
+			if (activePlayer.getHP() === 0) this.gameState = 'playerLost';
+			if (activeDragon && activeDragon.getHP() === 0) this.gameState = 'playerWon';
+			// clear gameLoop if the game is over
+			if (this.gameState !== 'running') {
+				clearInterval(this.gameLoop);
+			}
 		}, 20);
 	}
 
@@ -117,7 +120,6 @@ export default class Game {
 		});
 	}
 
-	// todo bug: flames invisible, not moving
 	flameHandler(entity) {
 		// check if the TTL of the flame is equal to 0
 		if (entity.getTTL() === 0) {
@@ -162,5 +164,13 @@ export default class Game {
 			index += 1;
 			yield index;
 		}
+	}
+
+	getGameState() {
+		return this.gameState;
+	}
+
+	getGameLoop() {
+		return this.gameLoop;
 	}
 }
