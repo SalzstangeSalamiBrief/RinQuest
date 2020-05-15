@@ -190,7 +190,7 @@ export default {
 			console.log(`watched GameState: ${newState}`);
 			if (newState !== 'running') {
 				// todo decide which page is displayed
-				this.$router.push('/');
+				// this.$router.push('/');
 			}
 			// TODO
 			// this.$router.route('/');
