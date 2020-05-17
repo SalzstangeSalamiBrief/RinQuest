@@ -6,6 +6,7 @@ export default class activeNPCsList {
 		this.gamefield = undefined;
 		this.dragon = undefined;
 		this.activeFlamesList = [];
+		this.inactiveEntities = undefined;
 	}
 
 	addEntity(entity) {
@@ -61,12 +62,29 @@ export default class activeNPCsList {
 		}
 	}
 
+	/**
+	 * add the first inactive entity to the activeNPCsList
+	 */
+	addInactiveEntityToActiveEntityList() {
+		this.addEntity(this.inactiveEntities.shift());
+	}
+
 	setGamefield(gamefield) {
 		this.gamefield = gamefield;
 	}
 
+	setInactiveEntities(entities) {
+		this.inactiveEntities = entities;
+	}
+
 	getActiveNPCsList() {
 		return this.activeNPCsList;
+	}
+
+	getFirstInactiveEntity() {
+		const inactiveEntity = this.inactiveEntities[0];
+		if (inactiveEntity) return inactiveEntity;
+		return null;
 	}
 
 	getPlayerEntity() {

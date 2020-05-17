@@ -66,7 +66,9 @@
       "xMax": 6,
       "yMax": 23,
       "type": "playerCharacter"
-    },
+    }
+  ],
+  "inactiveEntities" : [
     {
       "coords": [25,17],
       "xMin": 25,

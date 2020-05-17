@@ -40,6 +40,10 @@ export default class Entity {
 				// if newHP is lt 0 => HP = 0 && entityIsAlive = false
 				this.HP = 0;
 				entityIsAlive = false;
+				// if the entity with 0 hp is a dragon, set its hp-bar visibility to hidden
+				if (this.type === 'npcDragon') {
+					document.querySelector('.hp-bar.dragon').style.visibility = 'hidden';
+				}
 			} else {
 				// else set HP = newHP
 				this.HP = newHP;

@@ -2,7 +2,6 @@ import NPC from './nonPlayerCharacter';
 
 export default class Dragon extends NPC {
 	constructor(posX, posY) {
-		// id is per default 99
 		// height = 9, width = 7, id = 99
 		super(posX, posY, 10, 10, 'npcDragon', 99);
 		this.movement = this.constructor.movementGenerator();
@@ -10,12 +9,12 @@ export default class Dragon extends NPC {
 		// check if the dragon is allowed to move
 		this.canMove = true;
 		this.breathsFire = false;
-		// TODO:
 		// grab both dom-elems via selector
-		// set visible to true (default false)
 		// todo: change their textContent and bg if hp is changed
 		this.dragonHPTextContainer = 	document.querySelector('.hp-bar__text--current.dragon');
 		this.dragonBackgroundContainer = document.querySelector('.hp-bar__background.dragon');
+		// set visible to true (default false)
+		document.querySelector('.hp-bar.dragon').style.visibility = 'visible';
 		this.gotDamage = false;
 	}
 

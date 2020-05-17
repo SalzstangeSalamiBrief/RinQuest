@@ -1,10 +1,11 @@
-import { backgroundColumns, initEntities } from './fields.json';
+import { backgroundColumns, initEntities, inactiveEntities } from './fields.json';
 // TODO: rename
 export default class GameField {
 	constructor(painter, activeEntityList) {
 		return new Promise((resolve) => {
 			this.activeEntityList = activeEntityList;
 			this.scrollIndex = 0;
+			this.actualMaxXCoord = 80;
 			this.fieldMap = new Map();
 			this.painter = painter;
 			// reduce json-size with repeating
@@ -19,11 +20,13 @@ export default class GameField {
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
 			// console.log(this.activeEntityList.getAllEntities());
+			// draw each active entity of the init screen
 			this.activeEntityList.getAllEntities().forEach((entity) => {
 				const { coords, size } = entity.getCoordsAndSize();
 				const type = entity.getType();
 				this.painter.drawCharacter(type, coords, size);
 			});
+			this.activeEntityList.setInactiveEntities(inactiveEntities);
 			// initEntities.forEach(({ type, coords, size }) => {
 			// 	this.painter.drawCharacter(
 			// 		type, coords, size,
@@ -56,6 +59,16 @@ export default class GameField {
 
 	// todo scroll character field
 	scrollField(fieldType = 'background', movementAgent, character) {
+		// get first inanctive entty and check if it can be displayed
+		const inactiveEntity = this.activeEntityList.getFirstInactiveEntity();
+		if (inactiveEntity !== null) {
+			// check if xcoord is dislayed
+			if (this.scrollIndex === inactiveEntity.xMax) {
+				this.activeEntityList.addInactiveEntityToActiveEntityList();
+			}
+		}
+
+		// scroll each col of background
 		const map = this.fieldMap.get(fieldType);
 		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
 		scrollCol.forEach(({ start, end, type }) => {
@@ -70,6 +83,7 @@ export default class GameField {
 		// todo: end of scrollColumns
 		if (this.repeatCol === 0) {
 			this.scrollIndex += 1;
+			this.actualMaxXCoord += 1;
 			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 		}
 		return this.painter.drawFieldMap(map);
