@@ -63,10 +63,10 @@ export default class activeNPCsList {
 	}
 
 	/**
-	 * add the first inactive entity to the activeNPCsList
+	 * shift first inactiveEntity out of inactiveEntities
 	 */
-	addInactiveEntityToActiveEntityList() {
-		this.addEntity(this.inactiveEntities.shift());
+	getFistInactiveEntity() {
+		return this.inactiveEntities.shift();
 	}
 
 	setGamefield(gamefield) {

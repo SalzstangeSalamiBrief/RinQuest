@@ -1,7 +1,15 @@
-import NPCFlame from './entities/flame';
+import flameEntity from './entities/flame';
+import npcDragon from './entities/npcDragon';
+import npcBoar from './entities/npcBoar';
 
 export default class Game {
 	constructor(activeEntityList, movementAgent, gameField) {
+		// object for dynamic npc creation
+		this.entityClasses = {
+			flame: flameEntity,
+			npcDragon,
+			npcBoar,
+		};
 		this.activeEntityList = activeEntityList;
 		this.movementAgent = movementAgent;
 		this.gameField = gameField;
@@ -17,6 +25,8 @@ export default class Game {
 		// needed for checking if the finish screen will be shown
 		this.gameState = 'running';
 		this.flameIndexGenerator = this.constructor.generateFlameIndex();
+		// max xCoord of the actual gamefield
+		this.actualMaxXCoord = 80;
 	}
 
 	/**
@@ -51,6 +61,10 @@ export default class Game {
 	}
 
 	createGameLoop() {
+		// todo remove temp dragonCreation
+		// this.activeEntityList.addEntity(
+		// 	this.createNewEntity('npcDragon', 25, 17),
+		// );
 		// if loop index is equal to 5, move characters;
 		// 5 * 20 ms => 100ms for one movement
 		let loopIndex = 0;
@@ -85,7 +99,12 @@ export default class Game {
 						this.dragonHandler(entity);
 					}
 				});
-
+				// check if a new entity has to be created
+				this.checkForAvailableEntities();
+				// increment actualMaxXCoord
+				this.actualMaxXCoord += 1;
+				// TODO: scrolling
+				// this.gameField.scrollField();
 				loopIndex = 0;
 			} else {
 				loopIndex += 1;
@@ -132,6 +151,30 @@ export default class Game {
 	}
 
 	/**
+	 * Check if the first inactive Entity can be displayed
+	 * If that is the case create a new Entity and add it to the activeEntityList
+	 */
+	checkForAvailableEntities() {
+	// try to get the first inactive entity
+		const fistActiveEntity = this.gameField.checkForCreationOfNewEntity(
+			this.actualMaxXCoord,
+		);
+		// check if fistActiveEntity is not null => it exists
+		if (fistActiveEntity !== null) {
+			// create a new entity-object
+			const newEntity = this.createNewEntity(
+				fistActiveEntity.type,
+				fistActiveEntity.xMin,
+				fistActiveEntity.yMin,
+				fistActiveEntity.id,
+				fistActiveEntity.movementPatter,
+			);
+			// add new the new entity to the activeEntityList
+			this.activeEntityList.addEntity(newEntity);
+		}
+	}
+
+	/**
 	 * Handler for the dragon. Creates a new flame if the dragon breaths fire
 	 * @param {npcDragon} entity
 	 */
@@ -143,16 +186,22 @@ export default class Game {
 			// get Coords from the passed dragon
 			const { coords: [xAxisPos, yAxisPos] } = entity.getCoordsAndSize();
 			// create a new flame
-			const newFlame = new NPCFlame(
+			const newFlame = this.createNewEntity(
+				'flame',
 				xAxisPos - 2,
 				yAxisPos + 2,
 				index,
 			);
+
 			// add the created flame to the flameEntityList
 			this.activeEntityList.addEntity(newFlame);
 			// add the created Flame to the entity map of the gameField
 			this.gameField.addEntityAtCoords(newFlame);
 		}
+	}
+
+	createNewEntity(entityType, xPos, yPos, id = undefined, movementType = undefined) {
+		return new this.entityClasses[entityType](xPos, yPos, id, movementType);
 	}
 
 	/**

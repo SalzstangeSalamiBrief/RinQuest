@@ -5,7 +5,6 @@ export default class GameField {
 		return new Promise((resolve) => {
 			this.activeEntityList = activeEntityList;
 			this.scrollIndex = 0;
-			this.actualMaxXCoord = 80;
 			this.fieldMap = new Map();
 			this.painter = painter;
 			// reduce json-size with repeating
@@ -57,17 +56,26 @@ export default class GameField {
 		this.fieldMap.set(fieldType, resultArray);
 	}
 
-	// todo scroll character field
-	scrollField(fieldType = 'background', movementAgent, character) {
+	/**
+	 * check if the first inactiveEntity can be displayed
+	 * return null if that is not the case, else return the entity
+	 * @param {Number} acutalMaxXCoord
+	 */
+	checkForCreationOfNewEntity(acutalMaxXCoord) {
+		let result = null;
 		// get first inanctive entty and check if it can be displayed
 		const inactiveEntity = this.activeEntityList.getFirstInactiveEntity();
 		if (inactiveEntity !== null) {
-			// check if xcoord is dislayed
-			if (this.scrollIndex === inactiveEntity.xMax) {
-				this.activeEntityList.addInactiveEntityToActiveEntityList();
+			// check if xcoord is displayed
+			if (acutalMaxXCoord >= inactiveEntity.xMax) {
+				result = this.activeEntityList.getFistInactiveEntity();
 			}
 		}
+		return result;
+	}
 
+	// todo scroll character field
+	scrollField(fieldType = 'background') {
 		// scroll each col of background
 		const map = this.fieldMap.get(fieldType);
 		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
@@ -77,8 +85,6 @@ export default class GameField {
 				map[i].push(type);
 			}
 		});
-		// todo: needed?
-		movementAgent.moveCharacter({ xAxis: -1, yAxis: 0, entity: character });
 		this.repeatCol -= 1;
 		// todo: end of scrollColumns
 		if (this.repeatCol === 0) {
