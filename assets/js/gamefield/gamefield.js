@@ -74,8 +74,9 @@ export default class GameField {
 		return result;
 	}
 
-	// todo scroll character field
-	scrollField(fieldType = 'background') {
+	// todo scroll character field;
+	// TODO: FIX error after moving the last defined col
+	async scrollField(fieldType = 'background') {
 		// scroll each col of background
 		const map = this.fieldMap.get(fieldType);
 		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];

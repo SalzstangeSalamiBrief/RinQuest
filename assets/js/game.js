@@ -81,9 +81,8 @@ export default class Game {
 				});
 			}
 
-
-			// Move the npc and player character
-			if (loopIndex === 5) {
+			// Move the npc and player character on each 5th and 10th loop
+			if (loopIndex === 5 || loopIndex === 10) {
 				// if player is in attacking state execute attack
 				if (this.isPlayerAttacking) {
 					await this.movementAgent.attack(this.playerMovement.entity);
@@ -103,8 +102,12 @@ export default class Game {
 				this.checkForAvailableEntities();
 				// increment actualMaxXCoord
 				this.actualMaxXCoord += 1;
-				// TODO: scrolling
-				// this.gameField.scrollField();
+			}
+
+			// if loop index is equal to 10 set it to 0 and scroll field
+			// else: increment LoopIndex
+			if (loopIndex === 10) {
+				await this.scrollHandler();
 				loopIndex = 0;
 			} else {
 				loopIndex += 1;
@@ -127,11 +130,6 @@ export default class Game {
 	 */
 	moveEntity(entity) {
 		const { xAxis, yAxis } = entity.getMovementPattern();
-		// console.log({
-		// 	xAxis,
-		// 	yAxis,
-		// 	entity,
-		// });
 		this.movementAgent.moveCharacter({
 			xAxis,
 			yAxis,
@@ -139,6 +137,13 @@ export default class Game {
 		});
 	}
 
+	/**
+	 * handler for flames
+	 * check if a flame is alive (ttl > 0)
+	 * if that is not the case, remove the flame and return undefined
+	 * else return true
+	 * @param {Flame} entity
+	 */
 	flameHandler(entity) {
 		// check if the TTL of the flame is equal to 0
 		if (entity.getTTL() === 0) {
@@ -148,6 +153,37 @@ export default class Game {
 			return undefined;
 		}
 		return true;
+	}
+
+	/**
+ * Scroll the gamefield by one tick
+ * if the player collides with an envTile in the next tick, move him back one tile
+ */
+	async scrollHandler() {
+		// check if the player will collide with an envTile in the next tick
+		const playerEntity = this.activeEntityList.getPlayerEntity();
+		const { coords: playerCoords, size } = playerEntity.getCoordsAndSize();
+		const collisionWithEnvTile = await this.movementAgent.checkForEnvTileCollision(
+			[
+				this.movementAgent.constructor.calcNewCoordinate(playerCoords[0], 1),
+				playerCoords[1],
+			],
+			size,
+			'right',
+		);
+		// if the player collides with an envTile move it back one tile
+		if (collisionWithEnvTile) {
+			await this.movementAgent.moveCharacter(
+				{
+					xAxis: -1,
+					yAxis: 0,
+					entity: playerEntity,
+				},
+			);
+		}
+
+		// scroll field by one
+		await	this.gameField.scrollField();
 	}
 
 	/**

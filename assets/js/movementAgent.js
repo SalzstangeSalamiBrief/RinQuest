@@ -24,7 +24,6 @@ export default class MovementAgent {
  * @param {Object} entity
  */
 	async moveCharacter({ xAxis = 0, yAxis = 0, entity }) {
-		// TODO dry moveX and moveY merged into one move-function
 		if (xAxis !== yAxis) {
 			let foundCollision = false;
 			/*
@@ -47,6 +46,7 @@ export default class MovementAgent {
 					this.constructor.calcNewCoordinate(xCoord, xAxis),
 					yCoord,
 				];
+				console.log(`newCoords: ${newCoords}`);
 			} else {
 				// yAxis !== 0
 				movementDirection = yAxis === 1 ? 'bottom' : 'top';
@@ -56,7 +56,6 @@ export default class MovementAgent {
 				];
 			}
 			const entityID = entityType === 'playerCharacter' ? undefined : entity.getID();
-			// todo check collision
 			// check for collision with field
 			// destructure calcCoords and if a collision is found into existing variables
 			({
@@ -70,60 +69,79 @@ export default class MovementAgent {
 				entityID,
 			)
 			);
-			// console.log(foundCollision, entityID);
 			if (!foundCollision) {
+				// if no collisions with the edge is found, check for collisions on the field
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
 					movementDirection,
 					entity,
 				);
+				// if a field collision was found, set new coords
 				if (foundCollision) {
 					({ coords: [xCoord, yCoord] } = entity.getCoordsAndSize());
 					newCoords = [xCoord, yCoord];
 				}
 			}
-			//  else if (foundCollision && typeof entityID === 'string') {
-			// 	// console.log('hihihi');
-			// 	this.activeEntitiesList.removeEntity(entityID);
-			// }
-			// draw character
-			// set new coords on the entity
-			entity.setCoords(newCoords);
-			// calc which enityType has to be drawn
-			// const typeToDraw = entityType === 'playerCharacter' ?
-			// 'playerCharacter_moving' : entityType;
-			// update the entitiesField gamefield
-			// todo: possible Bugs with moving npcs?
-			// todo: check if moving npcs gets updated
-			const entityTypeToUpdate = entityType === 'playerCharacter'
-				? 'playerCharacter' : `${entityType}_${entity.getID()}`;
-			if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
-				this.activeEntitiesList.removeEntity(entityID);
-			} else {
-				this.gameField.updateEntitiesField(
-					'entities',
-					xCoord, yCoord,
-					entitySize[0],
-					entitySize[1],
-					newCoords[0], newCoords[1],
-					entityTypeToUpdate,
-				);
-				// update coords of entity
-				entity.setCoords(newCoords);
-			}
-
-			// if(entityTypeToUpdate !== 'playerCharacter'){
-			// 	if()
-			// }
+			// execute calculated movement for the entity
+			await this.executeEntityMovement(
+				entity,
+				entityType,
+				newCoords,
+				[xCoord, yCoord],
+				entityID,
+			);
 		}
 		// draw all entitites
 		this.activeEntitiesList.drawActiveEntitiesList();
+	}
+
+	/**
+	 * execute the movement of an Entity
+	 * Remove npc Entities if they move outside of the gamefield
+	 * Update Entities-gameField
+	 * @param {Entity} entity
+	 * @param {String} entityType
+	 * @param {Array} newCoords
+	 * @param {Array} oldCoords
+	 * @param {String} entityID
+	 */
+	executeEntityMovement(entity,	entityType, newCoords, oldCoords, entityID) {
+		entity.setCoords(newCoords);
+		const { size: entitySize } = entity.getCoordsAndSize();
+		// decide the type of the entity
+		const entityTypeToUpdate = entityType === 'playerCharacter'
+			? 'playerCharacter' : `${entityType}_${entity.getID()}`;
+		if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
+			// Remove npc Entities if they move outside of the gamefield
+			this.activeEntitiesList.removeEntity(entityID);
+		} else {
+			// update the entitiesField gamefield
+			this.gameField.updateEntitiesField(
+				'entities',
+				oldCoords[0],
+				oldCoords[1],
+				entitySize[0],
+				entitySize[1],
+				newCoords[0], newCoords[1],
+				entityTypeToUpdate,
+			);
+			// update coords of entity
+			entity.setCoords(newCoords);
+		}
 	}
 
 	static calcNewCoordinate(coord, step) {
 		return coord + step;
 	}
 
+	/**
+	 * Check for collisions with the edges of the field
+	 * @param {Array} size
+	 * @param {Array} coords
+	 * @param {String} type
+	 * @param {Number} canvasSize
+	 * @param {String} id
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	checkForFieldEdgeCollision(
 		[width, height],
@@ -380,6 +398,21 @@ export default class MovementAgent {
 			// result = true;
 		}
 		return result;
+	}
+
+	/**
+	 * check if a given entity collides with an non walkable environmentTile
+	 */
+	async checkForEnvTileCollision(passedCords,	entitySize, movementDirection) {
+		const mergedPartialField = await this.gameField.getMergedPartialField(
+			passedCords,
+			entitySize,
+			movementDirection,
+		);
+		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
+			return true;
+		}
+		return false;
 	}
 
 	damageDragon() {

@@ -69,14 +69,6 @@
     }
   ],
   "inactiveEntities" : [
-    {
-      "coords": [25,17],
-      "xMin": 25,
-      "yMin": 17,
-      "xMax": 32,
-      "yMax": 26,
-      "type": "npcDragon",
-      "id": 99
-    }
+
   ]
 }
