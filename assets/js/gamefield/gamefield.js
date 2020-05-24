@@ -18,7 +18,6 @@ export default class GameField {
 				.forEach((backgroundCol) => promiseArray.push(
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
-			// console.log(this.activeEntityList.getAllEntities());
 			// draw each active entity of the init screen
 			this.activeEntityList.getAllEntities().forEach((entity) => {
 				const { coords, size } = entity.getCoordsAndSize();
@@ -26,11 +25,6 @@ export default class GameField {
 				this.painter.drawCharacter(type, coords, size);
 			});
 			this.activeEntityList.setInactiveEntities(inactiveEntities);
-			// initEntities.forEach(({ type, coords, size }) => {
-			// 	this.painter.drawCharacter(
-			// 		type, coords, size,
-			// 	);
-			// });
 			Promise.all(promiseArray)
 				.then(() => resolve(this));
 		});
@@ -74,26 +68,33 @@ export default class GameField {
 		return result;
 	}
 
-	// todo scroll character field;
-	// TODO: FIX error after moving the last defined col
+	/**
+	 * Scroll the Field by 1 each call from right to left
+	 * @param {String} fieldType
+	 */
 	async scrollField(fieldType = 'background') {
-		// scroll each col of background
-		const map = this.fieldMap.get(fieldType);
-		const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
-		scrollCol.forEach(({ start, end, type }) => {
-			for (let i = start; i < end; i += 1) {
-				map[i].shift();
-				map[i].push(type);
+		if (this.scrollIndex < backgroundColumns.scrollColumns.length) {
+			const map = this.fieldMap.get(fieldType);
+			const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
+			// scroll each col of background
+			scrollCol.forEach(({ start, end, type }) => {
+				for (let i = start; i < end; i += 1) {
+					map[i].shift();
+					map[i].push(type);
+				}
+			});
+			this.repeatCol -= 1;
+			// todo: end of scrollColumns
+			if (this.repeatCol === 0) {
+				this.scrollIndex += 1;
+				// check if the new scrollIndex actually exist
+				if (this.scrollIndex < backgroundColumns.scrollColumns.length) {
+					// new scrollIndex exists, set repeatCol to next repeat-Entry in scrollColumns
+					this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
+				}
 			}
-		});
-		this.repeatCol -= 1;
-		// todo: end of scrollColumns
-		if (this.repeatCol === 0) {
-			this.scrollIndex += 1;
-			this.actualMaxXCoord += 1;
-			this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
+			this.painter.drawFieldMap(map);
 		}
-		return this.painter.drawFieldMap(map);
 	}
 
 	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType, id = '') {
@@ -162,15 +163,9 @@ export default class GameField {
 		const maxYCoord = yCoord + height;
 		const entryToAdd = `${entityToAdd.getType()}_${entityToAdd.getID()}`;
 		const map = this.fieldMap.get('entities');
-		// console.log({
-		// 	xCoord, yCoord, maxXCoord, maxYCoord,
-		// });
 		for (let row = yCoord; row < maxYCoord; row += 1) {
 			for (let col = xCoord; col < maxXCoord; col += 1) {
 				map[row][col] += ` ${entryToAdd}`;
-				// console.log('-----------');
-				// console.log(map[row][col]);
-				// console.log('-----------');
 				map[row][col].trim();
 			}
 		}

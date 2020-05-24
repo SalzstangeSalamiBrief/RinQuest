@@ -46,7 +46,6 @@ export default class MovementAgent {
 					this.constructor.calcNewCoordinate(xCoord, xAxis),
 					yCoord,
 				];
-				console.log(`newCoords: ${newCoords}`);
 			} else {
 				// yAxis !== 0
 				movementDirection = yAxis === 1 ? 'bottom' : 'top';

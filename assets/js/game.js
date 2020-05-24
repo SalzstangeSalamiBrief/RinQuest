@@ -163,7 +163,7 @@ export default class Game {
 		// check if the player will collide with an envTile in the next tick
 		const playerEntity = this.activeEntityList.getPlayerEntity();
 		const { coords: playerCoords, size } = playerEntity.getCoordsAndSize();
-		const collisionWithEnvTile = await this.movementAgent.checkForEnvTileCollision(
+		const hasCollisionWithEnvTile = await this.movementAgent.checkForEnvTileCollision(
 			[
 				this.movementAgent.constructor.calcNewCoordinate(playerCoords[0], 1),
 				playerCoords[1],
@@ -171,15 +171,26 @@ export default class Game {
 			size,
 			'right',
 		);
+		// check if the col left from the player doe not exists => FieldEdge
+		// const hasCollisionWithLeftEdge = playerCoords[0] - 1 < 0;
+		// todo: remove dummy
+		const hasCollisionWithLeftEdge = false;
 		// if the player collides with an envTile move it back one tile
-		if (collisionWithEnvTile) {
-			await this.movementAgent.moveCharacter(
-				{
-					xAxis: -1,
-					yAxis: 0,
-					entity: playerEntity,
-				},
-			);
+		if (hasCollisionWithEnvTile) {
+			if (hasCollisionWithLeftEdge) {
+				// player got stuck (left edge, right non walkable tile)
+				// kill player
+				playerEntity.decreaseHP(playerEntity.getHP());
+			} else {
+				// player got only stuck by a non walkable tile right
+				await this.movementAgent.moveCharacter(
+					{
+						xAxis: -1,
+						yAxis: 0,
+						entity: playerEntity,
+					},
+				);
+			}
 		}
 
 		// scroll field by one
