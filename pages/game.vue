@@ -142,6 +142,9 @@ export default {
 	},
 	// todo back to mounted and asyncData; remove store
 	async mounted() {
+		// reset store
+		this.$store.commit('gameState/setActualState');
+		// add canvas to Painter
 		this.painter.addCanvasAndCtx(document.querySelector('#background-area'), 'background');
 		this.painter.addCanvasAndCtx(document.querySelector('#entities-area'), 'entities');
 		window.addEventListener('keydown', this.keyDownListeners);
@@ -189,8 +192,9 @@ export default {
 		gameState(newState) {
 			console.log(`watched GameState: ${newState}`);
 			if (newState !== 'running') {
+				this.$store.commit('gameState/setActualState', newState);
 				// todo decide which page is displayed
-				// this.$router.push('/');
+				this.$router.push('/finish');
 			}
 			// TODO
 			// this.$router.route('/');

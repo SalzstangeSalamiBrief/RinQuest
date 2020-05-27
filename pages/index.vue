@@ -34,6 +34,7 @@
 import { remote } from 'electron';
 
 export default {
+	name: 'index',
 	methods: {
 		closeApp() {
 			remote.getCurrentWindow().close();

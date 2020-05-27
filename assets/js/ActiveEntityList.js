@@ -73,8 +73,12 @@ export default class activeNPCsList {
 		this.gamefield = gamefield;
 	}
 
+	getInactiveEntities() {
+		return this.inactiveEntities;
+	}
+
 	setInactiveEntities(entities) {
-		this.inactiveEntities = entities;
+		this.inactiveEntities = [...entities];
 	}
 
 	getActiveNPCsList() {

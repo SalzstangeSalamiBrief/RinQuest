@@ -82,7 +82,7 @@ export default class Game {
 			}
 
 			// Move the npc and player character on each 5th and 10th loop
-			if (loopIndex === 5 || loopIndex === 10) {
+			if (loopIndex !== 0 && loopIndex % 5 === 0) {
 				// if player is in attacking state execute attack
 				if (this.isPlayerAttacking) {
 					await this.movementAgent.attack(this.playerMovement.entity);
@@ -106,7 +106,7 @@ export default class Game {
 
 			// if loop index is equal to 10 set it to 0 and scroll field
 			// else: increment LoopIndex
-			if (loopIndex === 10) {
+			if (loopIndex === 25) {
 				await this.scrollHandler();
 				loopIndex = 0;
 			} else {
