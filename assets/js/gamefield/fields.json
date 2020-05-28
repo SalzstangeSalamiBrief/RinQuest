@@ -6,13 +6,27 @@
         {
           "xMin": 0,
           "yMin": 0,
-          "xMax": 42,
+          "xMax": 50,
           "yMax": 43,
           "type": "grassTile"
         },
         {
-          "xMin": 42,
+          "xMin": 50,
+          "yMin": 12,
+          "xMax": 80,
+          "yMax": 31,
+          "type": "grassTile"
+        },
+        {
+          "xMin": 50,
           "yMin": 0,
+          "xMax": 80,
+          "yMax": 12,
+          "type": "waterTile"
+        },
+        {
+          "xMin": 50,
+          "yMin": 31,
           "xMax": 80,
           "yMax": 43,
           "type": "waterTile"
@@ -24,12 +38,12 @@
           {
             "type": "waterTile",
             "start": 0,
-            "end": 16,
+            "end": 12,
             "repeat": 40
           },
           {
             "type": "grassTile",
-            "start": 16,
+            "start": 12,
             "end": 31
           },
           {
@@ -70,13 +84,44 @@
   ],
   "inactiveEntities" : [
     {
-      "coords": [25,17],
-      "xMin": 25,
+      "coords": [73,17],
+      "xMin": 110,
       "yMin": 17,
-      "xMax": 32,
-      "yMax": 26,
-      "type": "npcDragon",
-      "id": 99
+      "xMax": 117,
+      "yMax": 27,
+      "type": "npcBoar",
+      "movementPattern": "waveMovement",
+      "id": 0
+    },
+    {
+      "coords": [73,25],
+      "xMin": 120,
+      "yMin": 25,
+      "xMax": 127,
+      "yMax": 30,
+      "type": "npcBoar",
+      "movementPattern": "waveMovement",
+      "id": 1
+    },
+    {
+      "coords": [73,25],
+      "xMin": 140,
+      "yMin": 25,
+      "xMax": 147,
+      "yMax": 30,
+      "type": "npcBoar",
+      "movementPattern": "straightMovement",
+      "id": 2
+    },
+    {
+      "coords": [73,17],
+      "xMin": 140,
+      "yMin": 17,
+      "xMax": 147,
+      "yMax": 27,
+      "type": "npcBoar",
+      "movementPattern": "straightMovement",
+      "id": 3
     }
   ]
 }

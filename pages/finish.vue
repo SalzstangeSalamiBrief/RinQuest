@@ -7,7 +7,7 @@
 			to="/"
 			tag="button"
 			class="bg-transparent hover:bg-blue-400 text-blue-700 font-semibold hover:text-white py-2 px-4
-				border border-blue-500 hover:border-transparent rounded"
+			border border-blue-500 hover:border-transparent rounded"
 		>
 	Home
 		</nuxt-link>

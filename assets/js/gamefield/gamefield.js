@@ -19,7 +19,7 @@ export default class GameField {
 					this.painter.drawBackgroundInit(backgroundCol),
 				));
 			// draw each active entity of the init screen
-			this.activeEntityList.getAllEntities().forEach((entity) => {
+			this.activeEntityList.getAllEntities().forEach(async (entity) => {
 				const { coords, size } = entity.getCoordsAndSize();
 				const type = entity.getType();
 				this.painter.drawCharacter(type, coords, size);
@@ -55,13 +55,15 @@ export default class GameField {
 	 * return null if that is not the case, else return the entity
 	 * @param {Number} acutalMaxXCoord
 	 */
-	checkForCreationOfNewEntity(acutalMaxXCoord) {
+	checkForCreationOfNewEntity(actualMaxXCoord) {
 		let result = null;
 		// get first inanctive entty and check if it can be displayed
 		const inactiveEntity = this.activeEntityList.getFirstInactiveEntity();
 		if (inactiveEntity !== null) {
 			// check if xcoord is displayed
-			if (acutalMaxXCoord >= inactiveEntity.xMax) {
+			if (actualMaxXCoord === inactiveEntity.xMax) {
+				console.log(actualMaxXCoord, inactiveEntity.xMax, actualMaxXCoord >= inactiveEntity.xMax);
+				console.log(inactiveEntity);
 				result = this.activeEntityList.getFistInactiveEntity();
 			}
 		}
@@ -73,6 +75,7 @@ export default class GameField {
 	 * @param {String} fieldType
 	 */
 	async scrollField(fieldType = 'background') {
+		let hasScrolled = false;
 		if (this.scrollIndex < backgroundColumns.scrollColumns.length) {
 			const map = this.fieldMap.get(fieldType);
 			const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
@@ -93,8 +96,10 @@ export default class GameField {
 					this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 				}
 			}
+			hasScrolled = true;
 			this.painter.drawFieldMap(map);
 		}
+		return hasScrolled;
 	}
 
 	updateEntitiesField(fieldType = 'entities', oldXCoord, oldYCoord, width, height, newXCoord, newYCoord, entityType, id = '') {
@@ -142,7 +147,7 @@ export default class GameField {
 	 * @param {String} entityToUpdate
 	 * @param {String} cell
 	 */
-	static removeEntryFromCell(entityToRemove, cell) {
+	static removeEntryFromCell(entityToRemove, cell = '') {
 		// split corresponding entry by the separator space
 		const entries = [...cell.split(' ')];
 		// const entries = cell.split(' ');

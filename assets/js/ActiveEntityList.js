@@ -9,7 +9,7 @@ export default class activeNPCsList {
 		this.inactiveEntities = undefined;
 	}
 
-	addEntity(entity) {
+	async addEntity(entity) {
 		const type = entity.getType();
 		if (type === 'flame') {
 			this.activeFlamesList.push(entity);

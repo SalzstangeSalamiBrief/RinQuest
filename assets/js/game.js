@@ -98,10 +98,7 @@ export default class Game {
 						this.dragonHandler(entity);
 					}
 				});
-				// check if a new entity has to be created
-				this.checkForAvailableEntities();
 				// increment actualMaxXCoord
-				this.actualMaxXCoord += 1;
 			}
 
 			// if loop index is equal to 10 set it to 0 and scroll field
@@ -194,14 +191,18 @@ export default class Game {
 		}
 
 		// scroll field by one
-		await	this.gameField.scrollField();
+		const hasScrolled = 	await	this.gameField.scrollField();
+		// increment axtualMaxXCoord if the field got scrolled
+		if (hasScrolled)	this.actualMaxXCoord += 1;
+		// check if a new entity has to be created
+		await this.checkForAvailableEntities();
 	}
 
 	/**
 	 * Check if the first inactive Entity can be displayed
 	 * If that is the case create a new Entity and add it to the activeEntityList
 	 */
-	checkForAvailableEntities() {
+	async checkForAvailableEntities() {
 	// try to get the first inactive entity
 		const fistActiveEntity = this.gameField.checkForCreationOfNewEntity(
 			this.actualMaxXCoord,
@@ -211,13 +212,14 @@ export default class Game {
 			// create a new entity-object
 			const newEntity = this.createNewEntity(
 				fistActiveEntity.type,
-				fistActiveEntity.xMin,
-				fistActiveEntity.yMin,
+				fistActiveEntity.coords[0],
+				fistActiveEntity.coords[1],
 				fistActiveEntity.id,
-				fistActiveEntity.movementPatter,
+				fistActiveEntity.movementPattern,
 			);
+			console.log(newEntity);
 			// add new the new entity to the activeEntityList
-			this.activeEntityList.addEntity(newEntity);
+			await this.activeEntityList.addEntity(newEntity);
 		}
 	}
 
