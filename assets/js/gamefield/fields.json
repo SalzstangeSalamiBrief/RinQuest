@@ -85,40 +85,28 @@
   "inactiveEntities" : [
     {
       "coords": [73,17],
-      "xMin": 110,
-      "yMin": 17,
       "xMax": 117,
-      "yMax": 27,
       "type": "npcBoar",
       "movementPattern": "waveMovement",
       "id": 0
     },
     {
       "coords": [73,25],
-      "xMin": 120,
-      "yMin": 25,
       "xMax": 127,
-      "yMax": 30,
       "type": "npcBoar",
       "movementPattern": "waveMovement",
       "id": 1
     },
     {
       "coords": [73,25],
-      "xMin": 140,
-      "yMin": 25,
       "xMax": 147,
-      "yMax": 30,
       "type": "npcBoar",
       "movementPattern": "straightMovement",
       "id": 2
     },
     {
       "coords": [73,17],
-      "xMin": 140,
-      "yMin": 17,
       "xMax": 147,
-      "yMax": 27,
       "type": "npcBoar",
       "movementPattern": "straightMovement",
       "id": 3
