@@ -206,7 +206,7 @@ export default class MovementAgent {
 		);
 		// console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
-			return this.checkForFieldCollisionPlayer(mergedPartialField, entity);
+			return this.checkForFieldCollisionPlayer(mergedPartialField, entity, movementDirection);
 		}
 		if (entityType !== 'playerCharacter') {
 			return this.checkForFieldCollisionNPC(mergedPartialField, entity);
@@ -218,16 +218,13 @@ export default class MovementAgent {
 				return false;
 			}
 		}
-		// else: calc new coods;
-		// TODO: check fieldCOllision and set returnvalue
 		return false;
 	}
 
-	// /**
-	//  *
-	//  * @param {PlayerObject} entity
-	//  * @param {Array} passedCoords
-	//  */
+	/**
+	 * let an entity attack
+	 * @param {PlayerObject} entity
+	 */
 	async attack(entity) {
 		const { size, coords } = entity.getCoordsAndSize();
 		const entityState = entity.getState();
@@ -356,21 +353,13 @@ export default class MovementAgent {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
 			console.log(mergedPartialField);
-			// TODO: REmove Boar properly from gamefield etc.
-			// get id and type from the corresponding npc
-			// let id;
-			// let type;
-			// try {
-			// 	({ id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField));
-			// } catch (err) {
-			// 	console.log('err func checkForFieldCollisionPlayer');
-			// 	throw err;
-			// }
 			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
 				// check if the player hits a boar
 				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
+					// deal only damage if the player moves right
+
 					// if a boar gets hit, remove it
 					this.gameField.removeFromEntitiesField(type, id);
 					this.activeEntitiesList.removeEntity(id);
@@ -378,10 +367,12 @@ export default class MovementAgent {
 				console.log(mergedPartialField);
 				// check if the player hits a dragon
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
+					// deal only damage if the player moves right
+
 					// deal damage to dragon
 					this.damageDragon();
 				}
-				result = true;
+				result = false;
 			} else {
 				// the player is not in the state of attacking
 				if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
@@ -392,9 +383,8 @@ export default class MovementAgent {
 					// if the player hits a flame decrease hp
 					entity.decreaseHP();
 				}
-				result = true;
+				result = false;
 			}
-			// result = true;
 		}
 		return result;
 	}

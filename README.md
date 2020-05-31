@@ -17,12 +17,9 @@ $ npm run build
 For detailed explanation on how things work, checkout [Nuxt.js](https://github.com/nuxt/nuxt.js), [Electron.js](https://electronjs.org/), and [electron-builder](https://www.electron.build/).
 ```
 ## Bugs/TODOs:
-* Remove tryCatch from MovementAgent (was only for temp "relieve" of the bug)
 * Flames deal damage even if the player is attacking
-* dragon moves but his movement dont damage player
-* if dragon spawns show his hp-bar, else hide
 * scrolling and reading gamefield.json inclusive spawning of npcs
-* Player should move through boars without attack-state
+* Reorder functions in classes (generell function, setter, getter)
 ## Inspiration
 The Inspiration for creating this game came from the second season of the anime [New Game!!](https://myanimelist.net/anime/34914/New_Game) from [Studio Doga Kobo](http://www.dogakobo.com). In this anime the character "Sakura Nene" created a game named "Nene Quest", which is the inspiration for this project.
 
