@@ -103,12 +103,16 @@ export default class Game {
 
 			// if loop index is equal to 10 set it to 0 and scroll field
 			// else: increment LoopIndex
-			if (loopIndex === 25) {
+			// if (loopIndex === 25) {
+			if (loopIndex === 10) {
 				await this.scrollHandler();
+				console.log(this.actualMaxXCoord);
 				loopIndex = 0;
 			} else {
 				loopIndex += 1;
 			}
+			// check if new entities have to be spawned
+			await this.checkForAvailableEntities();
 			// calc if game is finished
 			const activePlayer = this.activeEntityList.getPlayerEntity();
 			const activeDragon = this.activeEntityList.getDragon();
@@ -195,7 +199,6 @@ export default class Game {
 		// increment axtualMaxXCoord if the field got scrolled
 		if (hasScrolled)	this.actualMaxXCoord += 1;
 		// check if a new entity has to be created
-		await this.checkForAvailableEntities();
 	}
 
 	/**

@@ -69,6 +69,66 @@
             "start": 37,
             "end": 43
           }
+        ],
+        [
+          {
+            "type": "grassTile",
+            "start": 0,
+            "end": 43,
+            "repeat": 10
+          }
+        ],
+        [
+          {
+            "type": "grassTile",
+            "start": 0,
+            "end": 8,
+            "repeat": 20
+          },
+          {
+            "type": "waterTile",
+            "start": 8,
+            "end": 35
+          },
+          {
+            "type": "grassTile",
+            "start": 35,
+            "end": 43
+          }
+        ],
+        [
+          {
+            "type": "grassTile",
+            "start": 0,
+            "end": 43,
+            "repeat": 10
+          }
+        ],
+        [
+          {
+            "type": "waterTile",
+            "start": 0,
+            "end": 7,
+            "repeat": 30
+          },
+          {
+            "type": "grassTile",
+            "start": 7,
+            "end": 17        
+          },
+          {
+            "type": "waterTile",
+            "start": 17,
+            "end": 43
+          }
+        ],
+        [
+          {
+            "type": "grassTile",
+            "start": 0,
+            "end": 43,
+            "repeat": 10
+          }
         ]
       ]
   },
@@ -84,14 +144,14 @@
   ],
   "inactiveEntities" : [
     {
-      "coords": [73,17],
+      "coords": [73,18],
       "xMax": 117,
       "type": "npcBoar",
       "movementPattern": "waveMovement",
       "id": 0
     },
     {
-      "coords": [73,25],
+      "coords": [73,26],
       "xMax": 127,
       "type": "npcBoar",
       "movementPattern": "waveMovement",
@@ -99,17 +159,47 @@
     },
     {
       "coords": [73,25],
-      "xMax": 147,
+      "xMax": 137,
       "type": "npcBoar",
       "movementPattern": "straightMovement",
       "id": 2
     },
     {
-      "coords": [73,17],
-      "xMax": 147,
+      "coords": [73,13],
+      "xMax": 137,
       "type": "npcBoar",
       "movementPattern": "straightMovement",
       "id": 3
+    },
+    {
+      "coords": [73,20],
+      "xMax": 143,
+      "type": "npcBoar",
+      "movementPattern": "straightMovement",
+      "id": 4
+    }
+    ,
+    {
+      "coords": [73,1],
+      "xMax": 163,
+      "type": "npcBoar",
+      "movementPattern": "straightMovement",
+      "id": 5
+    }
+    ,
+    {
+      "coords": [73,36],
+      "xMax": 163,
+      "type": "npcBoar",
+      "movementPattern": "straightMovement",
+      "id": 6
+    },
+    {
+      "coords": [73,13],
+      "xMax": 178,
+      "type": "npcBoar",
+      "movementPattern": "waveMovement",
+      "id": 7
     }
   ]
 }

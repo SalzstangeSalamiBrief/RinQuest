@@ -135,11 +135,19 @@ export default class GameField {
 		const maxCols = map[0].length;
 		for (let row = 0; row < maxRows; row += 1) {
 			for (let col = 0; col < maxCols; col += 1) {
+				// TODO: id 5 (remove at hitting water tiles) does not get removed completly
+				if (id === 5) {
+					console.log(
+						map[row][col],
+						new RegExp(entityToRemove).test(map[row][col]),
+					);
+				}
 				if (new RegExp(entityToRemove).test(map[row][col])) {
 					map[row][col]	= this.constructor.removeEntryFromCell(entityToRemove, map[row][col]);
 				}
 			}
 		}
+		console.log(map);
 	}
 
 	/**

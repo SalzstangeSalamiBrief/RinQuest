@@ -104,15 +104,17 @@ export default class MovementAgent {
 	 * @param {Array} oldCoords
 	 * @param {String} entityID
 	 */
-	executeEntityMovement(entity,	entityType, newCoords, oldCoords, entityID) {
+	async executeEntityMovement(entity,	entityType, newCoords, oldCoords, entityID) {
 		entity.setCoords(newCoords);
 		const { size: entitySize } = entity.getCoordsAndSize();
 		// decide the type of the entity
 		const entityTypeToUpdate = entityType === 'playerCharacter'
 			? 'playerCharacter' : `${entityType}_${entity.getID()}`;
+			// get the mergedPartialField
 		if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
 			// Remove npc Entities if they move outside of the gamefield
 			this.activeEntitiesList.removeEntity(entityID);
+			this.gameField.removeFromEntitiesField(entityType, entity.getID());
 		} else {
 			// update the entitiesField gamefield
 			this.gameField.updateEntitiesField(
@@ -184,14 +186,6 @@ export default class MovementAgent {
 		}
 		return { newCalcedCoords, collisionDetected };
 	}
-
-	// foundCollision = await this.checkForFieldCollision(
-	// 	newCoords,
-	// 	entitySize,
-	// 	entityType,
-	// 	movementDirection,
-	// 	entity,
-	// );
 
 	// eslint-disable-next-line class-methods-use-this
 	async	checkForFieldCollision(passedCords, movementDirection, entity) {
@@ -315,24 +309,26 @@ export default class MovementAgent {
  * @param {Entity} entity
  */
 	checkForFieldCollisionNPC(mergedPartialField, entity) {
+		const { type: entityType, id } = entity;
 		// if a playerCharacter got hit
-		if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
-			// console.log('NPC HIT Player');
+		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
+			console.log(`remove: ${entityType}_${id}`);
+			this.activeEntitiesList.removeEntity(id);
+			this.gameField.removeFromEntitiesField(entityType, id);
+		} else if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
 			const playerEntity = this.activeEntitiesList.getPlayerEntity();
-			const { type: entityType, id } = entity;
 			// check if the player character is attacking
 			if (playerEntity.getState() === 'attacking') {
 				// remove this npc if its not a dragon
 				if (entityType !== 'npcDragon') {
-					// console.log('func checkForFieldCollisionNPC');
 					this.activeEntitiesList.removeEntity(id);
 					this.gameField.removeFromEntitiesField(entityType, id);
 				}
 			} else {
-				// console.log('PLYER NON ATTACKING');
 				playerEntity.decreaseHP();
 			}
 		}
+
 		return false;
 	}
 

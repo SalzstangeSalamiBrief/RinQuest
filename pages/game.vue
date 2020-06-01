@@ -194,7 +194,7 @@ export default {
 			if (newState !== 'running') {
 				this.$store.commit('gameState/setActualState', newState);
 				// todo decide which page is displayed
-				this.$router.push('/finish');
+				// this.$router.push('/finish');
 			}
 			// TODO
 			// this.$router.route('/');
