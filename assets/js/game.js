@@ -73,10 +73,10 @@ export default class Game {
 			// move each active npc entity on the field
 			// move flames each time loopIndex % 3 === 1
 			if (loopIndex % 3 === 1) {
-				this.activeEntityList.getFlameEntities().forEach((flame) => {
+				this.activeEntityList.getFlameEntities().forEach(async (flame) => {
 					const flameIsAlive = this.flameHandler(flame);
 					if (flameIsAlive === true) {
-						this.moveEntity(flame);
+						await	this.moveEntity(flame);
 					}
 				});
 			}
@@ -103,6 +103,7 @@ export default class Game {
 
 			// if loop index is equal to 10 set it to 0 and scroll field
 			// else: increment LoopIndex
+			// TODO: 25
 			// if (loopIndex === 25) {
 			if (loopIndex === 10) {
 				await this.scrollHandler();
@@ -129,9 +130,9 @@ export default class Game {
 	 * Move the passed Entity
 	 * @param {Entity} entity
 	 */
-	moveEntity(entity) {
+	async moveEntity(entity) {
 		const { xAxis, yAxis } = entity.getMovementPattern();
-		this.movementAgent.moveCharacter({
+		await	this.movementAgent.moveCharacter({
 			xAxis,
 			yAxis,
 			entity,

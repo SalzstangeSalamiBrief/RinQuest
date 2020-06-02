@@ -88,6 +88,7 @@ export default class MovementAgent {
 				newCoords,
 				[xCoord, yCoord],
 				entityID,
+				movementDirection,
 			);
 		}
 		// draw all entitites
@@ -104,14 +105,20 @@ export default class MovementAgent {
 	 * @param {Array} oldCoords
 	 * @param {String} entityID
 	 */
-	async executeEntityMovement(entity,	entityType, newCoords, oldCoords, entityID) {
+	async executeEntityMovement(
+		entity,	entityType, newCoords, oldCoords, entityID, movementDirection,
+	) {
 		entity.setCoords(newCoords);
 		const { size: entitySize } = entity.getCoordsAndSize();
 		// decide the type of the entity
 		const entityTypeToUpdate = entityType === 'playerCharacter'
 			? 'playerCharacter' : `${entityType}_${entity.getID()}`;
 			// get the mergedPartialField
-		if (entityTypeToUpdate !== 'playerCharacter' && (newCoords[0] <= 0 || newCoords[1] <= 0)) {
+		const collisionWithEnvTiles = await this.checkForEnvTileCollision(
+			newCoords, entitySize, movementDirection,
+		);
+		if (entityTypeToUpdate !== 'playerCharacter' && ((newCoords[0] <= 0 || newCoords[1] <= 0) || collisionWithEnvTiles)) {
+			// TODO remove if collision with waterTiles
 			// Remove npc Entities if they move outside of the gamefield
 			this.activeEntitiesList.removeEntity(entityID);
 			this.gameField.removeFromEntitiesField(entityType, entity.getID());
