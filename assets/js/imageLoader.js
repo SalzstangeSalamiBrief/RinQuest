@@ -6,9 +6,7 @@ export default class ImageLoader {
 		return new Promise((resolve) => {
 			const img = new Image();
 			img.addEventListener('load', () => resolve(img));
-			// console.log(filePath);
 			img.src = filePath;
-			// url.resolve(window.location.origin, filePath);
 		});
 	}
 
@@ -28,7 +26,6 @@ export default class ImageLoader {
 		];
 		const promiseArray = [];
 		imagesToLoad.forEach((imgPath) => {
-			// console.log(imgPath);
 			promiseArray.push(
 				this.loadImage(imgPath),
 			);

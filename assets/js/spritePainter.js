@@ -57,7 +57,6 @@ export default class SpritePainter {
 	}
 
 	drawCharacter(characterType, [xCoord, yCoord], [characterWidth, characterHeight]) {
-		// console.log(characterWidth, characterHeight);
 		const { ctx } = this.canvasMap.get('entities');
 		const img = this.imagesLoaded.get(characterType);
 		ctx.drawImage(img, xCoord * 20, yCoord * 20, characterWidth * 20, characterHeight * 20);

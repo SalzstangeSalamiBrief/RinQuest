@@ -205,7 +205,6 @@ export default class MovementAgent {
 			entitySize,
 			movementDirection,
 		);
-		// console.log(mergedPartialField);
 		if (entityType === 'playerCharacter') {
 			return this.checkForFieldCollisionPlayer(mergedPartialField, entity, movementDirection);
 		}
@@ -234,7 +233,6 @@ export default class MovementAgent {
 			size,
 			'right',
 		);
-		// console.log(mergedPartialField);
 		if (entityState === 'attacking') {
 			// decide for the used regex (regexBoar or regexDragon)
 			let regexOfEntity;
@@ -254,7 +252,6 @@ export default class MovementAgent {
 					this.gameField.removeFromEntitiesField(type, id);
 				}
 				if (regexOfEntity === 'regexDragon') {
-					// console.log('func Attack');
 					this.damageDragon();
 				}
 			}
@@ -267,13 +264,11 @@ export default class MovementAgent {
 	 * @param {*} item
 	 */
 	static checkIfArrayIncludesString(regex, item) {
-		// console.log(item);
 		const itemsToCheck = [...item];
 		let isIncluded = false;
 		for (let i = 0; i < itemsToCheck.length; i += 1) {
 			isIncluded = isIncluded || regex.test(item[i]);
 		}
-		// console.log(isIncluded);
 		return isIncluded;
 	}
 
@@ -283,7 +278,6 @@ export default class MovementAgent {
 	 * @param {Array} arr
 	 */
 	static getTypeOfEntity(regex, arr) {
-		// console.log(regex, arr);
 		let type;
 		let id;
 		for (let i = 0; i < arr.length; i += 1) {
@@ -319,7 +313,6 @@ export default class MovementAgent {
 		const { type: entityType, id } = entity;
 		// if a playerCharacter got hit
 		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
-			console.log(`remove: ${entityType}_${id}`);
 			this.activeEntitiesList.removeEntity(id);
 			this.gameField.removeFromEntitiesField(entityType, id);
 		} else if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
@@ -355,7 +348,6 @@ export default class MovementAgent {
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
 			// check state of playerCharacter if entityType === 'playerCharacter'
 			// further calc
-			console.log(mergedPartialField);
 			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
@@ -367,11 +359,8 @@ export default class MovementAgent {
 					this.gameField.removeFromEntitiesField(type, id);
 					this.activeEntitiesList.removeEntity(id);
 				}
-				console.log(mergedPartialField);
 				// check if the player hits a dragon
 				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
-					// deal only damage if the player moves right
-
 					// deal damage to dragon
 					this.damageDragon();
 				}
@@ -409,28 +398,11 @@ export default class MovementAgent {
 
 	damageDragon() {
 		const activeDragon = this.activeEntitiesList.getDragon();
-		// TODO: FIX bug: Dragon loses 100HP in under 1 second
-		// if (activeDragon.getGotDamage() === false) {
 		const dragonIsAlive = activeDragon.decreaseHP(20);
-		// console.log(dragonIsAlive);
 		if (!dragonIsAlive) {
 			const id = activeDragon.getID();
 			this.activeEntitiesList.removeEntity(id);
 			this.gameField.removeFromEntitiesField('npcDragon', id);
 		}
-		// }
 	}
-
-	// static getCollisionEntity(mergedPartialField) {
-	// 	const res = { id: 0, type: undefined };
-	// 	for (let i = 0; i < mergedPartialField.length; i += 1) {
-	// 		if (mergedPartialField[i].match(this.regexNPCs)) {
-	// 			const [type, id] = mergedPartialField[i].split('_');
-	// 			res.type = type;
-	// 			res.id = id;
-	// 			break;
-	// 		}
-	// 	}
-	// 	return res;
-	// }
 }
