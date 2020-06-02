@@ -124,10 +124,38 @@
         ],
         [
           {
-            "type": "grassTile",
+            "type": "waterTile",
             "start": 0,
-            "end": 43,
-            "repeat": 10
+            "end": 7,
+            "repeat": 25
+          },
+          {
+            "type": "grassTile",
+            "start": 7,
+            "end": 36
+          },
+          {
+            "type": "waterTile",
+            "start": 36,
+            "end": 43
+          }
+        ],
+        [
+          {
+            "type": "waterTile",
+            "start": 0,
+            "end": 16,
+            "repeat": 25
+          },
+          {
+            "type": "grassTile",
+            "start": 16,
+            "end": 27
+          },
+          {
+            "type": "waterTile",
+            "start": 27,
+            "end": 43
           }
         ]
       ]
@@ -151,7 +179,7 @@
       "id": 0
     },
     {
-      "coords": [73,26],
+      "coords": [73,25],
       "xMax": 127,
       "type": "npcBoar",
       "movementPattern": "waveMovement",
@@ -200,6 +228,13 @@
       "type": "npcBoar",
       "movementPattern": "straightMovement",
       "id": 7
+    },
+    {
+      "coords": [50,16],
+      "xMax": 250,
+      "type": "npcDragon",
+      "movementPattern": "",
+      "id": 99
     }
   ]
 }

@@ -15,10 +15,16 @@ export default class PlayerCharacter extends Entity {
 		);
 		// possible States: idle, moving, attacking
 		this.state = 'idle';
+		this.isAttackOnCD = false;
 	}
 
 	setState(state) {
 		this.state = state;
+	}
+
+	setIsAttackOnCD() {
+		this.isAttackOnCD = true;
+		setTimeout(() => { this.isAttackOnCD = false; }, 750);
 	}
 
 	getPlayerTypeToDraw() {
@@ -33,5 +39,9 @@ export default class PlayerCharacter extends Entity {
 
 	getGotDamage() {
 		return this.gotDamage;
+	}
+
+	getIsAttackOnCD() {
+		return this.isAttackOnCD;
 	}
 }

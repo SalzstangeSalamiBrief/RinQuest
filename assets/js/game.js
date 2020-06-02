@@ -107,7 +107,6 @@ export default class Game {
 			// if (loopIndex === 25) {
 			if (loopIndex === 10) {
 				await this.scrollHandler();
-				console.log(this.actualMaxXCoord);
 				loopIndex = 0;
 			} else {
 				loopIndex += 1;
