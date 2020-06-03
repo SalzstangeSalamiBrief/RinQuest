@@ -107,7 +107,6 @@ export default {
 			//  space
 			case 32:
 				// todo better display => actual to clunky
-				// await this.displayPlayerAttack();
 				this.gameLoop.setPlayerStates({ isAttacking: false });
 				break;
 			// w
@@ -119,13 +118,8 @@ export default {
 			case 65:
 				this.gameLoop.setPlayerStates({ isMoving: false });
 				this.gameLoop.setPlayerMovement(0, 0);
-				// await this.movementAgent.moveCharacter(
-				// 	-1,
-				// 	0,
-				// 	this.activeEntityList.getActiveEntitiesList()[0],
-				// );
 				break;
-				// ss
+				// s
 			case 83:
 				this.gameLoop.setPlayerStates({ isMoving: false });
 				this.gameLoop.setPlayerMovement(0, 0);
@@ -140,7 +134,6 @@ export default {
 			}
 		},
 	},
-	// todo back to mounted and asyncData; remove store
 	async mounted() {
 		// reset store
 		this.$store.commit('gameState/setActualState');
@@ -149,8 +142,6 @@ export default {
 		this.painter.addCanvasAndCtx(document.querySelector('#entities-area'), 'entities');
 		window.addEventListener('keydown', this.keyDownListeners);
 		window.addEventListener('keyup', this.keyUpListener);
-
-
 		this.player = new PlayerCharacter();
 		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
 		this.gamefield = await new Gamefield(this.painter, this.activeEntityList);
@@ -184,8 +175,6 @@ export default {
 				// todo decide which page is displayed
 				// this.$router.push('/finish');
 			}
-			// TODO
-			// this.$router.route('/');
 		},
 	},
 };
@@ -249,6 +238,7 @@ export default {
 	background: red;
 }
 
+/* TODO: better contrast colors */
 .hp-bar__label{
 	font-weight: 600;
 	display: inline-block;

@@ -3,7 +3,6 @@ import { initEntities } from '../gamefield/fields.json';
 
 export default class PlayerCharacter extends Entity {
 	constructor() {
-		// todo state
 		super(
 			initEntities[0].coords[0],
 			initEntities[0].coords[1],

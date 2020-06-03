@@ -1,7 +1,6 @@
 import NPC from './nonPlayerCharacter';
 
 export default class Boar extends NPC {
-	// todo: change type to static npcBoar
 	constructor(posX, posY, id, movementType = 'straightMovement') {
 		// height: 5, width: 7
 		super(posX, posY, 7, 5, 'npcBoar', id);
@@ -38,7 +37,6 @@ export default class Boar extends NPC {
 	 */
 	static* waveMovementGenerator(maxLength) {
 		let index = 0;
-		// todo: refactor: replace maxLength and 23
 		while (true) {
 			if (index < maxLength - 1) {
 				index += 1;

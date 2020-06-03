@@ -127,7 +127,6 @@ export default class MovementAgent {
 			if (type === 'playerCharacter') {
 				newCalcedCoords[0] = canvasSize.xMax - width;
 			}
-			// todo: else => monster
 			collisionDetected = true;
 		}
 		// check for -y/top movement collision
@@ -145,11 +144,17 @@ export default class MovementAgent {
 		return { newCalcedCoords, collisionDetected };
 	}
 
+	/**
+	 * Check for collision on the field for the passed entity in
+	 * the given direction based on the passed coordinates
+	 * different checks for playerCharacter and npc entities
+	 * @param {Array} passedCords
+	 * @param {String} movementDirection
+	 * @param {Entity} entity
+	 */
 	async	checkForFieldCollision(passedCords, movementDirection, entity) {
 		const { size: entitySize } = entity.getCoordsAndSize();
 		const entityType = entity.getType();
-		// todo: increase extensibility of entityTypes
-		// todo: increase extensibility of tileTypes
 		const mergedPartialField = await this.gameField.getMergedPartialField(
 			passedCords,
 			entitySize,
@@ -277,6 +282,11 @@ export default class MovementAgent {
 		}
 	}
 
+	/**
+	 * Calculate a new Coordinate by adding the passed coord with the passed step
+	 * @param {Number} coord
+	 * @param {Number} step
+	 */
 	static calcNewCoordinate(coord, step) {
 		return coord + step;
 	}
@@ -304,7 +314,6 @@ export default class MovementAgent {
 			newCoords, entitySize, movementDirection,
 		);
 		if (entityTypeToUpdate !== 'playerCharacter' && ((newCoords[0] <= 0 || newCoords[1] <= 0) || collisionWithEnvTiles)) {
-			// TODO remove if collision with waterTiles
 			// Remove npc Entities if they move outside of the gamefield
 			this.activeEntitiesList.removeEntity(entityID);
 			this.gameField.removeFromEntitiesField(entityType, entity.getID());

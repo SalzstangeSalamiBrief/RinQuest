@@ -29,44 +29,14 @@ export default class Game {
 		this.actualMaxXCoord = 80;
 	}
 
+
+	/** <--------------- general functions ----------> */
+
 	/**
-	 * Calculate the state of the user based on the fact if the player attacks or is moving
-	 * @param {Boolean} isMoving
-	 * @param {Boolean} isAttacking
+	 * create the game loop
+	 * inside the game loop move characters and the field periodic
 	 */
-	setPlayerStates({ isMoving = undefined, isAttacking = undefined }) {
-		let newState = '';
-		const evalIsMoving = isMoving !== undefined ? isMoving : this.isPlayerMoving;
-		const evalIsAttacking = isAttacking !== undefined ? isAttacking : this.isPlayerAttacking;
-		switch (true) {
-		case (!evalIsMoving && !evalIsAttacking):
-			newState = 'idle';
-			break;
-		case (evalIsMoving && !evalIsAttacking):
-			newState = 'moving';
-			break;
-		default:
-			// (!isMoving && isAttacking)|| (isMoving && isAttacking)
-			newState = 'attacking';
-			break;
-		}
-		this.isPlayerAttacking = evalIsAttacking;
-		this.isPlayerMoving = evalIsMoving;
-		this.playerMovement.entity.setState(newState);
-	}
-
-	setPlayerMovement(xAxis, yAxis) {
-		this.playerMovement.xAxis = xAxis;
-		this.playerMovement.yAxis = yAxis;
-	}
-
 	createGameLoop() {
-		// todo remove temp dragonCreation
-		// this.activeEntityList.addEntity(
-		// 	this.createNewEntity('npcDragon', 25, 17),
-		// );
-		// if loop index is equal to 5, move characters;
-		// 5 * 20 ms => 100ms for one movement
 		let loopIndex = 0;
 		this.gameLoop = setInterval(async () => {
 			// move player
@@ -103,9 +73,8 @@ export default class Game {
 
 			// if loop index is equal to 10 set it to 0 and scroll field
 			// else: increment LoopIndex
-			// TODO: 25
-			// if (loopIndex === 25) {
-			if (loopIndex === 10) {
+			if (loopIndex === 25) {
+			// if (loopIndex === 10) {
 				await this.scrollHandler();
 				loopIndex = 0;
 			} else {
@@ -161,7 +130,7 @@ export default class Game {
  * if the player collides with an envTile in the next tick, move him back one tile
  */
 	async scrollHandler() {
-		// check if the player will collide with an envTile in the next tick
+	// check if the player will collide with an envTile in the next tick
 		const playerEntity = this.activeEntityList.getPlayerEntity();
 		const { coords: playerCoords, size } = playerEntity.getCoordsAndSize();
 		const hasCollisionWithEnvTile = await this.movementAgent.checkForEnvTileCollision(
@@ -173,17 +142,15 @@ export default class Game {
 			'right',
 		);
 		// check if the col left from the player doe not exists => FieldEdge
-		// const hasCollisionWithLeftEdge = playerCoords[0] - 1 < 0;
-		// todo: remove dummy
 		const hasCollisionWithLeftEdge = false;
 		// if the player collides with an envTile move it back one tile
 		if (hasCollisionWithEnvTile) {
 			if (hasCollisionWithLeftEdge) {
-				// player got stuck (left edge, right non walkable tile)
-				// kill player
+			// player got stuck (left edge, right non walkable tile)
+			// kill player
 				playerEntity.decreaseHP(playerEntity.getHP());
 			} else {
-				// player got only stuck by a non walkable tile right
+			// player got only stuck by a non walkable tile right
 				await this.movementAgent.moveCharacter(
 					{
 						xAxis: -1,
@@ -198,21 +165,21 @@ export default class Game {
 		const hasScrolled = 	await	this.gameField.scrollField();
 		// increment axtualMaxXCoord if the field got scrolled
 		if (hasScrolled)	this.actualMaxXCoord += 1;
-		// check if a new entity has to be created
+	// check if a new entity has to be created
 	}
 
 	/**
-	 * Check if the first inactive Entity can be displayed
-	 * If that is the case create a new Entity and add it to the activeEntityList
-	 */
+ * Check if the first inactive Entity can be displayed
+ * If that is the case create a new Entity and add it to the activeEntityList
+ */
 	async checkForAvailableEntities() {
-	// try to get the first inactive entity
+		// try to get the first inactive entity
 		const fistActiveEntity = this.gameField.checkForCreationOfNewEntity(
 			this.actualMaxXCoord,
 		);
 		// check if fistActiveEntity is not null => it exists
 		if (fistActiveEntity !== null) {
-			// create a new entity-object
+		// create a new entity-object
 			const newEntity = this.createNewEntity(
 				fistActiveEntity.type,
 				fistActiveEntity.coords[0],
@@ -220,20 +187,19 @@ export default class Game {
 				fistActiveEntity.id,
 				fistActiveEntity.movementPattern,
 			);
-			console.log(newEntity);
 			// add new the new entity to the activeEntityList
 			await this.activeEntityList.addEntity(newEntity);
 		}
 	}
 
 	/**
-	 * Handler for the dragon. Creates a new flame if the dragon breaths fire
-	 * @param {npcDragon} entity
-	 */
+ * Handler for the dragon. Creates a new flame if the dragon breaths fire
+ * @param {npcDragon} entity
+ */
 	dragonHandler(entity) {
-		// check if the dragon breaths fire
+	// check if the dragon breaths fire
 		if (entity.getBreathsFire() === true) {
-			// get the next index from the flameIndexGenerator
+		// get the next index from the flameIndexGenerator
 			const index = this.flameIndexGenerator.next().value;
 			// get Coords from the passed dragon
 			const { coords: [xAxisPos, yAxisPos] } = entity.getCoordsAndSize();
@@ -257,8 +223,8 @@ export default class Game {
 	}
 
 	/**
- * Generator for a integer gt 100
- */
+* Generator for a integer gt 100
+*/
 	static* generateFlameIndex() {
 		let index = 100;
 		while (true) {
@@ -267,6 +233,41 @@ export default class Game {
 		}
 	}
 
+	/** <--------------- setter ----------> */
+
+	/**
+	 * Calculate the state of the user based on the fact if the player attacks or is moving
+	 * @param {Boolean} isMoving
+	 * @param {Boolean} isAttacking
+	 */
+	setPlayerStates({ isMoving = undefined, isAttacking = undefined }) {
+		let newState = '';
+		const evalIsMoving = isMoving !== undefined ? isMoving : this.isPlayerMoving;
+		const evalIsAttacking = isAttacking !== undefined ? isAttacking : this.isPlayerAttacking;
+		switch (true) {
+		case (!evalIsMoving && !evalIsAttacking):
+			newState = 'idle';
+			break;
+		case (evalIsMoving && !evalIsAttacking):
+			newState = 'moving';
+			break;
+		default:
+			// (!isMoving && isAttacking)|| (isMoving && isAttacking)
+			newState = 'attacking';
+			break;
+		}
+		this.isPlayerAttacking = evalIsAttacking;
+		this.isPlayerMoving = evalIsMoving;
+		this.playerMovement.entity.setState(newState);
+	}
+
+	setPlayerMovement(xAxis, yAxis) {
+		this.playerMovement.xAxis = xAxis;
+		this.playerMovement.yAxis = yAxis;
+	}
+
+	/** <--------------- getter ----------> */
+
 	getGameState() {
 		return this.gameState;
 	}
@@ -274,7 +275,4 @@ export default class Game {
 	getGameLoop() {
 		return this.gameLoop;
 	}
-	/** <--------------- general functions ----------> */
-	/** <--------------- setter ----------> */
-	/** <--------------- getter ----------> */
 }

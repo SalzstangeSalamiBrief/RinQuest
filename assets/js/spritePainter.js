@@ -17,6 +17,11 @@ export default class SpritePainter {
 
 	/** <--------------- general functions ----------> */
 
+	/**
+	 * add a canvas and his context to the canvasMap
+	 * @param {Canvas} canvas
+	 * @param {String} type
+	 */
 	addCanvasAndCtx(canvas, type) {
 		return new Promise((resolve, reject) => {
 			if (!canvas || !type) {
@@ -28,6 +33,10 @@ export default class SpritePainter {
 		});
 	}
 
+	/**
+	 * calc the size of the given Canvas
+	 * @param {Canvas} canvas
+	 */
 	static calcCanvasSize(canvas) {
 		return {
 			xMin: 0,
@@ -37,6 +46,9 @@ export default class SpritePainter {
 		};
 	}
 
+	/**
+	 * Load all Images through the imageLoader
+	 */
 	async loadAllImages() {
 		const data = await this.imageLoader.loadAllImages();
 		data.forEach((item) => {
@@ -46,6 +58,10 @@ export default class SpritePainter {
 		});
 	}
 
+	/**
+	 * initial draw of the backgroundField
+	 * @param {Object} InitFIeld
+	 */
 	async drawBackgroundInit(
 		{
 			xMin, yMin, xMax, yMax, type: imageName, mapType = 'background',
@@ -65,6 +81,12 @@ export default class SpritePainter {
 		}
 	}
 
+	/**
+	 * first clear the canvas of the given type
+	 * Then draw the canvas of the given map
+	 * @param {Array} fieldArray
+	 * @param {String} type
+	 */
 	async drawFieldMap(fieldArray, type = 'background') {
 		this.clearCanvas(type);
 		const { ctx } = 	this.canvasMap.get(type);
@@ -79,12 +101,22 @@ export default class SpritePainter {
 		}
 	}
 
+	/**
+	 * Draw the passed character on the entity-map
+	 * @param {String} characterType
+	 * @param {Array} coords
+	 * @param {Array} size
+	 */
 	drawCharacter(characterType, [xCoord, yCoord], [characterWidth, characterHeight]) {
 		const { ctx } = this.canvasMap.get('entities');
 		const img = this.imagesLoaded.get(characterType);
 		ctx.drawImage(img, xCoord * 20, yCoord * 20, characterWidth * 20, characterHeight * 20);
 	}
 
+	/**
+	 * clear the canvas of the given type
+	 * @param {String} type
+	 */
 	clearCanvas(type) {
 		this.canvasMap.get(type).ctx.clearRect(
 			0,
