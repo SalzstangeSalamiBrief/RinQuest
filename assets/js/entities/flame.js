@@ -7,8 +7,8 @@ export default class Flame extends NPC {
 		this.TTL = 20;
 	}
 
-	// TODO: Random one of two different movementpatterns
-	// complete random, log-path
+	/** <--------------- getter ----------> */
+
 	/**
 	 * Calculate the movementPattern
 	 */

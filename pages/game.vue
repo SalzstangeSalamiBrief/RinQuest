@@ -153,18 +153,6 @@ export default {
 
 		this.player = new PlayerCharacter();
 		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
-		// const dummyNPC = new NPCDragon(
-		// 	25,
-		// 	17,
-		// 	'npcDragon',
-		// );
-		// const dummyNPC = new NPCBoar(
-		// 	25,
-		// 	17,
-		// 	0,
-		// 	'waveMovement',
-		// );
-		// this.activeEntityList.addEntity(dummyNPC);
 		this.gamefield = await new Gamefield(this.painter, this.activeEntityList);
 		this.activeEntityList.setGamefield(this.gamefield);
 		this.movementAgent.setGamefield(this.gamefield);

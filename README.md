@@ -20,7 +20,7 @@ For detailed explanation on how things work, checkout [Nuxt.js](https://github.c
 * Flames deal damage even if the player is attacking
 * scrolling and reading gamefield.json inclusive spawning of npcs
 * Reorder functions in classes (generell function, setter, getter)
-* CD attacks
+* Kill Player if he enters a waterTile
 ## Inspiration
 The Inspiration for creating this game came from the second season of the anime [New Game!!](https://myanimelist.net/anime/34914/New_Game) from [Studio Doga Kobo](http://www.dogakobo.com). In this anime the character "Sakura Nene" created a game named "Nene Quest", which is the inspiration for this project.
 

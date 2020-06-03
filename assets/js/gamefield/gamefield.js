@@ -30,6 +30,49 @@ export default class GameField {
 		});
 	}
 
+
+	/**
+	 * Calc an Object with coords for the movement direction
+	 * @param {String} movementDirection
+	 * @param {Number} xStart
+	 * @param {Number} yStart
+	 * @param {Number} width
+	 * @param {Number} height
+	 */
+	static calcMovementDirection(movementDirection, xStart, yStart, width, height) {
+		const movementObject = {};
+		switch (movementDirection) {
+		case 'right':
+			movementObject.xStart = xStart + width - 1;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'left':
+			movementObject.xStart = xStart - 1;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart;
+			movementObject.yEnd = yStart + height;
+			break;
+		case 'top':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + 1;
+			break;
+		case 'bottom':
+			movementObject.xStart = xStart;
+			movementObject.yStart = yStart + height - 1;
+			movementObject.xEnd = xStart + width;
+			movementObject.yEnd = yStart + height;
+			break;
+		default: break;
+		}
+		return movementObject;
+	}
+	/** <--------------- general functions ----------> */
+
+
 	async	initField(inputArray, fieldType) {
 		const resultArray = [];
 		// init rows with 0es filled
@@ -85,7 +128,6 @@ export default class GameField {
 				}
 			});
 			this.repeatCol -= 1;
-			// todo: end of scrollColumns
 			if (this.repeatCol === 0) {
 				this.scrollIndex += 1;
 				// check if the new scrollIndex actually exist
@@ -174,6 +216,9 @@ export default class GameField {
 		}
 	}
 
+	/** <--------------- getter ----------> */
+
+
 	getField(type) {
 		return this.fieldMap.get(type);
 	}
@@ -220,45 +265,5 @@ export default class GameField {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Calc an Object with coords for the movement direction
-	 * @param {String} movementDirection
-	 * @param {Number} xStart
-	 * @param {Number} yStart
-	 * @param {Number} width
-	 * @param {Number} height
-	 */
-	static calcMovementDirection(movementDirection, xStart, yStart, width, height) {
-		const movementObject = {};
-		switch (movementDirection) {
-		case 'right':
-			movementObject.xStart = xStart + width - 1;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + height;
-			break;
-		case 'left':
-			movementObject.xStart = xStart - 1;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart;
-			movementObject.yEnd = yStart + height;
-			break;
-		case 'top':
-			movementObject.xStart = xStart;
-			movementObject.yStart = yStart;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + 1;
-			break;
-		case 'bottom':
-			movementObject.xStart = xStart;
-			movementObject.yStart = yStart + height - 1;
-			movementObject.xEnd = xStart + width;
-			movementObject.yEnd = yStart + height;
-			break;
-		default: break;
-		}
-		return movementObject;
 	}
 }

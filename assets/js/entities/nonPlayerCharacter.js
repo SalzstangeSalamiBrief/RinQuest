@@ -7,6 +7,8 @@ export default class NonPlayerCharacter extends Entity {
 		this.id = id;
 	}
 
+	/** <--------------- getter ----------> */
+
 	getIsAlive() {
 		return this.isAlive;
 	}

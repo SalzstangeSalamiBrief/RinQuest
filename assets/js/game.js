@@ -274,4 +274,7 @@ export default class Game {
 	getGameLoop() {
 		return this.gameLoop;
 	}
+	/** <--------------- general functions ----------> */
+	/** <--------------- setter ----------> */
+	/** <--------------- getter ----------> */
 }

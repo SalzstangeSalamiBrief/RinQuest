@@ -18,6 +18,39 @@ export default class Boar extends NPC {
 		}
 	}
 
+
+	/** <--------------- general functions ----------> */
+
+	/**
+	 * create an object for straight movements vom right to left
+	 */
+	static createStraightMovement() {
+		return {
+			xAxis: -1,
+			yAxis: 0,
+		};
+	}
+
+	/**
+	 * Generator function, which iterates over the movement-array for type waveMovements.
+	 * it starts again from zero, if the last index in the array is reached
+	 * @param {Number} maxLength
+	 */
+	static* waveMovementGenerator(maxLength) {
+		let index = 0;
+		// todo: refactor: replace maxLength and 23
+		while (true) {
+			if (index < maxLength - 1) {
+				index += 1;
+			} else {
+				index = 0;
+			}
+			yield index;
+		}
+	}
+
+	/** <--------------- getter ----------> */
+
 	/**
 	 * return the movementPattern of the created entity
 	 * if the movementType is straightMovement, then just return the value of this.movement
@@ -43,33 +76,5 @@ export default class Boar extends NPC {
 			result.yAxis = 1;
 		}
 		return result;
-	}
-
-	/**
-	 * Generator function, which iterates over the movement-array for type waveMovements.
-	 * it starts again from zero, if the last index in the array is reached
-	 * @param {Number} maxLength
-	 */
-	static* waveMovementGenerator(maxLength) {
-		let index = 0;
-		// todo: refactor: replace maxLength and 23
-		while (true) {
-			if (index < maxLength - 1) {
-				index += 1;
-			} else {
-				index = 0;
-			}
-			yield index;
-		}
-	}
-
-	/**
-	 * create an object for straight movements vom right to left
-	 */
-	static createStraightMovement() {
-		return {
-			xAxis: -1,
-			yAxis: 0,
-		};
 	}
 }

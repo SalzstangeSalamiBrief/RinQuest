@@ -9,6 +9,9 @@ export default class activeNPCsList {
 		this.inactiveEntities = undefined;
 	}
 
+
+	/** <--------------- general functions ----------> */
+
 	async addEntity(entity) {
 		const type = entity.getType();
 		if (type === 'flame') {
@@ -62,6 +65,19 @@ export default class activeNPCsList {
 		}
 	}
 
+
+	/** <--------------- setter ----------> */
+
+	setGamefield(gamefield) {
+		this.gamefield = gamefield;
+	}
+
+	setInactiveEntities(entities) {
+		this.inactiveEntities = [...entities];
+	}
+
+	/** <--------------- getter ----------> */
+
 	/**
 	 * shift first inactiveEntity out of inactiveEntities
 	 */
@@ -69,16 +85,8 @@ export default class activeNPCsList {
 		return this.inactiveEntities.shift();
 	}
 
-	setGamefield(gamefield) {
-		this.gamefield = gamefield;
-	}
-
 	getInactiveEntities() {
 		return this.inactiveEntities;
-	}
-
-	setInactiveEntities(entities) {
-		this.inactiveEntities = [...entities];
 	}
 
 	getActiveNPCsList() {

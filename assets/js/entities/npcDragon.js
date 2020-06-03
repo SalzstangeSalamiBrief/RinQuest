@@ -18,6 +18,24 @@ export default class Dragon extends NPC {
 		this.gotDamage = false;
 	}
 
+
+	/** <--------------- general functions ----------> */
+
+	/**
+	 * Generator for generating an index which is used for calculation the movementPattern
+	 */
+	static* movementGenerator() {
+		let index = 2;
+		while (true) {
+			// index = index <= 12 ? index + 1 : 0;
+			index = index <= 7 ? index + 1 : 0;
+			yield index;
+		}
+	}
+
+
+	/** <--------------- getter ----------> */
+
 	/**
 	 * get the movementPattern for the dragon
 	 */
@@ -39,18 +57,6 @@ export default class Dragon extends NPC {
 		}
 		this.canMove = !this.canMove;
 		return result;
-	}
-
-	/**
-	 * Generator for generating an index which is used for calculation the movementPattern
-	 */
-	static* movementGenerator() {
-		let index = 2;
-		while (true) {
-			// index = index <= 12 ? index + 1 : 0;
-			index = index <= 7 ? index + 1 : 0;
-			yield index;
-		}
 	}
 
 	getGotDamage() {

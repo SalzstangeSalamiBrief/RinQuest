@@ -14,6 +14,29 @@ export default class SpritePainter {
 		this.imageLoader = new ImageLoaderClass();
 	}
 
+
+	/** <--------------- general functions ----------> */
+
+	addCanvasAndCtx(canvas, type) {
+		return new Promise((resolve, reject) => {
+			if (!canvas || !type) {
+				reject();
+			}
+			this.canvasMap.set(type, { canvas, ctx: canvas.getContext('2d') });
+			if (this.canvasSize === undefined) this.canvasSize = this.constructor.calcCanvasSize(canvas);
+			resolve();
+		});
+	}
+
+	static calcCanvasSize(canvas) {
+		return {
+			xMin: 0,
+			yMin: 0,
+			xMax: Math.floor(canvas.width / 20),
+			yMax: Math.floor(canvas.height / 20),
+		};
+	}
+
 	async loadAllImages() {
 		const data = await this.imageLoader.loadAllImages();
 		data.forEach((item) => {
@@ -31,7 +54,7 @@ export default class SpritePainter {
 		// check if an image already got loaded. if not, then call ImageLoader
 		let img = this.imagesLoaded.get(imageName);
 		if (img === undefined) {
-			img = await this.imageLoader.loadImage(`/game/background/${imageName}.png`);
+			img = await this.imageLoader.constructor.loadImage(`/game/background/${imageName}.png`);
 			this.imagesLoaded.set(imageName, img);
 		}
 		const { ctx } = this.canvasMap.get(mapType);
@@ -71,25 +94,7 @@ export default class SpritePainter {
 		);
 	}
 
-	addCanvasAndCtx(canvas, type) {
-		return new Promise((resolve, reject) => {
-			if (!canvas || !type) {
-				reject();
-			}
-			this.canvasMap.set(type, { canvas, ctx: canvas.getContext('2d') });
-			if (this.canvasSize === undefined) this.canvasSize = this.constructor.calcCanvasSize(canvas);
-			resolve();
-		});
-	}
-
-	static calcCanvasSize(canvas) {
-		return {
-			xMin: 0,
-			yMin: 0,
-			xMax: Math.floor(canvas.width / 20),
-			yMax: Math.floor(canvas.height / 20),
-		};
-	}
+	/** <--------------- getter ----------> */
 
 	getCanvasAndCtx(type) {
 		return this.canvasMap.get(type);

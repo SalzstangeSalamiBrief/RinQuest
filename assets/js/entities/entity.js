@@ -21,6 +21,9 @@ export default class Entity {
 		}
 	}
 
+
+	/** <--------------- general functions ----------> */
+
 	/**
 	 * Decrease the HP of this object by a passed value (default 20)
 	 * return true if the dragon is still alive
@@ -54,6 +57,8 @@ export default class Entity {
 		return true;
 	}
 
+	/** <--------------- setter ----------> */
+
 	/**
 	 * Set gotDamage to true
 	 * Set HPTextContainer with new Hp and adjust width of the background
@@ -79,6 +84,8 @@ export default class Entity {
 		this.xCoord = xCoord;
 		this.yCoord = yCoord;
 	}
+
+	/** <--------------- getter ----------> */
 
 	getType() {
 		return this.type;

@@ -1,8 +1,8 @@
-/* eslint-disable class-methods-use-this */
-// const url = require('url');
 
 export default class ImageLoader {
-	loadImage(filePath) {
+	/** <--------------- general functions ----------> */
+
+	static loadImage(filePath) {
 		return new Promise((resolve) => {
 			const img = new Image();
 			img.addEventListener('load', () => resolve(img));
@@ -27,7 +27,7 @@ export default class ImageLoader {
 		const promiseArray = [];
 		imagesToLoad.forEach((imgPath) => {
 			promiseArray.push(
-				this.loadImage(imgPath),
+				this.constructor.loadImage(imgPath),
 			);
 		});
 		const loadedImages = await Promise.all(promiseArray);
