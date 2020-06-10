@@ -1,8 +1,10 @@
 
 <template>
 	<section class="flex--column center-flex">
-			<h1 v-if="actualGameState === 'playerLost'">You lost against the the pure Evil</h1>
-			<h1 v-else>You successfully solved the adventure of RinQuest</h1>
+			<h1 v-if="actualGameState === 'playerLost'">You lost against the the evil forces.</h1>
+			<h1 v-else>You successfully solved the adventure of
+				<img width="512" src="/rinQuest_Title.svg">
+			</h1>
 		<nuxt-link
 			to="/"
 			tag="button"
@@ -29,5 +31,8 @@ export default {
 h1{
 	font-size: 2rem;
 	font-weight: 600;
+}
+img{
+	margin: 2rem 0;
 }
 </style>
