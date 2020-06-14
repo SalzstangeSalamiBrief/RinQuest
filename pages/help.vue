@@ -3,7 +3,12 @@
 		<h1 class="text-gray-600">Help</h1>
 		<div class="htp-container">
 			<h2 class="text-gray-600">How to Play</h2>
-			<div>cool description</div>
+			<div>
+				Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+				Praesentium nulla libero, fuga officia perferendis minus
+				accusamus est explicabo iste quam porro maiores
+				dolorum ipsa illo provident sunt quasi ratione numquam?
+			</div>
 		</div>
 		<div class="controls-container">
 			<h2 class="text-gray-600">Controls</h2>
