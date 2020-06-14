@@ -1,4 +1,5 @@
 /* eslint-disable */
+const path = require('path')
 /*
 **  Nuxt
 */
@@ -29,7 +30,7 @@ let win = null // Current window
 const {app, BrowserWindow,} = require('electron')
 const newWin = () => {
 	const options = {		
-			// icon: path.join(__dirname, 'static/icon.png'),
+			icon: path.join(__dirname, 'static/icon.png'),
 			width: 1600,
 			height: 900,
 			webPreferences: {
@@ -39,7 +40,7 @@ const newWin = () => {
 	}
 	win = new BrowserWindow(options)
 	// todo: comment in
-	// win.setMenu(null);
+	win.setMenu(null);
 	win.on('closed', () => win = null)
 	if (config.dev) {
 		// Install vue dev tool and open chrome dev tools
