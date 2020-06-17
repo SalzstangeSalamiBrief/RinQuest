@@ -27,7 +27,6 @@ export default class Dragon extends NPC {
 	static* movementGenerator() {
 		let index = 2;
 		while (true) {
-			// index = index <= 12 ? index + 1 : 0;
 			index = index <= 7 ? index + 1 : 0;
 			yield index;
 		}

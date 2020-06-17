@@ -46,8 +46,6 @@ import PlayerCharacter from '../assets/js/entities/playerCharacter';
 import MovementAgent from '../assets/js/movementAgent';
 import Gamefield from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
-// import NPCBoar from '../assets/js/entities/npcBoar';
-// import NPCDragon from '../assets/js/entities/npcDragon';
 import GameLoop from '../assets/js/game';
 
 export default {
@@ -69,8 +67,6 @@ export default {
 			switch (keyCode) {
 			//  space
 			case 32:
-				// todo better display => actual to clunky
-				// await this.displayPlayerAttack();
 				this.gameLoop.setPlayerStates({ isAttacking: true });
 				break;
 			// w
@@ -82,11 +78,6 @@ export default {
 			case 65:
 				this.gameLoop.setPlayerStates({ isMoving: true });
 				this.gameLoop.setPlayerMovement(-1, 0);
-				// await this.movementAgent.moveCharacter(
-				// 	-1,
-				// 	0,
-				// 	this.activeEntityList.getActiveEntitiesList()[0],
-				// );
 				break;
 				// ss
 			case 83:
@@ -172,8 +163,7 @@ export default {
 			console.log(`watched GameState: ${newState}`);
 			if (newState !== 'running') {
 				this.$store.commit('gameState/setActualState', newState);
-				// todo decide which page is displayed
-				// this.$router.push('/finish');
+				this.$router.push('/finish');
 			}
 		},
 	},

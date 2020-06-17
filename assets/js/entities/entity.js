@@ -94,7 +94,6 @@ export default class Entity {
 	getCoordsAndSize() {
 		return {
 			coords: [this.xCoord, this.yCoord],
-			// [width, height]
 			size: [this.width, this.height],
 		};
 	}

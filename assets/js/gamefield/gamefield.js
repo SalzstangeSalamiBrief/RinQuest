@@ -14,18 +14,16 @@ export default class GameField {
 				this.initField(backgroundColumns.start, 'background'),
 				this.initField(initEntities, 'entities'),
 			];
-			backgroundColumns.start
-				.forEach((backgroundCol) => promiseArray.push(
-					this.painter.drawBackgroundInit(backgroundCol),
-				));
 			// draw each active entity of the init screen
-			this.activeEntityList.getAllEntities().forEach(async (entity) => {
+			this.activeEntityList.getAllEntities().forEach((entity) => {
 				const { coords, size } = entity.getCoordsAndSize();
 				const type = entity.getType();
 				this.painter.drawCharacter(type, coords, size);
 			});
 			this.activeEntityList.setInactiveEntities(inactiveEntities);
+			// wait to succeed all promises in promiseArray and then paint background field
 			Promise.all(promiseArray)
+				.then(() => this.painter.drawFieldMap(this.fieldMap.get('background')))
 				.then(() => resolve(this));
 		});
 	}
@@ -190,7 +188,6 @@ export default class GameField {
 	static removeEntryFromCell(entityToRemove, cell = '') {
 		// split corresponding entry by the separator space
 		const entries = [...cell.split(' ')];
-		// const entries = cell.split(' ');
 		// loop through all entries
 		for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
 			// if the entry with the index is found, remove it

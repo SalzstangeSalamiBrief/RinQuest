@@ -39,7 +39,6 @@ const newWin = () => {
 			backgroundColor: '#fff'	
 	}
 	win = new BrowserWindow(options)
-	// todo: comment in
 	win.setMenu(null);
 	win.on('closed', () => win = null)
 	if (config.dev) {

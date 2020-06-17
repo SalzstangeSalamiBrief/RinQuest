@@ -2,7 +2,6 @@ import ImageLoaderClass from './imageLoader';
 
 export default class SpritePainter {
 	constructor() {
-		// this.canvas = canvas;
 		this.canvasMap = new Map();
 		/**
 		 * xMax = width / 20, yMax = height / 20
@@ -56,29 +55,6 @@ export default class SpritePainter {
 				this.imagesLoaded.set(item.imageName, item.image);
 			}
 		});
-	}
-
-	/**
-	 * initial draw of the backgroundField
-	 * @param {Object} InitFIeld
-	 */
-	async drawBackgroundInit(
-		{
-			xMin, yMin, xMax, yMax, type: imageName, mapType = 'background',
-		},
-	) {
-		// check if an image already got loaded. if not, then call ImageLoader
-		let img = this.imagesLoaded.get(imageName);
-		if (img === undefined) {
-			img = await this.imageLoader.constructor.loadImage(`/game/background/${imageName}.png`);
-			this.imagesLoaded.set(imageName, img);
-		}
-		const { ctx } = this.canvasMap.get(mapType);
-		for (let row = xMin; row < xMax; row += 1) {
-			for (let col = yMin; col < yMax; col += 1) {
-				ctx.drawImage(img, row * 20, col * 20);
-			}
-		}
 	}
 
 	/**

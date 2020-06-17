@@ -74,7 +74,6 @@ export default class Game {
 			// if loop index is equal to 10 set it to 0 and scroll field
 			// else: increment LoopIndex
 			if (loopIndex === 25) {
-			// if (loopIndex === 10) {
 				await this.scrollHandler();
 				loopIndex = 0;
 			} else {

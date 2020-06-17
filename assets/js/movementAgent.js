@@ -219,7 +219,6 @@ export default class MovementAgent {
 		// check if an npc gets hit
 		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
 		// check state of playerCharacter if entityType === 'playerCharacter'
-		// further calc
 			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
 			// if the player is in attacking state,
 			if (entity.getState() === 'attacking') {
