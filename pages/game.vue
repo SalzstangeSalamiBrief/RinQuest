@@ -47,6 +47,7 @@ import MovementAgent from '../assets/js/movementAgent';
 import Gamefield from '../assets/js/gamefield/gamefield';
 import ActiveEntityList from '../assets/js/ActiveEntityList';
 import GameLoop from '../assets/js/game';
+import KeyHandler from '../assets/js/keyHandler';
 
 export default {
 	name: 'game',
@@ -56,83 +57,16 @@ export default {
 			gamefield: undefined,
 			activeEntityList: undefined,
 			gameLoop: false,
+			keyHandler: null,
 		};
 	},
-	methods: {
-		debuggingBackToIndex() {
-			this.$router.push({ path: '/' });
-		},
-
-		async keyDownListeners({ keyCode }) {
-			switch (keyCode) {
-			//  space
-			case 32:
-				this.gameLoop.setPlayerStates({ isAttacking: true });
-				break;
-			// w
-			case 87:
-				this.gameLoop.setPlayerStates({ isMoving: true });
-				this.gameLoop.setPlayerMovement(0, -1);
-				break;
-				// a
-			case 65:
-				this.gameLoop.setPlayerStates({ isMoving: true });
-				this.gameLoop.setPlayerMovement(-1, 0);
-				break;
-				// ss
-			case 83:
-				this.gameLoop.setPlayerStates({ isMoving: true });
-				this.gameLoop.setPlayerMovement(0, 1);
-				break;
-				// d
-			case 68:
-				this.gameLoop.setPlayerStates({ isMoving: true });
-				this.gameLoop.setPlayerMovement(1, 0);
-				break;
-			default:
-				break;
-			}
-		},
-		async keyUpListener({ keyCode }) {
-			switch (keyCode) {
-			//  space
-			case 32:
-				// todo better display => actual to clunky
-				this.gameLoop.setPlayerStates({ isAttacking: false });
-				break;
-			// w
-			case 87:
-				this.gameLoop.setPlayerStates({ isMoving: false });
-				this.gameLoop.setPlayerMovement(0, 0);
-				break;
-				// a
-			case 65:
-				this.gameLoop.setPlayerStates({ isMoving: false });
-				this.gameLoop.setPlayerMovement(0, 0);
-				break;
-				// s
-			case 83:
-				this.gameLoop.setPlayerStates({ isMoving: false });
-				this.gameLoop.setPlayerMovement(0, 0);
-				break;
-				// d
-			case 68:
-				this.gameLoop.setPlayerStates({ isMoving: false });
-				this.gameLoop.setPlayerMovement(0, 0);
-				break;
-			default:
-				break;
-			}
-		},
-	},
+	methods: {},
 	async mounted() {
 		// reset store
 		this.$store.commit('gameState/setActualState');
 		// add canvas to Painter
 		this.painter.addCanvasAndCtx(document.querySelector('#background-area'), 'background');
 		this.painter.addCanvasAndCtx(document.querySelector('#entities-area'), 'entities');
-		window.addEventListener('keydown', this.keyDownListeners);
-		window.addEventListener('keyup', this.keyUpListener);
 		this.player = new PlayerCharacter();
 		this.activeEntityList = new ActiveEntityList(this.player, this.painter);
 		this.gamefield = await new Gamefield(this.painter, this.activeEntityList);
@@ -143,9 +77,10 @@ export default {
 			this.activeEntityList, this.movementAgent, this.gamefield, this.$store,
 		);
 		this.gameLoop.createGameLoop();
+		this.keyHandler = new KeyHandler(this.gameLoop);
 	},
 	beforeDestroy() {
-		window.removeEventListener('keydown', this.addKeyListeners);
+		this.keyHandler.removeKeyListeners();
 	},
 	async asyncData() {
 		const painter = new SpritePainter();
