@@ -74,7 +74,7 @@ export default class GameField {
 	async	initField(inputArray, fieldType) {
 		const resultArray = [];
 		// init rows with 0es filled
-		for (let i = 0; i < 43; i += 1) {
+		for (let row = 0; row < 43; row += 1) {
 			resultArray.push(new Array(80).fill(''));
 		}
 		// set values according to the inputArray
@@ -120,9 +120,9 @@ export default class GameField {
 			const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
 			// scroll each col of background
 			scrollCol.forEach(({ start, end, type }) => {
-				for (let i = start; i < end; i += 1) {
-					map[i].shift();
-					map[i].push(type);
+				for (let cell = start; cell < end; cell += 1) {
+					map[cell].shift();
+					map[cell].push(type);
 				}
 			});
 			this.repeatCol -= 1;
