@@ -81,10 +81,11 @@ export default class GameField {
 		inputArray.forEach(({
 			xMin, yMin, xMax, yMax, type, id = undefined,
 		}) => {
-			for (let row = yMin; row < yMax; row += 1) {
+			for (let r = yMin; r < yMax; r += 1) {
+				const row = resultArray[r];
 				for (let col = xMin; col < xMax; col += 1) {
 					const suffix = id !== undefined ? `_${id}` : '';
-					resultArray[row][col] = `${type}${suffix}`;
+					row[col] = `${type}${suffix}`;
 				}
 			}
 		});
@@ -119,12 +120,14 @@ export default class GameField {
 			const map = this.fieldMap.get(fieldType);
 			const scrollCol = backgroundColumns.scrollColumns[this.scrollIndex];
 			// scroll each col of background
-			scrollCol.forEach(({ start, end, type }) => {
+			for (let i = 0; i < scrollCol.length; i += 1) {
+				const { start, end, type } = scrollCol[i];
 				for (let cell = start; cell < end; cell += 1) {
 					map[cell].shift();
 					map[cell].push(type);
 				}
-			});
+			}
+
 			this.repeatCol -= 1;
 			if (this.repeatCol === 0) {
 				this.scrollIndex += 1;
@@ -144,18 +147,21 @@ export default class GameField {
 		const map = this.fieldMap.get(fieldType);
 		const entityToUpdate = `${entityType}${id !== '' ? '_' : ''}${id}`;
 		// clear old position
-		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
+		for (let r = oldYCoord; r < oldYCoord + height; r += 1) {
+			const row = map[r];
 			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
-				map[row][col] = this.constructor.removeEntryFromCell(entityToUpdate, map[row][col]);
+				let cell = row[col];
+				cell = this.constructor.removeEntryFromCell(entityToUpdate, cell);
 			}
 		}
 		// insert new position
-		for (let row = newYCoord; row < newYCoord + height; row += 1) {
+		for (let r = newYCoord; r < newYCoord + height; r += 1) {
+			const row = map[r];
 			for (let col = newXCoord; col < newXCoord + width; col += 1) {
 				// check if the entity already exists in the cell
-				if (!(new RegExp(entityToUpdate).test(map[row][col]))) {
+				if (!(new RegExp(entityToUpdate).test(row[col]))) {
 					// if the entity does not exist in the cell, add it
-					map[row][col] = (`${map[row][col]} ${entityToUpdate}`).trim();
+					row[col] = (`${row[col]} ${entityToUpdate}`).trim();
 				}
 			}
 		}
