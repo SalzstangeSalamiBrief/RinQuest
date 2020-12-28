@@ -90,7 +90,7 @@ export default class Game {
 			if (this.gameState !== 'running') {
 				clearInterval(this.gameLoop);
 			}
-		}, 20);
+		}, 10);
 	}
 
 	/**

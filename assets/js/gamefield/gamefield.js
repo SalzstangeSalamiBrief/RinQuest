@@ -102,8 +102,8 @@ export default class GameField {
 		// get first inanctive entty and check if it can be displayed
 		const inactiveEntity = this.activeEntityList.getFirstInactiveEntity();
 		if (inactiveEntity !== null) {
-			// check if xcoord is displayed
-			if (actualMaxXCoord === inactiveEntity.xMax) {
+			const isActualXCoordVisible = actualMaxXCoord === inactiveEntity.xMax;
+			if (isActualXCoordVisible) {
 				result = this.activeEntityList.getFistInactiveEntity();
 			}
 		}
@@ -147,11 +147,9 @@ export default class GameField {
 		const map = this.fieldMap.get(fieldType);
 		const entityToUpdate = `${entityType}${id !== '' ? '_' : ''}${id}`;
 		// clear old position
-		for (let r = oldYCoord; r < oldYCoord + height; r += 1) {
-			const row = map[r];
+		for (let row = oldYCoord; row < oldYCoord + height; row += 1) {
 			for (let col = oldXCoord; col < oldXCoord + width; col += 1) {
-				let cell = row[col];
-				cell = this.constructor.removeEntryFromCell(entityToUpdate, cell);
+				map[row][col] = this.constructor.removeEntryFromCell(entityToUpdate, map[row][col]);
 			}
 		}
 		// insert new position
@@ -159,8 +157,8 @@ export default class GameField {
 			const row = map[r];
 			for (let col = newXCoord; col < newXCoord + width; col += 1) {
 				// check if the entity already exists in the cell
-				if (!(new RegExp(entityToUpdate).test(row[col]))) {
-					// if the entity does not exist in the cell, add it
+				const isEntityInCell = new RegExp(entityToUpdate).test(row[col]);
+				if (!isEntityInCell) {
 					row[col] = (`${row[col]} ${entityToUpdate}`).trim();
 				}
 			}
@@ -179,7 +177,8 @@ export default class GameField {
 		const maxCols = map[0].length;
 		for (let row = 0; row < maxRows; row += 1) {
 			for (let col = 0; col < maxCols; col += 1) {
-				if (new RegExp(entityToRemove).test(map[row][col])) {
+				const isEntityToRemoveInCell = new RegExp(entityToRemove).test(map[row][col]);
+				if (isEntityToRemoveInCell) {
 					map[row][col]	= this.constructor.removeEntryFromCell(entityToRemove, map[row][col]);
 				}
 			}
@@ -192,16 +191,13 @@ export default class GameField {
 	 * @param {String} cell
 	 */
 	static removeEntryFromCell(entityToRemove, cell = '') {
-		// split corresponding entry by the separator space
 		const entries = [...cell.split(' ')];
-		// loop through all entries
 		for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
-			// if the entry with the index is found, remove it
-			if (entityToRemove === entries[entryIndex]) {
+			const isEntryFilledByEntityToRemove = entityToRemove === entries[entryIndex];
+			if (isEntryFilledByEntityToRemove) {
 				entries.splice(entryIndex, 1);
 			}
 		}
-		// join the splitted array and trim it
 		return entries.join(' ').trim();
 	}
 
@@ -227,22 +223,19 @@ export default class GameField {
 	}
 
 	async getMergedPartialField([xStart, yStart], [width, height], movementDirection) {
-		// calc xStart, yStart, xEnd, yEnd based on movementDirection
 		const movementObject = this.constructor.calcMovementDirection(
 			movementDirection, xStart, yStart, width, height,
 		);
 
-		// parallelize call of booth methods
 		const [partialEntitiesField, partialBackgroundField] = await Promise.all([
 			this.getPartialField(movementObject, 'entities'),
 			this.getPartialField(movementObject, 'background'),
 		]);
-		// merge both field-arrays
+
 		const mergedPartialField = [];
 		for (let x = 0; x < partialEntitiesField.length; x += 1) {
-			// if the partialBackgroundField[x] is a grassTile, then push partialEntitiesField[x].
-			// Else: push partialBackgroundField[x]
-			if (partialBackgroundField[x] === 'grassTile') {
+			const isCellAGrassTile = partialBackgroundField[x] === 'grassTile';
+			if (isCellAGrassTile) {
 				mergedPartialField.push(partialEntitiesField[x].split(' '));
 			} else {
 				mergedPartialField.push(partialBackgroundField[x]);

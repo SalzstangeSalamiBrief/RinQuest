@@ -31,28 +31,23 @@ export default class Entity {
 	 * @param {Number} damage
 	 */
 	decreaseHP(damageReceived = 20) {
-		// check if the entity is from type playerCharacter or npcDragon (only these two got HP)
-		if ((new RegExp('playerCharacter|npcDragon')).test(this.type)) {
-			// check if the entity got damage in the last 1.5s
+		const isEntityPlayer = this.type === 'playerCharacter';
+		const isEntityDragon = this.type === 'npcDragon';
+
+		if (isEntityPlayer || isEntityDragon) {
 			if (this.gotDamage) return true;
-			// else calc new HP
 			const newHP = this.HP - damageReceived;
-			// init entityIsAlive with true
-			let entityIsAlive = true;
-			if (newHP <= 0) {
-				// if newHP is lt 0 => HP = 0 && entityIsAlive = false
+			const isEntityAlive = newHP > 0;
+			if (isEntityAlive) {
+				this.HP = newHP;
+			} else {
 				this.HP = 0;
-				entityIsAlive = false;
-				// if the entity with 0 hp is a dragon, set its hp-bar visibility to hidden
-				if (this.type === 'npcDragon') {
+				if (isEntityDragon) {
 					document.querySelector('.hp-bar.dragon').style.visibility = 'hidden';
 				}
-			} else {
-				// else set HP = newHP
-				this.HP = newHP;
 			}
 			this.setGotDamage();
-			return entityIsAlive;
+			return isEntityAlive;
 		}
 		return true;
 	}
@@ -99,9 +94,6 @@ export default class Entity {
 	}
 
 	getHP() {
-		if (this.HP !== undefined) {
-			return this.HP;
-		}
-		return undefined;
+		return this.HP;
 	}
 }
