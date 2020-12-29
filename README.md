@@ -15,9 +15,6 @@ $ npm run dev
 $ npm run build
 ```
 
-## Bugs/TODOs:
-* Kill Player if he enters a waterTile at scrolling
-
 ## Inspiration
 The Inspiration for creating this game came from the second season of the anime [New Game!!](https://myanimelist.net/anime/34914/New_Game) from [Studio Doga Kobo](http://www.dogakobo.com). In this anime the character "Sakura Nene" created a game named "Nene Quest", which is the inspiration for this project.
 
