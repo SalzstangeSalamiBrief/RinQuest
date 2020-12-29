@@ -126,7 +126,6 @@ export default class activeNPCsList {
 	 * get the active dragon of the game
 	 */
 	getDragon() {
-		// if dragon is undefined, search for it in the activeNPCsList and set the dragon variable
 		const doesDragonExist = this.dragon === undefined;
 		if (doesDragonExist) {
 			let dragon;

@@ -131,9 +131,8 @@ export default class GameField {
 			this.repeatCol -= 1;
 			if (this.repeatCol === 0) {
 				this.scrollIndex += 1;
-				// check if the new scrollIndex actually exist
-				if (this.scrollIndex < backgroundColumns.scrollColumns.length) {
-					// new scrollIndex exists, set repeatCol to next repeat-Entry in scrollColumns
+				const doesNewScrollIndexExist = this.scrollIndex < backgroundColumns.scrollColumns.length;
+				if (doesNewScrollIndexExist) {
 					this.repeatCol = backgroundColumns.scrollColumns[this.scrollIndex][0].repeat;
 				}
 			}
