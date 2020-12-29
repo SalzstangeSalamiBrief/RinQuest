@@ -41,11 +41,13 @@ export default class Dragon extends NPC {
 	getMovementPattern() {
 		const result = { xAxis: 0, yAxis: 0 };
 		// only move every second call and if the dragon is not breathing fire
-		if (this.canMove && !this.breathsFire) {
+		const canDragonMove = this.canMove && !this.breathsFire;
+		if (canDragonMove) {
 			const stepIndex = this.movement.next().value;
 			// at stepIndex === 4 the dragon is on the most left side of his movementPattern
 			// and breaths fire
-			if (stepIndex === 4) {
+			const hasDragonToBreathFire = stepIndex === 4;
+			if (hasDragonToBreathFire) {
 				this.breathsFire = true;
 				setTimeout(() => { this.breathsFire = false; }, 1050);
 			}

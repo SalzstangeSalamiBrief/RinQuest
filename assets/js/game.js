@@ -39,32 +39,29 @@ export default class Game {
 	createGameLoop() {
 		let loopIndex = 0;
 		this.gameLoop = setInterval(async () => {
-			// move player
-			// move each active npc entity on the field
-			// move flames each time loopIndex % 3 === 1
-			if (loopIndex % 3 === 1) {
+			const isItTimeToMoveFlames = loopIndex % 3 === 1;
+			if (isItTimeToMoveFlames) {
 				this.activeEntityList.getFlameEntities().forEach(async (flame) => {
 					const flameIsAlive = this.flameHandler(flame);
-					if (flameIsAlive === true) {
+					if (flameIsAlive) {
 						await	this.moveEntity(flame);
 					}
 				});
 			}
 
 			// Move the npc and player character on each 5th and 10th loop
-			if (loopIndex !== 0 && loopIndex % 5 === 0) {
-				// if player is in attacking state execute attack
+			const isEntityMovementValid = loopIndex !== 0 && loopIndex % 5 === 0;
+			if (isEntityMovementValid) {
 				if (this.isPlayerAttacking) {
 					await this.movementAgent.attack(this.playerMovement.entity);
 				}
-				// move player
+
 				await this.movementAgent.moveCharacter(this.playerMovement);
-				// loop through the activeNPCsList
-				await 	this.activeEntityList.getActiveNPCsList().forEach(async (entity) => {
-					// move a entity
+
+				await this.activeEntityList.getActiveNPCsList().forEach(async (entity) => {
 					await this.moveEntity(entity);
-					// if the type of the entity is npcDragon, create flames
-					if (entity.getType() === 'npcDragon') {
+					const isEntityADragon = entity.getType() === 'npcDragon';
+					if (isEntityADragon) {
 						this.dragonHandler(entity);
 					}
 				});
@@ -79,14 +76,18 @@ export default class Game {
 			} else {
 				loopIndex += 1;
 			}
-			// check if new entities have to be spawned
 			await this.checkForAvailableEntities();
+
 			// calc if game is finished
 			const activePlayer = this.activeEntityList.getPlayerEntity();
 			const activeDragon = this.activeEntityList.getDragon();
-			if (activePlayer.getHP() === 0) this.gameState = 'playerLost';
-			if (activeDragon && activeDragon.getHP() === 0) this.gameState = 'playerWon';
-			// clear gameLoop if the game is over
+
+			const isPlayerDead = activePlayer.getHP() === 0;
+			if (isPlayerDead) this.gameState = 'playerLost';
+
+			const isDragonDead = activeDragon && activeDragon.getHP() === 0;
+			if (isDragonDead) this.gameState = 'playerWon';
+
 			if (this.gameState !== 'running') {
 				clearInterval(this.gameLoop);
 			}
@@ -114,10 +115,8 @@ export default class Game {
 	 * @param {Flame} entity
 	 */
 	flameHandler(entity) {
-		// check if the TTL of the flame is equal to 0
-		if (entity.getTTL() === 0) {
-			// clearInterval(this.gameLoop);
-			// remove flame
+		const isFlameAlive = entity.getTTL() === 0;
+		if (isFlameAlive) {
 			this.activeEntityList.removeEntity(entity.getID(), 'flame');
 			return undefined;
 		}

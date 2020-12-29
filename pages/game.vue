@@ -95,7 +95,7 @@ export default {
 	},
 	watch: {
 		gameState(newState) {
-			console.log(`watched GameState: ${newState}`);
+			// console.log(`watched GameState: ${newState}`);
 			if (newState !== 'running') {
 				this.$store.commit('gameState/setActualState', newState);
 				this.$router.push('/finish');

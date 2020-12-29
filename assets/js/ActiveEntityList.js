@@ -25,7 +25,6 @@ export default class activeNPCsList {
 	}
 
 	drawActiveEntitiesList() {
-		// clear canvas
 		this.painter.clearCanvas('entities');
 		const tempEntityList = [
 			...this.activeNPCsList,
@@ -35,8 +34,9 @@ export default class activeNPCsList {
 		tempEntityList.forEach((activeEntity) => {
 			const { size, coords } = activeEntity.getCoordsAndSize();
 			let type = activeEntity.getType();
-			// change type if the actual entity is the playercharacter
-			if (type === 'playerCharacter') type = activeEntity.getPlayerTypeToDraw();
+			if (type === 'playerCharacter') {
+				type = activeEntity.getPlayerTypeToDraw();
+			}
 			this.painter.drawCharacter(type, coords, size);
 		});
 	}
@@ -127,11 +127,13 @@ export default class activeNPCsList {
 	 */
 	getDragon() {
 		// if dragon is undefined, search for it in the activeNPCsList and set the dragon variable
-		if (this.dragon === undefined) {
+		const doesDragonExist = this.dragon === undefined;
+		if (doesDragonExist) {
 			let dragon;
 			const list = this.activeNPCsList;
 			for (let i = 0; i < list.length; i += 1) {
-				if (list[i].getType() === 'npcDragon') {
+				const isSelectedEnityADragon = list[i].getType() === 'npcDragon';
+				if (isSelectedEnityADragon) {
 					dragon = list[i];
 					break;
 				}

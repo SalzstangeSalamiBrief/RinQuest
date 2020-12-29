@@ -5,12 +5,9 @@ export default class Boar extends NPC {
 		// height: 5, width: 7
 		super(posX, posY, 7, 5, 'npcBoar', id);
 		this.movementType = movementType;
-		/*
-		calculate different values for movement by the given movementTypebundleRenderer.renderToStream
-		if movementType === 'waveMovement,
-			then create this.movemenGenerator which is used to iterate over the movemen-array
-	*/
-		if (movementType === 'waveMovement') {
+
+		const isWaveMovementType = movementType === 'waveMovement';
+		if (isWaveMovementType) {
 			this.movementGenerator = this.constructor.waveMovementGenerator(24);
 		} else {
 			this.movement = this.constructor.createStraightMovement();
@@ -63,16 +60,19 @@ export default class Boar extends NPC {
 		const result = { xAxis: 0, yAxis: 0 };
 		const stepIndex = this.movementGenerator.next().value;
 		// straight left movement
-		if (stepIndex % 2 === 0) {
+		const isStraightLeftMovement = stepIndex % 2 === 0;
+		const isTopMovement = stepIndex < 12;
+		if (isStraightLeftMovement) {
 			result.xAxis = -1;
 			return result;
-		} if (stepIndex < 12) {
-			// top movement
+		}
+
+		if (isTopMovement) {
 			result.yAxis = -1;
 		} else {
-			// bottom movement
 			result.yAxis = 1;
 		}
+
 		return result;
 	}
 }

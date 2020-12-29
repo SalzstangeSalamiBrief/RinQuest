@@ -27,7 +27,10 @@ export default class SpritePainter {
 				reject();
 			}
 			this.canvasMap.set(type, { canvas, ctx: canvas.getContext('2d') });
-			if (this.canvasSize === undefined) this.canvasSize = this.constructor.calcCanvasSize(canvas);
+			const isCanvasAlive = this.canvasSize === undefined;
+			if (isCanvasAlive) {
+				this.canvasSize = this.constructor.calcCanvasSize(canvas);
+			}
 			resolve();
 		});
 	}
@@ -51,7 +54,8 @@ export default class SpritePainter {
 	async loadAllImages() {
 		const data = await this.imageLoader.loadAllImages();
 		data.forEach((item) => {
-			if (!this.imagesLoaded.has(item.imageName)) {
+			const isItemIncluded = this.imagesLoaded.has(item.imageName);
+			if (!isItemIncluded) {
 				this.imagesLoaded.set(item.imageName, item.image);
 			}
 		});

@@ -12,16 +12,15 @@ export default class MovementAgent {
 		this.regexWaterTile = /waterTile/;
 	}
 
-
 	/** <--------------- general functions ----------> */
 
 	/**
- * Function which moves a character on the entityCanvas
- * there is collisionDetection for the edges, tiles and other characters
- * @param {Number} xAxis
- * @param {Number} yAxis
- * @param {Object} entity
- */
+   * Function which moves a character on the entityCanvas
+   * there is collisionDetection for the edges, tiles and other characters
+   * @param {Number} xAxis
+   * @param {Number} yAxis
+   * @param {Object} entity
+   */
 	async moveCharacter({ xAxis = 0, yAxis = 0, entity }) {
 		if (xAxis !== yAxis) {
 			let foundCollision = false;
@@ -32,8 +31,9 @@ export default class MovementAgent {
 			= -1 negative Movement on this Axis
 		*/
 			let {
-			// eslint-disable-next-line prefer-const
-				coords: [xCoord, yCoord], size: entitySize,
+				coords: [xCoord, yCoord],
+				// eslint-disable-next-line prefer-const
+				size: entitySize,
 			} = entity.getCoordsAndSize();
 			const entityType = entity.getType();
 			const canvasSize = this.painter.getCanvasSize();
@@ -41,21 +41,14 @@ export default class MovementAgent {
 			let newCoords;
 			if (xAxis !== 0) {
 				movementDirection = xAxis === 1 ? 'right' : 'left';
-				newCoords = [
-					this.constructor.calcNewCoordinate(xCoord, xAxis),
-					yCoord,
-				];
+				newCoords = [this.constructor.calcNewCoordinate(xCoord, xAxis), yCoord];
 			} else {
-			// yAxis !== 0
+				// yAxis !== 0
 				movementDirection = yAxis === 1 ? 'bottom' : 'top';
-				newCoords = [
-					xCoord,
-					this.constructor.calcNewCoordinate(yCoord, yAxis),
-				];
+				newCoords = [xCoord, this.constructor.calcNewCoordinate(yCoord, yAxis)];
 			}
 			const entityID = entityType === 'playerCharacter' ? undefined : entity.getID();
 			// check for collision with field
-			// destructure calcCoords and if a collision is found into existing variables
 			({
 				newCalcedCoords: newCoords,
 				collisionDetected: foundCollision,
@@ -65,10 +58,9 @@ export default class MovementAgent {
 				entityType,
 				canvasSize,
 				entityID,
-			)
-			);
+			));
 			if (!foundCollision) {
-			// if no collisions with the edge is found, check for collisions on the field
+				// if no collisions with the edge is found, check for collisions on the field
 				foundCollision = await this.checkForFieldCollision(
 					newCoords,
 					movementDirection,
@@ -76,7 +68,9 @@ export default class MovementAgent {
 				);
 				// if a field collision was found, set new coords
 				if (foundCollision) {
-					({ coords: [xCoord, yCoord] } = entity.getCoordsAndSize());
+					({
+						coords: [xCoord, yCoord],
+					} = entity.getCoordsAndSize());
 					newCoords = [xCoord, yCoord];
 				}
 			}
@@ -95,13 +89,13 @@ export default class MovementAgent {
 	}
 
 	/**
-	 * Check for collisions with the edges of the field
-	 * @param {Array} size
-	 * @param {Array} coords
-	 * @param {String} type
-	 * @param {Number} canvasSize
-	 * @param {String} id
-	 */
+   * Check for collisions with the edges of the field
+   * @param {Array} size
+   * @param {Array} coords
+   * @param {String} type
+   * @param {Number} canvasSize
+   * @param {String} id
+   */
 	checkForFieldEdgeCollision(
 		[width, height],
 		[newXCoord, newYCoord],
@@ -110,21 +104,22 @@ export default class MovementAgent {
 		id = undefined,
 	) {
 		const newCalcedCoords = [newXCoord, newYCoord];
+		const isFromTypePlayer = type === 'playerCharacter';
 		let collisionDetected = false;
-		// check for -x/left movement collision
+		// check for left movement collision
 		if (newXCoord <= 0) {
 			collisionDetected = true;
-			if (type === 'playerCharacter') {
+			if (isFromTypePlayer) {
 				newCalcedCoords[0] = 0;
 			} else {
 				newCalcedCoords[0] = 0;
 				this.activeEntitiesList.removeEntity(id);
 			}
 		}
-		// check for +x/right movement collision
-		if (newXCoord + width > canvasSize.xMax) {
-		// if (newXCoord + width > canvasSize.xMax) {
-			if (type === 'playerCharacter') {
+		// check for right movement collision
+		const isMovementToRightInField = newXCoord + width > canvasSize.xMax;
+		if (isMovementToRightInField) {
+			if (isFromTypePlayer) {
 				newCalcedCoords[0] = canvasSize.xMax - width;
 			}
 			collisionDetected = true;
@@ -135,8 +130,9 @@ export default class MovementAgent {
 			collisionDetected = true;
 		}
 		// check for -y/bottom movement collision
-		if (newYCoord + height > canvasSize.yMax) {
-			if (type === 'playerCharacter') {
+		const isMovementToBottomInField = newYCoord + height > canvasSize.yMax;
+		if (isMovementToBottomInField) {
+			if (isFromTypePlayer) {
 				newCalcedCoords[1] = canvasSize.yMax - height;
 			}
 			collisionDetected = true;
@@ -145,14 +141,14 @@ export default class MovementAgent {
 	}
 
 	/**
-	 * Check for collision on the field for the passed entity in
-	 * the given direction based on the passed coordinates
-	 * different checks for playerCharacter and npc entities
-	 * @param {Array} passedCords
-	 * @param {String} movementDirection
-	 * @param {Entity} entity
-	 */
-	async	checkForFieldCollision(passedCords, movementDirection, entity) {
+   * Check for collision on the field for the passed entity in
+   * the given direction based on the passed coordinates
+   * different checks for playerCharacter and npc entities
+   * @param {Array} passedCords
+   * @param {String} movementDirection
+   * @param {Entity} entity
+   */
+	async checkForFieldCollision(passedCords, movementDirection, entity) {
 		const { size: entitySize } = entity.getCoordsAndSize();
 		const entityType = entity.getType();
 		const mergedPartialField = await this.gameField.getMergedPartialField(
@@ -161,38 +157,56 @@ export default class MovementAgent {
 			movementDirection,
 		);
 		if (entityType === 'playerCharacter') {
-			return this.checkForFieldCollisionPlayer(mergedPartialField, entity, movementDirection);
+			return this.checkForFieldCollisionPlayer(
+				mergedPartialField,
+				entity,
+				movementDirection,
+			);
 		}
 		if (entityType !== 'playerCharacter') {
 			return this.checkForFieldCollisionNPC(mergedPartialField, entity);
 		}
 		// entity type could be flames, boar or dragon
-		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
-			if (this.constructor.checkIfArrayIncludesString(this.regexPlayer, mergedPartialField)) {
-				// check for state of playerCharacter attacking => dmg to entityType, else dmg player
-				return false;
-			}
-		}
-		return false;
+		const isEntityFromTypeNPCInvolved = 		this.constructor.checkIfArrayIncludesString(
+			this.regexNPCs,
+			mergedPartialField,
+		);
+		const isPlayerEntityInvolved = this.constructor.checkIfArrayIncludesString(
+			this.regexPlayer,
+			mergedPartialField,
+		);
+
+		return isEntityFromTypeNPCInvolved && isPlayerEntityInvolved;
 	}
 
 	/**
- * Calculate fieldCollisions for boars
- * @param {Array} mergedPartialField
- * @param {Entity} entity
- */
+   * Calculate fieldCollisions for boars
+   * @param {Array} mergedPartialField
+   * @param {Entity} entity
+   */
 	checkForFieldCollisionNPC(mergedPartialField, entity) {
 		const { type: entityType, id } = entity;
 		// if a playerCharacter got hit
-		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
+		const isCollisionWithWaterTile = this.constructor.checkIfArrayIncludesString(
+			this.regexWaterTile,
+			mergedPartialField,
+		);
+		const isCollisionWIthPlayer = this.constructor.checkIfArrayIncludesString(
+			/playerCharacter/,
+			mergedPartialField,
+		);
+
+		if (isCollisionWithWaterTile) {
 			this.activeEntitiesList.removeEntity(id);
 			this.gameField.removeFromEntitiesField(entityType, id);
-		} else if (this.constructor.checkIfArrayIncludesString(/playerCharacter/, mergedPartialField)) {
+		} else if (isCollisionWIthPlayer) {
 			const playerEntity = this.activeEntitiesList.getPlayerEntity();
-			// check if the player character is attacking
-			if (playerEntity.getState() === 'attacking') {
-			// remove this npc if its not a dragon
-				if (entityType !== 'npcDragon') {
+			const isPlayerAttacking = playerEntity.getState() === 'attacking';
+
+			if (isPlayerAttacking) {
+				const isEntityNotADragon = entityType !== 'npcDragon';
+
+				if (isEntityNotADragon) {
 					this.activeEntitiesList.removeEntity(id);
 					this.gameField.removeFromEntitiesField(entityType, id);
 				}
@@ -204,46 +218,63 @@ export default class MovementAgent {
 		return false;
 	}
 
-
 	/**
- * Calculate fieldCollisions for player
- * @param {Array} mergedPartialField
- * @param {Entity} entity
- */
+   * Calculate fieldCollisions for player
+   * @param {Array} mergedPartialField
+   * @param {Entity} entity
+   */
 	checkForFieldCollisionPlayer(mergedPartialField, entity) {
 		let result = false;
-		// check if a waterTile gets hit
-		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
+
+		const gotWaterTileHit = this.constructor.checkIfArrayIncludesString(
+			this.regexWaterTile,
+			mergedPartialField,
+		);
+		if (gotWaterTileHit) {
 			result = true;
 		}
-		// check if an npc gets hit
-		if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
-		// check state of playerCharacter if entityType === 'playerCharacter'
-			const { id, type } = this.constructor.getTypeOfEntity(this.regexNPCs, mergedPartialField);
-			// if the player is in attacking state,
-			if (entity.getState() === 'attacking') {
-			// check if the player hits a boar
-				if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
-				// deal only damage if the player moves right
 
-					// if a boar gets hit, remove it
+		const gotNPCHit = this.constructor.checkIfArrayIncludesString(
+			this.regexNPCs,
+			mergedPartialField,
+		);
+		if (gotNPCHit) {
+			const { id, type } = this.constructor.getTypeOfEntity(
+				this.regexNPCs,
+				mergedPartialField,
+			);
+			const isPlayerAttacking = entity.getState() === 'attacking';
+			if (isPlayerAttacking) {
+				const isPlayerHittingABoar = this.constructor.checkIfArrayIncludesString(
+					this.regexBoar,
+					mergedPartialField,
+				);
+				if (isPlayerHittingABoar) {
 					this.gameField.removeFromEntitiesField(type, id);
 					this.activeEntitiesList.removeEntity(id);
 				}
-				// check if the player hits a dragon
-				if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
-				// deal damage to dragon
+				const isPlayerHittingADragon = this.constructor.checkIfArrayIncludesString(
+					this.regexDragon,
+					mergedPartialField,
+				);
+				if (isPlayerHittingADragon) {
 					this.damageDragon();
 				}
 				result = false;
 			} else {
-			// the player is not in the state of attacking
-				if (this.constructor.checkIfArrayIncludesString(this.regexNPCs, mergedPartialField)) {
-				// if the player hits an dragon/boar decrease hp
+				// case: the player is not in the state of attacking
+				const gotPlayerHitByNPCs = this.constructor.checkIfArrayIncludesString(
+					this.regexNPCs,
+					mergedPartialField,
+				);
+				if (gotPlayerHitByNPCs) {
 					entity.decreaseHP();
 				}
-				if (this.constructor.checkIfArrayIncludesString(this.regexFlames, mergedPartialField)) {
-				// if the player hits a flame decrease hp
+				const gotPlayerHitByFlame	=	this.constructor.checkIfArrayIncludesString(
+					this.regexFlames,
+					mergedPartialField,
+				);
+				if (gotPlayerHitByFlame) {
 					entity.decreaseHP();
 				}
 				result = false;
@@ -253,24 +284,34 @@ export default class MovementAgent {
 	}
 
 	/**
- * check if a given entity collides with an non walkable environmentTile
- */
-	async checkForEnvTileCollision(passedCords,	entitySize, movementDirection) {
+   * check if a given entity collides with an non walkable environmentTile
+   */
+	async checkForEnvTileCollision(passedCords, entitySize, movementDirection) {
 		const mergedPartialField = await this.gameField.getMergedPartialField(
 			passedCords,
 			entitySize,
 			movementDirection,
 		);
-		if (this.constructor.checkIfArrayIncludesString(this.regexWaterTile, mergedPartialField)) {
-			return true;
-		}
-		return false;
+		return 	this.constructor.checkIfArrayIncludesString(
+			this.regexWaterTile,
+			mergedPartialField,
+		);
+		// const isTile
+		// if (
+		// 	this.constructor.checkIfArrayIncludesString(
+		// 		this.regexWaterTile,
+		// 		mergedPartialField,
+		// 	)
+		// ) {
+		// 	return true;
+		// }
+		// return false;
 	}
 
 	/**
- * Damage the dragon by 20
- * If the dragon is not alive after that, remove him from the field and activeEntityList
- */
+   * Damage the dragon by 20
+   * If the dragon is not alive after that, remove him from the field and activeEntityList
+   */
 	damageDragon() {
 		const activeDragon = this.activeEntitiesList.getDragon();
 		const dragonIsAlive = activeDragon.decreaseHP(20);
@@ -282,37 +323,46 @@ export default class MovementAgent {
 	}
 
 	/**
-	 * Calculate a new Coordinate by adding the passed coord with the passed step
-	 * @param {Number} coord
-	 * @param {Number} step
-	 */
+   * Calculate a new Coordinate by adding the passed coord with the passed step
+   * @param {Number} coord
+   * @param {Number} step
+   */
 	static calcNewCoordinate(coord, step) {
 		return coord + step;
 	}
 
 	/**
-	 * execute the movement of an Entity
-	 * Remove npc Entities if they move outside of the gamefield
-	 * Update Entities-gameField
-	 * @param {Entity} entity
-	 * @param {String} entityType
-	 * @param {Array} newCoords
-	 * @param {Array} oldCoords
-	 * @param {String} entityID
-	 */
+   * execute the movement of an Entity
+   * Remove npc Entities if they move outside of the gamefield
+   * Update Entities-gameField
+   * @param {Entity} entity
+   * @param {String} entityType
+   * @param {Array} newCoords
+   * @param {Array} oldCoords
+   * @param {String} entityID
+   */
 	async executeEntityMovement(
-		entity,	entityType, newCoords, oldCoords, entityID, movementDirection,
+		entity,
+		entityType,
+		newCoords,
+		oldCoords,
+		entityID,
+		movementDirection,
 	) {
 		entity.setCoords(newCoords);
 		const { size: entitySize } = entity.getCoordsAndSize();
 		// decide the type of the entity
-		const entityTypeToUpdate = entityType === 'playerCharacter'
-			? 'playerCharacter' : `${entityType}_${entity.getID()}`;
-			// get the mergedPartialField
+		const entityTypeToUpdate = entityType === 'playerCharacter'	? 'playerCharacter'	: `${entityType}_${entity.getID()}`;
+		// get the mergedPartialField
 		const collisionWithEnvTiles = await this.checkForEnvTileCollision(
-			newCoords, entitySize, movementDirection,
+			newCoords,
+			entitySize,
+			movementDirection,
 		);
-		if (entityTypeToUpdate !== 'playerCharacter' && ((newCoords[0] <= 0 || newCoords[1] <= 0) || collisionWithEnvTiles)) {
+		if (
+			entityTypeToUpdate !== 'playerCharacter'
+      && (newCoords[0] <= 0 || newCoords[1] <= 0 || collisionWithEnvTiles)
+		) {
 			// Remove npc Entities if they move outside of the gamefield
 			this.activeEntitiesList.removeEntity(entityID);
 			this.gameField.removeFromEntitiesField(entityType, entity.getID());
@@ -324,7 +374,8 @@ export default class MovementAgent {
 				oldCoords[1],
 				entitySize[0],
 				entitySize[1],
-				newCoords[0], newCoords[1],
+				newCoords[0],
+				newCoords[1],
 				entityTypeToUpdate,
 			);
 			// update coords of entity
@@ -332,11 +383,10 @@ export default class MovementAgent {
 		}
 	}
 
-
 	/**
-	 * let an entity attack
-	 * @param {PlayerObject} entity
-	 */
+   * let an entity attack
+   * @param {PlayerObject} entity
+   */
 	async attack(entity) {
 		const { size, coords } = entity.getCoordsAndSize();
 		const entityState = entity.getState();
@@ -348,16 +398,27 @@ export default class MovementAgent {
 		if (entityState === 'attacking') {
 			// decide for the used regex (regexBoar or regexDragon)
 			let regexOfEntity;
-			if (this.constructor.checkIfArrayIncludesString(this.regexBoar, mergedPartialField)) {
+			if (
+				this.constructor.checkIfArrayIncludesString(
+					this.regexBoar,
+					mergedPartialField,
+				)
+			) {
 				regexOfEntity = 'regexBoar';
 			}
-			if (this.constructor.checkIfArrayIncludesString(this.regexDragon, mergedPartialField)) {
+			if (
+				this.constructor.checkIfArrayIncludesString(
+					this.regexDragon,
+					mergedPartialField,
+				)
+			) {
 				regexOfEntity = 'regexDragon';
 			}
 			// regexOfEntity is not undefined
 			if (regexOfEntity !== undefined) {
 				const { type, id } = this.constructor.getTypeOfEntity(
-					this[regexOfEntity], mergedPartialField,
+					this[regexOfEntity],
+					mergedPartialField,
 				);
 				if (regexOfEntity === 'regexBoar') {
 					this.activeEntitiesList.removeEntity(id);
@@ -371,10 +432,10 @@ export default class MovementAgent {
 	}
 
 	/**
-	 * Validate if an array includes a given string/regex
-	 * @param {Regex} regex
-	 * @param {*} item
-	 */
+   * Validate if an array includes a given string/regex
+   * @param {Regex} regex
+   * @param {*} item
+   */
 	static checkIfArrayIncludesString(regex, item) {
 		const itemsToCheck = [...item];
 		let isIncluded = false;
@@ -397,10 +458,10 @@ export default class MovementAgent {
 	/** <--------------- getter ----------> */
 
 	/**
-	 * Calculate teh type and id for the first match of an entity in the input array
-	 * @param {Regex} regex
-	 * @param {Array} arr
-	 */
+   * Calculate teh type and id for the first match of an entity in the input array
+   * @param {Regex} regex
+   * @param {Array} arr
+   */
 	static getTypeOfEntity(regex, arr) {
 		let type;
 		let id;
