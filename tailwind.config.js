@@ -1,11 +1,8 @@
-/*
-** TailwindCSS Configuration File
-**
-** Docs: https://tailwindcss.com/docs/configuration
-** Default: https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js
-*/
-module.exports = {
-  theme: {},
-  variants: {},
-  plugins: []
-}
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
