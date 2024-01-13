@@ -1,5 +1,5 @@
-import { ScreensToDisplay } from "../App";
-import { Button } from "../components/Button";
+import { ScreensToDisplay } from "@models/ScreensToDisplay";
+import { Button } from "@components/Button";
 
 interface IStartScreenProps {
   onChangeScreen: (selectedScreen: ScreensToDisplay) => void;

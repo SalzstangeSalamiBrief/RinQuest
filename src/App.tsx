@@ -1,16 +1,10 @@
 import { useState } from "react";
 import "./App.css";
-import { StartScreen } from "./pages/StartScreen";
-import { EndScreen } from "./pages/EndScreen";
-import { GameScreen } from "./pages/GameScreen";
-import { HelpScreen } from "./pages/HelpScreen";
-
-export enum ScreensToDisplay {
-  StartScreen,
-  GameScreen,
-  EndScreen,
-  HelpScreen,
-}
+import { StartScreen } from "@pages/StartScreen";
+import { EndScreen } from "@pages/EndScreen";
+import { GameScreen } from "@pages/GameScreen";
+import { HelpScreen } from "@pages/HelpScreen";
+import { ScreensToDisplay } from "@models/ScreensToDisplay";
 
 function App() {
   const [screenToDisplay, setScreenToDisplay] = useState<ScreensToDisplay>(
