@@ -14,9 +14,9 @@ export interface INPC extends IEntity {
   readonly isAlive: boolean;
 }
 
-export enum EntityType {
-  Player,
-  Dragon,
-  Flame,
+export const EntityType = {
+  Player: "player", // TODO DIFFERENTIATE BETWEEN MOVING; ATTACKING; STANDING
+  Dragon: "npcDragon",
+  Flame: "flame",
   // TODO ADD OTHER
-}
+} as const;
