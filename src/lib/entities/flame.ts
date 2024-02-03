@@ -1,6 +1,6 @@
-import { EntityType, IEntity } from "@/models/Entities";
+import { NpcEntityTypes, IEntity } from "@/models/Entities";
 
-interface IFlame extends IEntity {
+interface IFlame extends IEntity<typeof NpcEntityTypes.Flame> {
   readonly timeToLive: number;
 }
 
@@ -9,7 +9,7 @@ export function Flame(
   initialYCoordinate: number,
   id: number
 ): IFlame {
-  const type = EntityType.Flame;
+  const type = NpcEntityTypes.Flame;
   const width = 2;
   const height = 2;
   let xCoordinate = initialXCoordinate;
