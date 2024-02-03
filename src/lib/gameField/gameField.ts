@@ -1,9 +1,20 @@
+import { IEntity } from "@/models/Entities";
 import {
   backgroundColumns,
   initEntities,
   inactiveEntities,
 } from "./fields.json";
 
+// TODO WTF IS xMAX IN ingameEntities.json
+
+// TODO GET ALL ENTITIES AS LIST WITH COORS
+// TODO USE TWO LISTS: ONE FOR ALL ENTITIES AND ONE FOR THE ACTIVE ONES
+// TODO PASS THE ACTIVE ENTTIIES TO THE RENDER METHOD
+// TODO IF AN  ENTITY IS SPAWNED ADD A REFERENZ TO ACTIVE ONES
+// TODO IF AN ENTITY IS DEFEATED/REMOVED REMOVE THE REFERENCE FROM ACTIVE
+function GameField() {
+  const currentScrollIndex = 0;
+}
 export default class GameField {
   constructor(painter, activeEntityList) {
     return new Promise((resolve) => {
@@ -41,44 +52,7 @@ export default class GameField {
    * @param {Number} width
    * @param {Number} height
    */
-  static calcMovementDirection(
-    movementDirection,
-    xStart,
-    yStart,
-    width,
-    height
-  ) {
-    const movementObject = {};
-    switch (movementDirection) {
-      case "right":
-        movementObject.xStart = xStart + width - 1;
-        movementObject.yStart = yStart;
-        movementObject.xEnd = xStart + width;
-        movementObject.yEnd = yStart + height;
-        break;
-      case "left":
-        movementObject.xStart = xStart - 1;
-        movementObject.yStart = yStart;
-        movementObject.xEnd = xStart;
-        movementObject.yEnd = yStart + height;
-        break;
-      case "top":
-        movementObject.xStart = xStart;
-        movementObject.yStart = yStart;
-        movementObject.xEnd = xStart + width;
-        movementObject.yEnd = yStart + 1;
-        break;
-      case "bottom":
-        movementObject.xStart = xStart;
-        movementObject.yStart = yStart + height - 1;
-        movementObject.xEnd = xStart + width;
-        movementObject.yEnd = yStart + height;
-        break;
-      default:
-        break;
-    }
-    return movementObject;
-  }
+
   /** <--------------- general functions ----------> */
 
   async initField(inputArray, fieldType) {
@@ -298,3 +272,42 @@ export default class GameField {
     return result;
   }
 }
+
+// TODO THIS FUNCTION SHOULD NOT BE IN THIS FILE
+const calcMovementDirection = (
+  movementDirection: MovementDirection,
+  entity: IEntity
+) => {
+  const { xCoordinate, yCoordinate, height, width } = entity;
+  const movementObject = {
+    xStart: xCoordinate,
+    yStart: yCoordinate,
+    xEnd: xCoordinate + width,
+    yEnd: yCoordinate + height,
+  };
+  // TODO WHAT ARE THIS CALCULATIONS? SHOULD THE ENTITY MOVE ONE TILE AT A TIME OR ITS WHOLE WIDTH? NEED FURTHER INFORMATIONEN
+  switch (movementDirection) {
+    case MovementDirection.right:
+      movementObject.xStart = xCoordinate + width - 1;
+      movementObject.xEnd = xCoordinate + width;
+      // movementObject.yEnd = yCoordinate + height;
+      break;
+    case MovementDirection.left:
+      movementObject.xStart = xCoordinate - width - 1;
+      movementObject.xEnd = xCoordinate;
+      // movementObject.yEnd = yCoordinate + height;
+      break;
+    case MovementDirection.top:
+      movementObject.xEnd = xCoordinate + width;
+      movementObject.yEnd = yCoordinate + 1;
+      break;
+    case MovementDirection.bottom:
+      movementObject.yStart = yCoordinate + height - 1;
+      movementObject.xEnd = xCoordinate + width;
+      movementObject.yEnd = yCoordinate + height;
+      break;
+    default:
+      break;
+  }
+  return movementObject;
+};

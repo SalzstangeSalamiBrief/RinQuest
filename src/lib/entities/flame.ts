@@ -21,10 +21,8 @@ export function Flame(
       return;
     }
 
-    // if TTL % 2 === 0 move the character on the xAxis, else move on the yAxis
-    const isXAxisMovement = timeToLive % 2 === 0;
     timeToLive -= 1;
-
+    const isXAxisMovement = timeToLive % 2 === 0;
     if (isXAxisMovement) {
       // TODO CHECK OUT OF BOUNDS OR RETURN MOVEMENT => REQUIRES THE MAP => MAYBE CHECK IN THE CALLING FUNCTION IF OUT_OF_BOUNDS AND REMVOE?
       xCoordinate -= 1;

@@ -4,7 +4,7 @@ import { StartScreen } from "@pages/StartScreen";
 import { EndScreen } from "@pages/EndScreen";
 import { GameScreen } from "@pages/GameScreen";
 import { HelpScreen } from "@pages/HelpScreen";
-import { ScreensToDisplay } from "@models/ScreensToDisplay";
+import { ScreensToDisplay } from "@/models/enums/ScreensToDisplay";
 
 function App() {
   const [screenToDisplay, setScreenToDisplay] = useState<ScreensToDisplay>(

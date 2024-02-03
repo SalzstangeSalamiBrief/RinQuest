@@ -1,0 +1,70 @@
+[
+  {
+    "coords": [1, 17],
+    "type": "playerCharacter",
+    "id": 0
+  },
+  {
+    "coords": [73, 18],
+    "xMax": 117,
+    "type": "npcBoar",
+    "movementPattern": "waveMovement",
+    "id": 1
+  },
+  {
+    "coords": [73, 25],
+    "xMax": 127,
+    "type": "npcBoar",
+    "movementPattern": "waveMovement",
+    "id": 2
+  },
+  {
+    "coords": [73, 25],
+    "xMax": 137,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 3
+  },
+  {
+    "coords": [73, 13],
+    "xMax": 137,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 4
+  },
+  {
+    "coords": [73, 20],
+    "xMax": 143,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 5
+  },
+  {
+    "coords": [73, 1],
+    "xMax": 163,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 6
+  },
+  {
+    "coords": [73, 36],
+    "xMax": 163,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 7
+  },
+  {
+    "coords": [73, 9],
+    "xMax": 209,
+    "type": "npcBoar",
+    "movementPattern": "straightMovement",
+    "id": 8
+  },
+  {
+    "coords": [50, 16],
+    "xMax": 250,
+    "type": "npcDragon",
+    "movementPattern": "",
+    "id": 9
+  }
+]

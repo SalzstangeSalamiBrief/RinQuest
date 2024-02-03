@@ -1,8 +1,9 @@
-import { CanvasType } from "@/models/CanvasType";
-import { loadImages } from "./imageLoder";
+import { CanvasType } from "@/models/enums/CanvasType";
+import { loadImages } from "./imageLoader";
 import { IEntity } from "@/models/Entities";
 import { TILE_SIZE } from "./constants";
 
+// TODO MODEL
 interface ICanvasDimensions {
   xMin: 0;
   yMin: 0;

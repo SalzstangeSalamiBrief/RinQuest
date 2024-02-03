@@ -1,4 +1,4 @@
-import { ScreensToDisplay } from "@models/ScreensToDisplay";
+import { ScreensToDisplay } from "@/models/enums/ScreensToDisplay";
 import { Button } from "@components/Button";
 
 interface IStartScreenProps {
