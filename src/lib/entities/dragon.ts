@@ -1,4 +1,4 @@
-import { NpcEntityTypes, IDragon } from "@/models/Entities";
+import { IDragon } from "@/models/Entities";
 
 // TODO HANDLE DRAWING OF THE HEALTH BAR TO CUSTOM SERVICE
 export function Dragon(
@@ -6,7 +6,7 @@ export function Dragon(
   initialYCoordinate: number,
   id: number
 ): IDragon {
-  const type = NpcEntityTypes.Dragon;
+  const type = "dragon";
   const width = 5;
   const height = 7;
   const damage = 10;

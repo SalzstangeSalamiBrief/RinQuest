@@ -1,4 +1,4 @@
-import { NpcEntityTypes, INpc } from "@/models/Entities";
+import { INpc } from "@/models/Entities";
 import { MovementTyp } from "@/models/enums/MovementType";
 
 // TODO MAYBE A FUNCTION THAT TAKES THE HP, MOVEMENET ETC AS PARAMS
@@ -7,8 +7,8 @@ export function Boar(
   initialYCoordinate: number,
   id: number,
   movementType: MovementTyp
-): INpc<typeof NpcEntityTypes.Boar> {
-  const type = NpcEntityTypes.Boar;
+): INpc<"boar"> {
+  const type = "boar";
   const width = 5;
   const height = 7;
   const damage = 10;

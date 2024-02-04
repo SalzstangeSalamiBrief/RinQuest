@@ -1,194 +1,160 @@
-[
-  {
-    "type": "grassTile",
-    "coordinates": {
-      "xMin": 0,
-      "yMin": 0,
-      "xMax": 50,
-      "yMax": 43
-    }
-  },
-  {
-    "xMin": 50,
-    "yMin": 12,
-    "xMax": 80,
-    "yMax": 31,
-    "type": "grassTile"
-  },
-  {
-    "xMin": 50,
-    "yMin": 0,
-    "xMax": 80,
-    "yMax": 12,
-    "type": "waterTile"
-  },
-  {
-    "xMin": 50,
-    "yMin": 31,
-    "xMax": 80,
-    "yMax": 43,
-    "type": "waterTile"
+{
+  "backgroundColumns": {
+    "start": [
+      {
+        "xMin": 0,
+        "yMin": 0,
+        "xMax": 50,
+        "yMax": 43,
+        "type": "grassTile"
+      },
+      {
+        "xMin": 50,
+        "yMin": 12,
+        "xMax": 80,
+        "yMax": 31,
+        "type": "grassTile"
+      },
+      {
+        "xMin": 50,
+        "yMin": 0,
+        "xMax": 80,
+        "yMax": 12,
+        "type": "waterTile"
+      },
+      {
+        "xMin": 50,
+        "yMin": 31,
+        "xMax": 80,
+        "yMax": 43,
+        "type": "waterTile"
+      }
+    ],
+    "scrollColumns": [
+      [
+        {
+          "type": "waterTile",
+          "start": 0,
+          "end": 12,
+          "repeat": 40
+        },
+        {
+          "type": "grassTile",
+          "start": 12,
+          "end": 31
+        },
+        {
+          "type": "waterTile",
+          "start": 31,
+          "end": 43
+        }
+      ],
+      [
+        {
+          "type": "waterTile",
+          "start": 0,
+          "end": 5,
+          "repeat": 10
+        },
+        {
+          "type": "grassTile",
+          "start": 5,
+          "end": 37
+        },
+        {
+          "type": "waterTile",
+          "start": 37,
+          "end": 43
+        }
+      ],
+      [
+        {
+          "type": "grassTile",
+          "start": 0,
+          "end": 43,
+          "repeat": 10
+        }
+      ],
+      [
+        {
+          "type": "grassTile",
+          "start": 0,
+          "end": 8,
+          "repeat": 20
+        },
+        {
+          "type": "waterTile",
+          "start": 8,
+          "end": 35
+        },
+        {
+          "type": "grassTile",
+          "start": 35,
+          "end": 43
+        }
+      ],
+      [
+        {
+          "type": "grassTile",
+          "start": 0,
+          "end": 43,
+          "repeat": 10
+        }
+      ],
+      [
+        {
+          "type": "waterTile",
+          "start": 0,
+          "end": 7,
+          "repeat": 30
+        },
+        {
+          "type": "grassTile",
+          "start": 7,
+          "end": 17
+        },
+        {
+          "type": "waterTile",
+          "start": 17,
+          "end": 43
+        }
+      ],
+      [
+        {
+          "type": "waterTile",
+          "start": 0,
+          "end": 7,
+          "repeat": 25
+        },
+        {
+          "type": "grassTile",
+          "start": 7,
+          "end": 36
+        },
+        {
+          "type": "waterTile",
+          "start": 36,
+          "end": 43
+        }
+      ],
+      [
+        {
+          "type": "waterTile",
+          "start": 0,
+          "end": 16,
+          "repeat": 25
+        },
+        {
+          "type": "grassTile",
+          "start": 16,
+          "end": 27
+        },
+        {
+          "type": "waterTile",
+          "start": 27,
+          "end": 43
+        }
+      ]
+    ]
   }
-]
-
-// {
-//   "backgroundColumns": {
-//     "start": [
-//       {
-//         "xMin": 0,
-//         "yMin": 0,
-//         "xMax": 50,
-//         "yMax": 43,
-//         "type": "grassTile"
-//       },
-//       {
-//         "xMin": 50,
-//         "yMin": 12,
-//         "xMax": 80,
-//         "yMax": 31,
-//         "type": "grassTile"
-//       },
-//       {
-//         "xMin": 50,
-//         "yMin": 0,
-//         "xMax": 80,
-//         "yMax": 12,
-//         "type": "waterTile"
-//       },
-//       {
-//         "xMin": 50,
-//         "yMin": 31,
-//         "xMax": 80,
-//         "yMax": 43,
-//         "type": "waterTile"
-//       }
-//     ],
-//     "scrollColumns": [
-//       [
-//         {
-//           "type": "waterTile",
-//           "start": 0,
-//           "end": 12,
-//           "repeat": 40
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 12,
-//           "end": 31
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 31,
-//           "end": 43
-//         }
-//       ],
-//       [
-//         {
-//           "type": "waterTile",
-//           "start": 0,
-//           "end": 5,
-//           "repeat": 10
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 5,
-//           "end": 37
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 37,
-//           "end": 43
-//         }
-//       ],
-//       [
-//         {
-//           "type": "grassTile",
-//           "start": 0,
-//           "end": 43,
-//           "repeat": 10
-//         }
-//       ],
-//       [
-//         {
-//           "type": "grassTile",
-//           "start": 0,
-//           "end": 8,
-//           "repeat": 20
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 8,
-//           "end": 35
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 35,
-//           "end": 43
-//         }
-//       ],
-//       [
-//         {
-//           "type": "grassTile",
-//           "start": 0,
-//           "end": 43,
-//           "repeat": 10
-//         }
-//       ],
-//       [
-//         {
-//           "type": "waterTile",
-//           "start": 0,
-//           "end": 7,
-//           "repeat": 30
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 7,
-//           "end": 17
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 17,
-//           "end": 43
-//         }
-//       ],
-//       [
-//         {
-//           "type": "waterTile",
-//           "start": 0,
-//           "end": 7,
-//           "repeat": 25
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 7,
-//           "end": 36
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 36,
-//           "end": 43
-//         }
-//       ],
-//       [
-//         {
-//           "type": "waterTile",
-//           "start": 0,
-//           "end": 16,
-//           "repeat": 25
-//         },
-//         {
-//           "type": "grassTile",
-//           "start": 16,
-//           "end": 27
-//         },
-//         {
-//           "type": "waterTile",
-//           "start": 27,
-//           "end": 43
-//         }
-//       ]
-//     ]
-//   }
-
-// }
+}

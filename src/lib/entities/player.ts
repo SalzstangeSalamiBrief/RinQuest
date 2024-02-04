@@ -1,6 +1,5 @@
-import { IPlayer, PlayerEntityTypes } from "@/models/Entities";
+import { IPlayer, playerEntities } from "@/models/Entities";
 import { MovementDirection } from "@/models/enums/MovementDirection";
-import { ValueOf } from "@/models/utilityTypes";
 
 export function Player(
   initialXCoordinate: number,
@@ -9,12 +8,12 @@ export function Player(
 ): IPlayer {
   let xCoordinate = initialXCoordinate;
   let yCoordinate = initialYCoordinate;
-  let type: ValueOf<typeof PlayerEntityTypes> = PlayerEntityTypes.PlayerIdle;
+  let type: (typeof playerEntities)[number] = playerEntities[0];
   const width = 5;
   const height = 6;
   const hp = 100;
 
-  function setCurrentType(newType: ValueOf<typeof PlayerEntityTypes>) {
+  function setCurrentType(newType: (typeof playerEntities)[number]) {
     type = newType;
   }
 

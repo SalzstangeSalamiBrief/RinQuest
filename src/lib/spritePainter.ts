@@ -87,7 +87,7 @@ export const SpritePainter = async () => {
             `Could not draw background because the image '${cell}' does not exist.`
           );
         }
-        // TODO CONSTANT TILE_SIZE
+
         context.drawImage(image, columnIndex * TILE_SIZE, rowIndex * TILE_SIZE);
       }
     }
