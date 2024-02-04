@@ -5,6 +5,10 @@
 //   inactiveEntities,
 // } from "./fields.json";
 
+import { backgroundAreas } from "./gameField.json";
+
+import { backgroundEntities } from "@/models/Entities";
+
 // TODO WTF IS xMAX IN ingameEntities.json
 
 // TODO GET ALL ENTITIES AS LIST WITH COORS
@@ -13,22 +17,54 @@
 // TODO IF AN  ENTITY IS SPAWNED ADD A REFERENZ TO ACTIVE ONES
 // TODO IF AN ENTITY IS DEFEATED/REMOVED REMOVE THE REFERENCE FROM ACTIVE
 
-export type Field = string[80][60]; // TODO TYPING: NOT STING BUT UNION OF ALL POSSIBLE TYPES
+interface IBackgroundAreaDefinition {
+  xRange: [xStart: number, xEnd: number];
+  yRange: [yStart: number, yEnd: number];
+  type: (typeof backgroundEntities)[number];
+}
+
+export type Field<T> = T[][]; // TODO TYPING: NOT STING BUT UNION OF ALL POSSIBLE TYPES
 
 export function GameField() {
   // const currentScrollIndex = 0;
   // TODO ADD FIELD FOR ENTITES
   // const fields =
 
-  function createField() {
-    const columns = Array(80).fill(undefined);
+  function initializeBackgroundField(): Field<
+    (typeof backgroundEntities)[number]
+  > {
+    const columns: Field<(typeof backgroundEntities)[number]> =
+      Array(80).fill(undefined);
     for (let i = 0; i < columns.length; i += 1) {
-      columns[i] = Array(40).fill("grassTile");
+      columns[i] = Array(40).fill(undefined);
     }
+
+    const initialFields = backgroundAreas.start as IBackgroundAreaDefinition[];
+    for (let i = 0; i < initialFields.length; i += 1) {
+      const {
+        xRange: [minX, maxX],
+        yRange: [minY, maxY],
+        type,
+      } = initialFields[i];
+      for (
+        let currentXCoordinate = minX;
+        currentXCoordinate < maxX;
+        currentXCoordinate += 1
+      ) {
+        for (
+          let currentYCoordinate = minY;
+          currentYCoordinate < maxY;
+          currentYCoordinate += 1
+        ) {
+          columns[currentXCoordinate][currentYCoordinate] = type;
+        }
+      }
+    }
+
     return columns;
   }
 
-  return { createField };
+  return { createField: initializeBackgroundField };
 }
 // export default class GameField {
 //   constructor(painter, activeEntityList) {

@@ -1,32 +1,24 @@
 {
-  "backgroundColumns": {
+  "backgroundAreas": {
     "start": [
       {
-        "xMin": 0,
-        "yMin": 0,
-        "xMax": 50,
-        "yMax": 43,
+        "xRange": [0, 50],
+        "yRange": [0, 40],
         "type": "grassTile"
       },
       {
-        "xMin": 50,
-        "yMin": 12,
-        "xMax": 80,
-        "yMax": 31,
+        "xRange": [50, 80],
+        "yRange": [12, 31],
         "type": "grassTile"
       },
       {
-        "xMin": 50,
-        "yMin": 0,
-        "xMax": 80,
-        "yMax": 12,
+        "xRange": [50, 80],
+        "yRange": [0, 12],
         "type": "waterTile"
       },
       {
-        "xMin": 50,
-        "yMin": 31,
-        "xMax": 80,
-        "yMax": 43,
+        "xRange": [50, 80],
+        "yRange": [31, 40],
         "type": "waterTile"
       }
     ],
@@ -46,7 +38,7 @@
         {
           "type": "waterTile",
           "start": 31,
-          "end": 43
+          "end": 40
         }
       ],
       [
@@ -64,14 +56,14 @@
         {
           "type": "waterTile",
           "start": 37,
-          "end": 43
+          "end": 40
         }
       ],
       [
         {
           "type": "grassTile",
           "start": 0,
-          "end": 43,
+          "end": 40,
           "repeat": 10
         }
       ],
@@ -90,14 +82,14 @@
         {
           "type": "grassTile",
           "start": 35,
-          "end": 43
+          "end": 40
         }
       ],
       [
         {
           "type": "grassTile",
           "start": 0,
-          "end": 43,
+          "end": 40,
           "repeat": 10
         }
       ],
@@ -116,7 +108,7 @@
         {
           "type": "waterTile",
           "start": 17,
-          "end": 43
+          "end": 40
         }
       ],
       [
@@ -134,7 +126,7 @@
         {
           "type": "waterTile",
           "start": 36,
-          "end": 43
+          "end": 40
         }
       ],
       [
@@ -152,7 +144,7 @@
         {
           "type": "waterTile",
           "start": 27,
-          "end": 43
+          "end": 40
         }
       ]
     ]

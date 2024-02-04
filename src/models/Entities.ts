@@ -20,6 +20,12 @@ export interface IDragon extends INpc<"dragon"> {
   readonly isBreathingFire: boolean;
 }
 
+export interface IFlame extends IEntity {
+  type: "flame";
+  readonly timeToLive: number;
+  move: () => void;
+}
+
 export interface IPlayer extends IEntity {
   type: (typeof playerEntities)[number];
   move: (direction: MovementDirection) => void;
@@ -39,15 +45,3 @@ export const playerEntities = [
   "player_moving",
   "player_attacking",
 ] as const;
-
-// export const NpcEntityTypes = {
-//   Dragon: "dragon",
-//   Flame: "flame",
-//   Boar: "boar",
-// } as const;
-
-// export const PlayerEntityTypes = {
-//   PlayerIdle: "player_idle",
-//   PlayerMoving: "player_moving",
-//   PlayerAttacking: "player_attacking",
-// } as const;

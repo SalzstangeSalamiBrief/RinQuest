@@ -1,6 +1,6 @@
 import { CanvasType } from "@/models/enums/CanvasType";
 import { loadImages } from "./imageLoader";
-import { IEntity } from "@/models/Entities";
+import { INpc, backgroundEntities, npcEntities } from "@/models/Entities";
 import { TILE_SIZE } from "./constants";
 import { Field } from "./gameField/gameField";
 
@@ -62,7 +62,7 @@ export const SpritePainter = async () => {
   }
 
   // TODO WHAT IS FIELDARRAY => SOME 2D ARRAY?
-  function drawBackground(fieldArray: Field) {
+  function drawBackground(field: Field<(typeof backgroundEntities)[number]>) {
     clearCanvas(CanvasType.Background);
     const backgroundCanvas = getCanvasItemFromMap(
       canvasMap,
@@ -73,12 +73,8 @@ export const SpritePainter = async () => {
       backgroundCanvas.canvas,
       CanvasType.Background
     );
-    for (
-      let columnIndex = 0;
-      columnIndex < fieldArray.length;
-      columnIndex += 1
-    ) {
-      const column = fieldArray[columnIndex];
+    for (let columnIndex = 0; columnIndex < field.length; columnIndex += 1) {
+      const column = field[columnIndex];
       for (let rowIndex = 0; rowIndex < column.length; rowIndex += 1) {
         const cell = column[rowIndex];
         const image = imagesLoaded.get(cell);
@@ -95,7 +91,7 @@ export const SpritePainter = async () => {
 
   // TODO CHARACTERTYPE STRING ENUM
   // TODO TYPE
-  function drawEntity(entity: IEntity<unknown>) {
+  function drawEntity(entity: INpc<(typeof npcEntities)[number]>) {
     const { type, height, width, xCoordinate, yCoordinate } = entity;
     const image = imagesLoaded.get(type);
     if (!image) {
