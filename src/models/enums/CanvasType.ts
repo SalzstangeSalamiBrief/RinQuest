@@ -1,4 +1,4 @@
 export enum CanvasType {
-  entities,
-  background,
+  Entities,
+  Background,
 }

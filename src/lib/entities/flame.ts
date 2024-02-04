@@ -16,7 +16,7 @@ export function Flame(
   let yCoordinate = initialYCoordinate;
   let timeToLive = 20;
 
-  const move = () => {
+  function move() {
     if (timeToLive <= 0) {
       return;
     }
@@ -30,7 +30,7 @@ export function Flame(
     }
 
     yCoordinate += Math.round(Math.random()) === 0 ? -1 : 1;
-  };
+  }
 
   return {
     id,

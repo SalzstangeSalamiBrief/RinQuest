@@ -17,7 +17,7 @@ export function Boar(
   let yCoordinate = initialYCoordinate;
   const indexOfMovementInWaveGenerator = getIndexOfMovementInWave();
 
-  const move = () => {
+  function move() {
     if (movementType === MovementTyp.Straight) {
       xCoordinate -= 1;
       return;
@@ -37,9 +37,11 @@ export function Boar(
     }
 
     yCoordinate += 1;
-  };
+  }
 
-  const isAlive = () => hp > 0;
+  function isAlive() {
+    return hp > 0;
+  }
 
   return {
     height,

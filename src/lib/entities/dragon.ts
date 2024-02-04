@@ -16,9 +16,11 @@ export function Dragon(
   const movement = movementGenerator();
   let isBreathingFire = false;
 
-  const isAlive = () => hp > 0;
+  function isAlive() {
+    return hp > 0;
+  }
 
-  const move = () => {
+  function move() {
     if (isBreathingFire === true) {
       return;
     }
@@ -37,7 +39,7 @@ export function Dragon(
     } else {
       yCoordinate += 1;
     }
-  };
+  }
 
   return {
     height,

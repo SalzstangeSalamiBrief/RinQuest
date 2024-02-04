@@ -8,7 +8,8 @@ import { ScreensToDisplay } from "@/models/enums/ScreensToDisplay";
 
 function App() {
   const [screenToDisplay, setScreenToDisplay] = useState<ScreensToDisplay>(
-    ScreensToDisplay.StartScreen
+    // ScreensToDisplay.StartScreen
+    ScreensToDisplay.GameScreen
   );
 
   return (

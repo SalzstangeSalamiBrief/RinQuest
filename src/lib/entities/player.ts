@@ -14,10 +14,11 @@ export function Player(
   const height = 6;
   const hp = 100;
 
-  const setCurrentType = (newType: ValueOf<typeof PlayerEntityTypes>) =>
-    (type = newType);
+  function setCurrentType(newType: ValueOf<typeof PlayerEntityTypes>) {
+    type = newType;
+  }
 
-  const move = (direction: MovementDirection) => {
+  function move(direction: MovementDirection) {
     switch (direction) {
       case MovementDirection.Top:
         yCoordinate -= 1;
@@ -32,7 +33,7 @@ export function Player(
         xCoordinate += 1;
         break;
     }
-  };
+  }
 
   return {
     type,

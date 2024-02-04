@@ -2,6 +2,7 @@ import { CanvasType } from "@/models/enums/CanvasType";
 import { loadImages } from "./imageLoader";
 import { IEntity } from "@/models/Entities";
 import { TILE_SIZE } from "./constants";
+import { Field } from "./gameField/gameField";
 
 // TODO MODEL
 interface ICanvasDimensions {
@@ -16,15 +17,12 @@ interface ICanvasItem {
   dimensions: ICanvasDimensions;
 }
 
-export const spritePainter = async () => {
+export const SpritePainter = async () => {
   const canvasMap = new Map<CanvasType, ICanvasItem>();
   const imagesLoaded = await loadImages();
 
-  const addCanvas = (
-    canvasToAdd: HTMLCanvasElement | undefined,
-    type: CanvasType
-  ) => {
-    if (canvasToAdd === undefined) {
+  function addCanvas(canvasToAdd: HTMLCanvasElement | null, type: CanvasType) {
+    if (canvasToAdd === null) {
       throw new Error(
         `Could not add canvas of type '${type}' because it does not exist.`
       );
@@ -43,9 +41,9 @@ export const spritePainter = async () => {
       dimensions,
     };
     canvasMap.set(type, canvasItem);
-  };
+  }
 
-  const clearCanvas = (type: CanvasType) => {
+  function clearCanvas(type: CanvasType) {
     const canvasToClear = canvasMap.get(type);
     if (!canvasToClear) {
       throw new Error(
@@ -61,38 +59,43 @@ export const spritePainter = async () => {
       canvasToClear.dimensions.xMax * TILE_SIZE,
       canvasToClear.dimensions.yMax * TILE_SIZE
     );
-  };
+  }
 
   // TODO WHAT IS FIELDARRAY => SOME 2D ARRAY?
-  const drawBackground = (fieldArray: any) => {
-    clearCanvas(CanvasType.background);
+  function drawBackground(fieldArray: Field) {
+    clearCanvas(CanvasType.Background);
     const backgroundCanvas = getCanvasItemFromMap(
       canvasMap,
-      CanvasType.background
+      CanvasType.Background
     );
 
     const context = getContextOfCanvas(
       backgroundCanvas.canvas,
-      CanvasType.background
+      CanvasType.Background
     );
-    for (let rowIndex = 0; rowIndex < fieldArray.length; rowIndex += 1) {
-      const row = fieldArray[rowIndex];
-      for (let colIndex = 0; colIndex < row.length; colIndex += 1) {
-        const cell = row[colIndex];
-        const image = imagesLoaded.get(cell.imageName);
+    for (
+      let columnIndex = 0;
+      columnIndex < fieldArray.length;
+      columnIndex += 1
+    ) {
+      const column = fieldArray[columnIndex];
+      for (let rowIndex = 0; rowIndex < column.length; rowIndex += 1) {
+        const cell = column[rowIndex];
+        const image = imagesLoaded.get(cell);
         if (!image) {
           throw new Error(
-            `Could not draw background because the image '${cell.imageName}' does not exist.`
+            `Could not draw background because the image '${cell}' does not exist.`
           );
         }
         // TODO CONSTANT TILE_SIZE
-        context.drawImage(image, colIndex * TILE_SIZE, rowIndex * TILE_SIZE);
+        context.drawImage(image, columnIndex * TILE_SIZE, rowIndex * TILE_SIZE);
       }
     }
-  };
+  }
 
   // TODO CHARACTERTYPE STRING ENUM
-  const drawEntity = (entity: IEntity) => {
+  // TODO TYPE
+  function drawEntity(entity: IEntity<unknown>) {
     const { type, height, width, xCoordinate, yCoordinate } = entity;
     const image = imagesLoaded.get(type);
     if (!image) {
@@ -101,8 +104,8 @@ export const spritePainter = async () => {
       );
     }
 
-    const canvasItem = getCanvasItemFromMap(canvasMap, CanvasType.entities);
-    const context = getContextOfCanvas(canvasItem.canvas, CanvasType.entities);
+    const canvasItem = getCanvasItemFromMap(canvasMap, CanvasType.Entities);
+    const context = getContextOfCanvas(canvasItem.canvas, CanvasType.Entities);
     context.drawImage(
       image,
       xCoordinate * TILE_SIZE,
@@ -110,7 +113,7 @@ export const spritePainter = async () => {
       width * TILE_SIZE,
       height * TILE_SIZE
     );
-  };
+  }
 
   return { drawBackground, drawEntity, clearCanvas, addCanvas };
 };
@@ -131,7 +134,7 @@ const getCanvasItemFromMap = (
   const canvasToGet = canvasMap.get(type);
   if (!canvasToGet) {
     throw new Error(
-      `Could not draw background because the canvas '${CanvasType.background}' does not exist.`
+      `Could not draw background because the canvas '${CanvasType.Background}' does not exist.`
     );
   }
 
