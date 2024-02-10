@@ -2,6 +2,8 @@
 
 This is a game where you play a knight who has to defeat the evil forces in his world.
 
+**! This project is outdated and is currently beeing rewritten in newer technologies.**
+
 ## Build Setup
 
 ``` bash
